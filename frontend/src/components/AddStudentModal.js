@@ -31,7 +31,7 @@ const AddStudentModal = ({ isOpen, onClose, onSuccess }) => {
     yas: "",
     meslek: "",
     ilk_ders_tarihi: new Date().toISOString().split('T')[0],
-    referans: "Diğer",
+    referans: "",
     notlar: "",
     ucret: "",
     aylik_ders_sayisi: 4,
