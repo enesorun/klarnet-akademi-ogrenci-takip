@@ -1,0 +1,97 @@
+╔════════════════════════════════════════════════════════════╗
+║                                                            ║
+║        KLARNET AKADEMI OGRENCI TAKIP SISTEMI              ║
+║                                                            ║
+║                  HIZLI BASLANGIC REHBERI                  ║
+║                                                            ║
+╚════════════════════════════════════════════════════════════╝
+
+
+📌 BU NEDIR?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Klarnet öğrencilerinizi takip etmek için özel olarak
+hazırlanmış bir masaüstü uygulamasıdır.
+
+✅ İnternet bağlantısı gerektirmez (Offline)
+✅ Verileriniz sadece sizin bilgisayarınızda
+✅ Tamamen ÜCRETSİZ, reklam yok
+✅ Modern ve kullanıcı dostu arayüz
+
+
+🚀 ILCE ÇALIŞTIRMA (5 ADIM)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. KURULUM.txt dosyasını açın ve takip edin (İlk kez için)
+
+2. Gerekli programları kurun:
+   • Python 3.8+
+   • Node.js 16+
+   • MongoDB
+
+3. İlk kurulumu yapın (Terminal/CMD'de):
+   cd backend
+   pip install -r requirements.txt
+   cd ../frontend
+   npm install
+
+4. Sistemi başlatın:
+   Windows: START.bat'a çift tıklayın
+   Mac/Linux: Terminal'de ./start.sh
+
+5. Tarayıcınızda açılır: http://localhost:3000
+
+
+💾 GUNLUK KULLANIM
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+BAŞLATMA:
+  🪟 Windows → START.bat (Çift tıkla)
+  🍎 Mac/Linux → ./start.sh (Terminal'de)
+
+KAPATMA:
+  🪟 Windows → STOP.bat (Çift tıkla)
+  🍎 Mac/Linux → ./stop.sh (Terminal'de)
+
+⚠️  Sistemi kapatırken mutlaka STOP scriptini kullanın!
+
+
+📂 ONEMLI DOSYALAR
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📄 KURULUM.txt       → Detaylı kurulum rehberi (ONCE BUNU OKUYUN!)
+🚀 START.bat / .sh   → Sistemi başlatır
+🛑 STOP.bat / .sh    → Sistemi kapatır
+💾 YEDEK.bat / .sh   → Veri yedekleme (Haftada 1 kez!)
+🔄 GERI_YUKLE.bat/.sh → Yedeği geri yükler
+
+
+🆘 SORUN MU VAR?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. KURULUM.txt dosyasındaki "SORUN GIDERME" bölümüne bakın
+2. MongoDB servisinin çalıştığından emin olun
+3. Bilgisayarı yeniden başlatıp tekrar deneyin
+4. Tüm terminal/cmd pencerelerini kapatıp yeniden açın
+
+
+⚡ HIZLI IPUCLARI
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+💡 Masaüstü kısayolu oluşturun (START.bat için)
+💡 Haftada 1 kez YEDEK.bat çalıştırın
+💡 Tarayıcı favorilerinize ekleyin: http://localhost:3000
+💡 Dark mode için sol alttaki Karanlık Mod butonuna tıklayın
+
+
+📞 YARDIM
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Tüm detaylar için KURULUM.txt dosyasını açın.
+Her şey Türkçe ve adım adım anlatılmıştır.
+
+
+╔════════════════════════════════════════════════════════════╗
+║                                                            ║
+║             Başarılar! Keyifli Kullanımlar! 🎵            ║
+║                                                            ║
+╚════════════════════════════════════════════════════════════╝
