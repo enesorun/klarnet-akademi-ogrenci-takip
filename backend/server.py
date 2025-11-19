@@ -468,6 +468,8 @@ async def get_genel_istatistik():
     BASLANGIC_ESKI = 250
     BASLANGIC_ARA_VERDI = 17
     BASLANGIC_DERS = 5000
+    BASLANGIC_ORTALAMA_DERS_UCRETI = 750  # 750₺ ortalama ders ücreti
+    BASLANGIC_KAZANC = BASLANGIC_DERS * BASLANGIC_ORTALAMA_DERS_UCRETI  # 5000 * 750 = 3,750,000₺
     
     students = await db.students.find({}, {"_id": 0}).to_list(1000)
     toplam_ogrenci = len(students) + BASLANGIC_ESKI
@@ -478,7 +480,8 @@ async def get_genel_istatistik():
     
     # Tüm ödemeler
     all_payments = await db.payments.find({}, {"_id": 0}).to_list(10000)
-    toplam_kazanc = sum(p["tutar"] for p in all_payments)
+    yeni_kazanc = sum(p["tutar"] for p in all_payments)
+    toplam_kazanc = yeni_kazanc + BASLANGIC_KAZANC
     
     ortalama_ders_ucreti = toplam_kazanc / toplam_ders if toplam_ders > 0 else 0
     ogrenci_basina_ders = toplam_ders / toplam_ogrenci if toplam_ogrenci > 0 else 0
