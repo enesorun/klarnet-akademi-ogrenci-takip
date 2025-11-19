@@ -706,17 +706,6 @@ async def calculate_student_data(student_id: str):
         "status_color": status_color
     }
 
-# Include the router in the main app
-app.include_router(api_router)
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_credentials=True,
-    allow_origins=os.environ.get('CORS_ORIGINS', '*').split(','),
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
 # ==================== GRUP DERSLERI ENDPOINTS ====================
 
 # Sezon endpoints
