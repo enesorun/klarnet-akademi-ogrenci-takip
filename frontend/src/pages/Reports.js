@@ -12,6 +12,7 @@ const COLORS = ['#4d5deb', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899'
 const Reports = () => {
   const [referansData, setReferansData] = useState([]);
   const [genelStats, setGenelStats] = useState(null);
+  const [aylikGelirData, setAylikGelirData] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -20,12 +21,14 @@ const Reports = () => {
 
   const fetchData = async () => {
     try {
-      const [referansRes, genelRes] = await Promise.all([
+      const [referansRes, genelRes, aylikGelirRes] = await Promise.all([
         axios.get(`${API}/reports/referans`),
         axios.get(`${API}/reports/genel`),
+        axios.get(`${API}/reports/aylik-gelir`),
       ]);
       setReferansData(referansRes.data);
       setGenelStats(genelRes.data);
+      setAylikGelirData(aylikGelirRes.data);
     } catch (error) {
       toast.error("Raporlar yüklenirken hata oluştu");
     } finally {
