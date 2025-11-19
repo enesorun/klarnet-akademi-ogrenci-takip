@@ -42,21 +42,27 @@ const Login = ({ onLogin }) => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#f7f8fc] px-4">
-      <div className="w-full max-w-md">
-        <div className="text-center mb-8">
+    <div className="min-h-screen flex items-center justify-center bg-[#f7f8fc] dark:bg-gray-900 px-4 transition-colors duration-300">
+      <div className="w-full max-w-md animate-scale-in">
+        <div className="text-center mb-8 animate-fade-in">
           <img
             src="https://customer-assets.emergentagent.com/job_4b0d0b3e-879e-455d-b243-259cedba9ea8/artifacts/f6s6gzdg_akademi-logo-siyah.png"
             alt="Logo"
-            className="mx-auto mb-4 h-24 w-auto"
+            className="mx-auto mb-4 h-24 w-auto dark:hidden transition-all duration-300 hover:scale-110"
             data-testid="login-logo"
           />
-          <h1 className="text-2xl font-bold text-gray-800" data-testid="app-title">
+          <img
+            src="https://customer-assets.emergentagent.com/job_muzikogretmen/artifacts/e0hewzvg_akademi-logo.png"
+            alt="Logo"
+            className="mx-auto mb-4 h-24 w-auto hidden dark:block transition-all duration-300 hover:scale-110"
+            data-testid="login-logo-dark"
+          />
+          <h1 className="text-2xl font-bold text-gray-800 dark:text-white" data-testid="app-title">
             Klarnet Akademi Öğrenci Takibi
           </h1>
         </div>
 
-        <div className="bg-white rounded-2xl shadow-lg p-8" data-testid="login-form-container">
+        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-8 border border-gray-100 dark:border-gray-700 animate-slide-in" data-testid="login-form-container">
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="space-y-2">
               <Label htmlFor="username">Kullanıcı Adı</Label>
