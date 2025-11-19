@@ -102,47 +102,49 @@ const AddStudentModal = ({ isOpen, onClose, onSuccess }) => {
         <form onSubmit={handleSubmit} className="space-y-4 mt-4">
           <div className="grid grid-cols-2 gap-4">
             <div className="col-span-2">
-              <Label htmlFor="ad_soyad">Ad Soyad *</Label>
+              <Label htmlFor="ad_soyad" className="text-gray-700 dark:text-gray-300">Ad Soyad *</Label>
               <Input
                 id="ad_soyad"
                 value={formData.ad_soyad}
                 onChange={(e) => setFormData({ ...formData, ad_soyad: e.target.value })}
                 required
                 data-testid="student-name-input"
+                className="dark:bg-gray-700 dark:border-gray-600 dark:text-white"
               />
             </div>
 
             <div>
-              <Label htmlFor="konum">Konum *</Label>
+              <Label htmlFor="konum" className="text-gray-700 dark:text-gray-300">Konum *</Label>
               <Input
                 id="konum"
                 value={formData.konum}
                 onChange={(e) => setFormData({ ...formData, konum: e.target.value })}
                 required
                 data-testid="student-location-input"
+                className="dark:bg-gray-700 dark:border-gray-600 dark:text-white"
               />
             </div>
 
             <div>
-              <Label htmlFor="seviye">Seviye *</Label>
+              <Label htmlFor="seviye" className="text-gray-700 dark:text-gray-300">Seviye *</Label>
               <Select
                 value={formData.seviye}
                 onValueChange={(value) => setFormData({ ...formData, seviye: value })}
               >
-                <SelectTrigger data-testid="student-level-select">
+                <SelectTrigger data-testid="student-level-select" className="dark:bg-gray-700 dark:border-gray-600 dark:text-white">
                   <SelectValue />
                 </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="Başlangıç">Başlangıç</SelectItem>
-                  <SelectItem value="Orta">Orta</SelectItem>
-                  <SelectItem value="İleri">ileri</SelectItem>
-                  <SelectItem value="Uzman">Uzman</SelectItem>
+                <SelectContent className="dark:bg-gray-700 dark:border-gray-600">
+                  <SelectItem value="Başlangıç" className="dark:text-white dark:focus:bg-gray-600">Başlangıç</SelectItem>
+                  <SelectItem value="Orta" className="dark:text-white dark:focus:bg-gray-600">Orta</SelectItem>
+                  <SelectItem value="İleri" className="dark:text-white dark:focus:bg-gray-600">İleri</SelectItem>
+                  <SelectItem value="Uzman" className="dark:text-white dark:focus:bg-gray-600">Uzman</SelectItem>
                 </SelectContent>
               </Select>
             </div>
 
             <div>
-              <Label htmlFor="email">E-mail *</Label>
+              <Label htmlFor="email" className="text-gray-700 dark:text-gray-300">E-mail *</Label>
               <Input
                 id="email"
                 type="email"
@@ -150,11 +152,12 @@ const AddStudentModal = ({ isOpen, onClose, onSuccess }) => {
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                 required
                 data-testid="student-email-input"
+                className="dark:bg-gray-700 dark:border-gray-600 dark:text-white"
               />
             </div>
 
             <div>
-              <Label htmlFor="yas">Yaş *</Label>
+              <Label htmlFor="yas" className="text-gray-700 dark:text-gray-300">Yaş *</Label>
               <Input
                 id="yas"
                 type="number"
@@ -162,22 +165,24 @@ const AddStudentModal = ({ isOpen, onClose, onSuccess }) => {
                 onChange={(e) => setFormData({ ...formData, yas: e.target.value })}
                 required
                 data-testid="student-age-input"
+                className="dark:bg-gray-700 dark:border-gray-600 dark:text-white"
               />
             </div>
 
             <div>
-              <Label htmlFor="meslek">Meslek *</Label>
+              <Label htmlFor="meslek" className="text-gray-700 dark:text-gray-300">Meslek *</Label>
               <Input
                 id="meslek"
                 value={formData.meslek}
                 onChange={(e) => setFormData({ ...formData, meslek: e.target.value })}
                 required
                 data-testid="student-occupation-input"
+                className="dark:bg-gray-700 dark:border-gray-600 dark:text-white"
               />
             </div>
 
             <div>
-              <Label htmlFor="ilk_ders_tarihi">İlk Ders Tarihi *</Label>
+              <Label htmlFor="ilk_ders_tarihi" className="text-gray-700 dark:text-gray-300">İlk Ders Tarihi *</Label>
               <Input
                 id="ilk_ders_tarihi"
                 type="date"
@@ -185,36 +190,37 @@ const AddStudentModal = ({ isOpen, onClose, onSuccess }) => {
                 onChange={(e) => setFormData({ ...formData, ilk_ders_tarihi: e.target.value })}
                 required
                 data-testid="student-first-lesson-input"
+                className="dark:bg-gray-700 dark:border-gray-600 dark:text-white"
               />
             </div>
 
             <div>
-              <Label htmlFor="referans">Referans *</Label>
+              <Label htmlFor="referans" className="text-gray-700 dark:text-gray-300">Referans *</Label>
               <Select
                 value={formData.referans}
                 onValueChange={(value) => setFormData({ ...formData, referans: value })}
               >
-                <SelectTrigger data-testid="student-reference-select">
-                  <SelectValue />
+                <SelectTrigger data-testid="student-reference-select" className="dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                  <SelectValue placeholder="Seçiniz" />
                 </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="Tavsiye">Tavsiye</SelectItem>
-                  <SelectItem value="Google Arama">Google Arama</SelectItem>
-                  <SelectItem value="Sosyal Medya">Sosyal Medya</SelectItem>
-                  <SelectItem value="Meta Reklam">Meta Reklam</SelectItem>
-                  <SelectItem value="Google Reklam">Google Reklam</SelectItem>
-                  <SelectItem value="Diğer">Diğer</SelectItem>
+                <SelectContent className="dark:bg-gray-700 dark:border-gray-600">
+                  <SelectItem value="Tavsiye" className="dark:text-white dark:focus:bg-gray-600">Tavsiye</SelectItem>
+                  <SelectItem value="Google Arama" className="dark:text-white dark:focus:bg-gray-600">Google Arama</SelectItem>
+                  <SelectItem value="Sosyal Medya" className="dark:text-white dark:focus:bg-gray-600">Sosyal Medya</SelectItem>
+                  <SelectItem value="Meta Reklam" className="dark:text-white dark:focus:bg-gray-600">Meta Reklam</SelectItem>
+                  <SelectItem value="Google Reklam" className="dark:text-white dark:focus:bg-gray-600">Google Reklam</SelectItem>
+                  <SelectItem value="Diğer" className="dark:text-white dark:focus:bg-gray-600">Diğer</SelectItem>
                 </SelectContent>
               </Select>
             </div>
           </div>
 
           {/* Tarife Bilgileri */}
-          <div className="border-t border-gray-200 dark:border-gray-700 pt-4 mt-4">
+          <div className="border-t border-gray-200 dark:border-gray-600 pt-4 mt-4">
             <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Tarife Bilgileri</h3>
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <Label htmlFor="ucret">Ücret (4 derslik paket) *</Label>
+                <Label htmlFor="ucret" className="text-gray-700 dark:text-gray-300">Ücret (4 derslik paket) *</Label>
                 <Input
                   id="ucret"
                   type="number"
@@ -224,11 +230,12 @@ const AddStudentModal = ({ isOpen, onClose, onSuccess }) => {
                   required
                   placeholder="Örn: 6000"
                   data-testid="student-tariff-price-input"
+                  className="dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder-gray-400"
                 />
               </div>
 
               <div>
-                <Label htmlFor="aylik_ders_sayisi">Aylık Ders Sayısı *</Label>
+                <Label htmlFor="aylik_ders_sayisi" className="text-gray-700 dark:text-gray-300">Aylık Ders Sayısı *</Label>
                 <Input
                   id="aylik_ders_sayisi"
                   type="number"
@@ -236,32 +243,35 @@ const AddStudentModal = ({ isOpen, onClose, onSuccess }) => {
                   onChange={(e) => setFormData({ ...formData, aylik_ders_sayisi: e.target.value })}
                   required
                   data-testid="student-tariff-lessons-input"
+                  className="dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                 />
               </div>
 
               <div className="col-span-2">
-                <Label htmlFor="tarife_not">Tarife Notu</Label>
+                <Label htmlFor="tarife_not" className="text-gray-700 dark:text-gray-300">Tarife Notu</Label>
                 <Input
                   id="tarife_not"
                   value={formData.tarife_not}
                   onChange={(e) => setFormData({ ...formData, tarife_not: e.target.value })}
                   placeholder="Örn: Standart tarife"
                   data-testid="student-tariff-note-input"
+                  className="dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder-gray-400"
                 />
               </div>
             </div>
           </div>
 
           {/* Genel Notlar */}
-          <div className="border-t border-gray-200 dark:border-gray-700 pt-4 mt-4">
+          <div className="border-t border-gray-200 dark:border-gray-600 pt-4 mt-4">
             <div className="col-span-2">
-              <Label htmlFor="notlar">Genel Notlar</Label>
+              <Label htmlFor="notlar" className="text-gray-700 dark:text-gray-300">Genel Notlar</Label>
               <Textarea
                 id="notlar"
                 value={formData.notlar}
                 onChange={(e) => setFormData({ ...formData, notlar: e.target.value })}
                 rows={3}
                 data-testid="student-notes-input"
+                className="dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder-gray-400"
               />
             </div>
           </div>
