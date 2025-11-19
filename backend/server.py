@@ -462,6 +462,99 @@ async def get_aylik_rapor():
         ay_sonu_toplam=aktif + ara_verdi
     )]
 
+@api_router.get("/reports/aylik-gelir", response_model=List[AylikGelirRapor])
+async def get_aylik_gelir_raporu():
+    """
+    Aylık gelir raporu - 15'ten 15'e hesaplama
+    Örn: 15 Ekim - 15 Kasım = Kasım geliri
+    """
+    from datetime import datetime, timedelta
+    from dateutil.relativedelta import relativedelta
+    
+    # Tüm ödemeleri al
+    all_payments = await db.payments.find({}, {"_id": 0}).to_list(10000)
+    
+    if not all_payments:
+        return []
+    
+    # Ödemeleri tarihe göre sırala
+    sorted_payments = sorted(all_payments, key=lambda x: x["tarih"])
+    
+    # İlk ve son ödeme tarihlerini bul
+    first_payment_date = datetime.fromisoformat(sorted_payments[0]["tarih"].replace("Z", "+00:00"))
+    last_payment_date = datetime.fromisoformat(sorted_payments[-1]["tarih"].replace("Z", "+00:00"))
+    
+    # İlk ödemenin 15'inden başla
+    if first_payment_date.day >= 15:
+        start_date = datetime(first_payment_date.year, first_payment_date.month, 15)
+    else:
+        prev_month = first_payment_date - relativedelta(months=1)
+        start_date = datetime(prev_month.year, prev_month.month, 15)
+    
+    # Son ödemenin ayına kadar git
+    end_date = datetime.now()
+    
+    # Aylık dönemleri oluştur (15'ten 15'e)
+    monthly_data = []
+    current = start_date
+    
+    while current <= end_date:
+        next_period = current + relativedelta(months=1)
+        
+        # Bu dönemdeki ödemeleri topla
+        period_total = 0
+        for payment in all_payments:
+            payment_date = datetime.fromisoformat(payment["tarih"].replace("Z", "+00:00"))
+            if current <= payment_date < next_period:
+                period_total += payment["tutar"]
+        
+        # Ay adını belirle (dönem bitiş ayı)
+        month_name = next_period.strftime("%B %Y")
+        month_name_tr = {
+            "January": "Ocak", "February": "Şubat", "March": "Mart",
+            "April": "Nisan", "May": "Mayıs", "June": "Haziran",
+            "July": "Temmuz", "August": "Ağustos", "September": "Eylül",
+            "October": "Ekim", "November": "Kasım", "December": "Aralık"
+        }
+        for en, tr in month_name_tr.items():
+            month_name = month_name.replace(en, tr)
+        
+        donem_str = f"{current.day} {current.strftime('%B')} - {next_period.day} {next_period.strftime('%B')}"
+        for en, tr in month_name_tr.items():
+            donem_str = donem_str.replace(en, tr)
+        
+        monthly_data.append({
+            "ay": month_name,
+            "donem": donem_str,
+            "toplam_gelir": period_total
+        })
+        
+        current = next_period
+    
+    # Önceki aya göre fark ve yüzde hesapla
+    result = []
+    for i, data in enumerate(monthly_data):
+        if i == 0:
+            onceki_fark = 0
+            degisim_yuzde = 0
+        else:
+            onceki_gelir = monthly_data[i-1]["toplam_gelir"]
+            onceki_fark = data["toplam_gelir"] - onceki_gelir
+            if onceki_gelir > 0:
+                degisim_yuzde = (onceki_fark / onceki_gelir) * 100
+            else:
+                degisim_yuzde = 0
+        
+        result.append(AylikGelirRapor(
+            ay=data["ay"],
+            donem=data["donem"],
+            toplam_gelir=data["toplam_gelir"],
+            onceki_ay_fark=onceki_fark,
+            degisim_yuzde=degisim_yuzde
+        ))
+    
+    return result
+
 @api_router.get("/reports/genel", response_model=GenelIstatistik)
 async def get_genel_istatistik():
     # Başlangıç değerleri
