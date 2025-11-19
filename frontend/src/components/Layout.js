@@ -22,6 +22,7 @@ const Layout = ({ onLogout }) => {
   const navItems = [
     { to: "/", icon: LayoutDashboard, label: "Ana Sayfa" },
     { to: "/students", icon: Users, label: "Tüm Öğrenciler" },
+    { to: "/grup-dersleri", icon: Users, label: "Grup Dersleri" },
     { to: "/reports", icon: BarChart3, label: "Raporlar" },
   ];
 
