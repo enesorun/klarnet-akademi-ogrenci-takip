@@ -63,7 +63,7 @@ const Layout = () => {
           ))}
         </nav>
 
-        <div className="p-4 border-t border-gray-200 dark:border-gray-700 space-y-2">
+        <div className="p-4 border-t border-gray-200 dark:border-gray-700">
           {/* Dark Mode Toggle */}
           <Button
             onClick={() => setDarkMode(!darkMode)}
@@ -82,16 +82,6 @@ const Layout = () => {
                 Karanlık Mod
               </>
             )}
-          </Button>
-
-          <Button
-            onClick={onLogout}
-            variant="ghost"
-            className="w-full justify-start text-red-600 dark:text-red-400 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-900/20 transition-all duration-200 transform hover:scale-[1.02]"
-            data-testid="logout-button"
-          >
-            <LogOut className="w-5 h-5 mr-3" />
-            Çıkış Yap
           </Button>
         </div>
       </aside>
