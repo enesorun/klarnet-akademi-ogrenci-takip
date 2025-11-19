@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { Users, TrendingUp, Clock, AlertCircle, Eye, EyeOff } from "lucide-react";
+import { Users, TrendingUp, Clock, AlertCircle, Eye, EyeOff, Search } from "lucide-react";
 import StudentCard from "@/components/StudentCard";
 import { Button } from "@/components/ui/button";
 import AddStudentModal from "@/components/AddStudentModal";
