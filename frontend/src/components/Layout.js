@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Outlet, NavLink } from "react-router-dom";
-import { LayoutDashboard, Users, BarChart3, Moon, Sun, LogOut } from "lucide-react";
+import { LayoutDashboard, Users, BarChart3, Settings, Moon, Sun, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Toaster } from "@/components/ui/sonner";
 
