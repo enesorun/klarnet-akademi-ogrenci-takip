@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
 import { Outlet, NavLink } from "react-router-dom";
-import { LayoutDashboard, Users, BarChart3, Moon, Sun } from "lucide-react";
+import { LayoutDashboard, Users, BarChart3, Moon, Sun, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Toaster } from "@/components/ui/sonner";
 
-const Layout = () => {
+const Layout = ({ onLogout }) => {
   const [darkMode, setDarkMode] = useState(() => {
     const saved = localStorage.getItem('darkMode');
     return saved === 'true';
