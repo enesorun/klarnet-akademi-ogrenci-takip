@@ -7,6 +7,7 @@ import StudentDetail from "./pages/StudentDetail";
 import Reports from "./pages/Reports";
 import GrupDersleri from "./pages/GrupDersleri";
 import GrupDetay from "./pages/GrupDetay";
+import Ayarlar from "./pages/Ayarlar";
 import Login from "./pages/Login";
 import Layout from "./components/Layout";
 
