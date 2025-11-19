@@ -17,6 +17,7 @@ const Dashboard = () => {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [paymentModalData, setPaymentModalData] = useState({ isOpen: false, students: [], title: '', statusColor: '' });
   const [showIncome, setShowIncome] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     fetchData();
