@@ -31,9 +31,12 @@ const Layout = ({ onLogout }) => {
       <aside className="w-64 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 flex flex-col transition-all duration-300 shadow-sm">
         <div className="p-6 border-b border-gray-200 dark:border-gray-700">
           <img
-            src="https://customer-assets.emergentagent.com/job_4b0d0b3e-879e-455d-b243-259cedba9ea8/artifacts/f6s6gzdg_akademi-logo-siyah.png"
+            src={darkMode 
+              ? "https://customer-assets.emergentagent.com/job_muzikogretmen/artifacts/e0hewzvg_akademi-logo.png"
+              : "https://customer-assets.emergentagent.com/job_4b0d0b3e-879e-455d-b243-259cedba9ea8/artifacts/f6s6gzdg_akademi-logo-siyah.png"
+            }
             alt="Logo"
-            className="h-16 w-auto transition-transform duration-300 hover:scale-105"
+            className="h-16 w-auto transition-all duration-300 hover:scale-105"
             data-testid="sidebar-logo"
           />
           <h2 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mt-3">Klarnet Akademi</h2>
