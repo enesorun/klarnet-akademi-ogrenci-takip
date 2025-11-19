@@ -63,13 +63,13 @@ const StudentCard = ({ student, onUpdate }) => {
       {/* Header */}
       <div className="flex justify-between items-start mb-4">
         <div>
-          <h3 className="text-lg font-bold text-gray-900" data-testid="student-name">{student.ad_soyad}</h3>
+          <h3 className="text-lg font-bold text-gray-900 dark:text-white" data-testid="student-name">{student.ad_soyad}</h3>
           <div className="flex items-center space-x-3 mt-2">
-            <div className="flex items-center text-sm text-gray-600">
+            <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
               <MapPin className="w-4 h-4 mr-1" />
               {student.konum}
             </div>
-            <div className="flex items-center text-sm text-gray-600">
+            <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
               <Award className="w-4 h-4 mr-1" />
               {student.seviye}
             </div>
@@ -81,25 +81,25 @@ const StudentCard = ({ student, onUpdate }) => {
       {/* Remaining Lessons */}
       <div className="mb-3">
         <div className="flex justify-between items-center mb-2">
-          <span className="text-sm font-medium text-gray-700" data-testid="remaining-lessons">
+          <span className="text-sm font-medium text-gray-700 dark:text-gray-300" data-testid="remaining-lessons">
             {calculations.kalan_ders} ders kaldı
           </span>
-          <span className="text-xs text-gray-500">
+          <span className="text-xs text-gray-500 dark:text-gray-400">
             {calculations.yapilan_ders} / {calculations.toplam_ders_kredisi} ders
           </span>
         </div>
         
         {/* Progress Bar */}
-        <div className="w-full bg-gray-200 rounded-full h-2">
+        <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
           <div
-            className={`h-2 rounded-full transition-all ${getProgressColor()}`}
+            className={`h-2 rounded-full progress-bar ${getProgressColor()}`}
             style={{ width: `${calculations.progress_percentage}%` }}
           ></div>
         </div>
       </div>
 
       {/* Footer */}
-      <div className="text-xs text-gray-500 pt-3 border-t border-gray-100">
+      <div className="text-xs text-gray-500 dark:text-gray-400 pt-3 border-t border-gray-100 dark:border-gray-700">
         İlk Ders: {new Date(student.ilk_ders_tarihi).toLocaleDateString('tr-TR')}
       </div>
     </div>
