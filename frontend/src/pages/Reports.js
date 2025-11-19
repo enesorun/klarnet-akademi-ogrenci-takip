@@ -116,18 +116,107 @@ const Reports = () => {
               <div className="text-sm text-gray-600 mt-1">Ortalama Ders Ücreti</div>
             </div>
 
-            <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100" data-testid="avg-lessons-per-student-stat">
+            <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-100 dark:border-gray-700" data-testid="avg-lessons-per-student-stat">
               <div className="flex items-center justify-between mb-3">
-                <div className="p-3 bg-pink-50 rounded-lg">
-                  <Users className="w-6 h-6 text-pink-600" />
+                <div className="p-3 bg-pink-50 dark:bg-pink-900/20 rounded-lg">
+                  <Users className="w-6 h-6 text-pink-600 dark:text-pink-400" />
                 </div>
               </div>
-              <div className="text-3xl font-bold text-gray-900">{genelStats.ogrenci_basina_ortalama_ders}</div>
-              <div className="text-sm text-gray-600 mt-1">Öğrenci Başına Ort. Ders</div>
+              <div className="text-3xl font-bold text-gray-900 dark:text-white">{genelStats.ogrenci_basina_ortalama_ders}</div>
+              <div className="text-sm text-gray-600 dark:text-gray-400 mt-1">Öğrenci Başına Ort. Ders</div>
             </div>
           </div>
         </div>
       )}
+
+      {/* Aylık Gelir Raporu */}
+      <div>
+        <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4" data-testid="monthly-income-title">Aylık Gelir Raporu</h2>
+        <p className="text-sm text-gray-600 dark:text-gray-400 mb-6">15'ten 15'e dönemler halinde aylık gelir takibi</p>
+        
+        {/* Bar Chart */}
+        <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-100 dark:border-gray-700 mb-6">
+          <h3 className="font-semibold text-gray-900 dark:text-white mb-4">Aylık Gelir Trendi</h3>
+          {aylikGelirData.length > 0 ? (
+            <ResponsiveContainer width="100%" height={300}>
+              <BarChart data={aylikGelirData}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="ay" tick={{ fontSize: 12 }} />
+                <YAxis tick={{ fontSize: 12 }} />
+                <Tooltip
+                  formatter={(value) => [formatCurrency(value), 'Gelir']}
+                  contentStyle={{ backgroundColor: 'rgba(255, 255, 255, 0.95)', border: '1px solid #ccc' }}
+                />
+                <Bar dataKey="toplam_gelir" fill="#4d5deb" radius={[8, 8, 0, 0]} />
+              </BarChart>
+            </ResponsiveContainer>
+          ) : (
+            <p className="text-center text-gray-500 py-8">Henüz ödeme kaydı bulunmuyor</p>
+          )}
+        </div>
+
+        {/* Detaylı Tablo */}
+        <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-100 dark:border-gray-700">
+          <h3 className="font-semibold text-gray-900 dark:text-white mb-4">Detaylı Aylık Gelir Verileri</h3>
+          {aylikGelirData.length > 0 ? (
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead>
+                  <tr className="border-b border-gray-200 dark:border-gray-700">
+                    <th className="text-left py-3 px-4 text-sm font-semibold text-gray-700 dark:text-gray-300">Ay</th>
+                    <th className="text-left py-3 px-4 text-sm font-semibold text-gray-700 dark:text-gray-300">Dönem</th>
+                    <th className="text-right py-3 px-4 text-sm font-semibold text-gray-700 dark:text-gray-300">Toplam Gelir</th>
+                    <th className="text-right py-3 px-4 text-sm font-semibold text-gray-700 dark:text-gray-300">Önceki Aya Fark</th>
+                    <th className="text-right py-3 px-4 text-sm font-semibold text-gray-700 dark:text-gray-300">Değişim</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {aylikGelirData.map((item, index) => (
+                    <tr key={index} className="border-b border-gray-100 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700">
+                      <td className="py-3 px-4 text-sm font-medium text-gray-900 dark:text-white">{item.ay}</td>
+                      <td className="py-3 px-4 text-sm text-gray-600 dark:text-gray-400">{item.donem}</td>
+                      <td className="py-3 px-4 text-sm font-semibold text-gray-900 dark:text-white text-right">
+                        {formatCurrency(item.toplam_gelir)}
+                      </td>
+                      <td className={`py-3 px-4 text-sm font-medium text-right ${
+                        item.onceki_ay_fark > 0 ? 'text-green-600 dark:text-green-400' : 
+                        item.onceki_ay_fark < 0 ? 'text-red-600 dark:text-red-400' : 
+                        'text-gray-600 dark:text-gray-400'
+                      }`}>
+                        {item.onceki_ay_fark !== 0 && (
+                          <span className="flex items-center justify-end">
+                            {item.onceki_ay_fark > 0 ? (
+                              <ArrowUp className="w-4 h-4 mr-1" />
+                            ) : (
+                              <ArrowDown className="w-4 h-4 mr-1" />
+                            )}
+                            {formatCurrency(Math.abs(item.onceki_ay_fark))}
+                          </span>
+                        )}
+                        {item.onceki_ay_fark === 0 && '-'}
+                      </td>
+                      <td className={`py-3 px-4 text-sm font-semibold text-right ${
+                        item.degisim_yuzde > 0 ? 'text-green-600 dark:text-green-400' : 
+                        item.degisim_yuzde < 0 ? 'text-red-600 dark:text-red-400' : 
+                        'text-gray-600 dark:text-gray-400'
+                      }`}>
+                        {item.degisim_yuzde !== 0 && (
+                          <span className="inline-flex items-center">
+                            {item.degisim_yuzde > 0 ? '+' : ''}{item.degisim_yuzde.toFixed(1)}%
+                          </span>
+                        )}
+                        {item.degisim_yuzde === 0 && '-'}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          ) : (
+            <p className="text-center text-gray-500 py-8">Henüz ödeme kaydı bulunmuyor</p>
+          )}
+        </div>
+      </div>
 
       {/* Referans Raporu */}
       <div>
