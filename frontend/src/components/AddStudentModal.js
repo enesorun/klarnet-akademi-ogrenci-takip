@@ -94,9 +94,9 @@ const AddStudentModal = ({ isOpen, onClose, onSuccess }) => {
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto" data-testid="add-student-modal">
+      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto bg-white dark:bg-gray-800" data-testid="add-student-modal">
         <DialogHeader>
-          <DialogTitle className="text-2xl font-bold">Yeni Öğrenci Ekle</DialogTitle>
+          <DialogTitle className="text-2xl font-bold text-gray-900 dark:text-white">Yeni Öğrenci Ekle</DialogTitle>
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-4 mt-4">
