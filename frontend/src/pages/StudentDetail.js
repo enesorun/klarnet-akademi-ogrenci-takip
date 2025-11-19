@@ -200,18 +200,21 @@ const StudentDetail = () => {
                 <div className="flex items-start space-x-3">
                   <User className="w-5 h-5 text-gray-400 mt-0.5" />
                   <div className="flex-1">
-                    <p className="text-sm text-gray-600 mb-2">Genel Durum</p>
+                    <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">Genel Durum</p>
                     <Select
                       value={student.genel_durum}
-                      onValueChange={handleStatusChange}
+                      onValueChange={(value) => {
+                        console.log('Durum değiştirildi:', value);
+                        handleStatusChange(value);
+                      }}
                     >
-                      <SelectTrigger className="w-full" data-testid="status-select">
-                        <SelectValue />
+                      <SelectTrigger className="w-full dark:bg-gray-700 dark:border-gray-600 dark:text-white" data-testid="status-select">
+                        <SelectValue placeholder="Durum seçiniz" />
                       </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="aktif">Aktif</SelectItem>
-                        <SelectItem value="ara_verdi">Ara Verdi</SelectItem>
-                        <SelectItem value="eski">Eski Öğrenci</SelectItem>
+                      <SelectContent className="dark:bg-gray-700 dark:border-gray-600">
+                        <SelectItem value="aktif" className="dark:text-white dark:focus:bg-gray-600">Aktif</SelectItem>
+                        <SelectItem value="ara_verdi" className="dark:text-white dark:focus:bg-gray-600">Ara Verdi</SelectItem>
+                        <SelectItem value="eski" className="dark:text-white dark:focus:bg-gray-600">Eski Öğrenci</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
