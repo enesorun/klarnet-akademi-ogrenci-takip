@@ -51,16 +51,16 @@ const Dashboard = () => {
   }
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 animate-fade-in">
       {/* Header */}
-      <div className="flex justify-between items-center">
+      <div className="flex justify-between items-center animate-slide-in">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900" data-testid="dashboard-title">Ana Sayfa</h1>
-          <p className="text-gray-600 mt-1">Aktif öğrencilerinizi ve genel durumu görüntüleyin</p>
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white" data-testid="dashboard-title">Ana Sayfa</h1>
+          <p className="text-gray-600 dark:text-gray-400 mt-1">Aktif öğrencilerinizi ve genel durumu görüntüleyin</p>
         </div>
         <Button
           onClick={() => setIsAddModalOpen(true)}
-          className="bg-[#4d5deb] hover:bg-[#3a4ad4]"
+          className="bg-[#4d5deb] hover:bg-[#3a4ad4] transform hover:scale-105 transition-all duration-200 shadow-md hover:shadow-lg"
           data-testid="add-student-button"
         >
           Yeni Öğrenci Ekle
