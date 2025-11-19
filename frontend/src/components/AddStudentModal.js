@@ -198,10 +198,14 @@ const AddStudentModal = ({ isOpen, onClose, onSuccess }) => {
               <Label htmlFor="referans" className="text-gray-700 dark:text-gray-300">Referans *</Label>
               <Select
                 value={formData.referans}
-                onValueChange={(value) => setFormData({ ...formData, referans: value })}
+                onValueChange={(value) => {
+                  console.log('Referans seçildi:', value);
+                  setFormData({ ...formData, referans: value });
+                }}
+                required
               >
                 <SelectTrigger data-testid="student-reference-select" className="dark:bg-gray-700 dark:border-gray-600 dark:text-white">
-                  <SelectValue placeholder="Seçiniz" />
+                  <SelectValue placeholder="Referans seçiniz" />
                 </SelectTrigger>
                 <SelectContent className="dark:bg-gray-700 dark:border-gray-600">
                   <SelectItem value="Tavsiye" className="dark:text-white dark:focus:bg-gray-600">Tavsiye</SelectItem>
