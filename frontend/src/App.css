@@ -13,6 +13,23 @@ body.dark {
   background-color: #0f172a;
 }
 
+/* Cover watermark with background */
+body::after {
+  content: '';
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  width: 200px;
+  height: 50px;
+  background-color: #f7f8fc;
+  z-index: 99999;
+  pointer-events: none;
+}
+
+body.dark::after {
+  background-color: #0f172a;
+}
+
 .App {
   min-height: 100vh;
 }
