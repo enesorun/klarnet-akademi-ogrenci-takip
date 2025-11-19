@@ -216,12 +216,16 @@ const Dashboard = () => {
         {students.filter(s => s.ad_soyad.toLowerCase().includes(searchQuery.toLowerCase())).length === 0 ? (
           <div className="bg-white dark:bg-gray-800 rounded-xl p-12 text-center shadow-sm border border-gray-100 dark:border-gray-700 animate-scale-in">
             <Users className="w-16 h-16 text-gray-300 dark:text-gray-600 mx-auto mb-4 animate-pulse-slow" />
-            <p className="text-gray-600 dark:text-gray-400 text-lg">Henüz aktif öğrenci bulunmuyor</p>
-            <p className="text-gray-400 dark:text-gray-500 text-sm mt-2">Yeni öğrenci eklemek için yukarıdaki butonu kullanın</p>
+            <p className="text-gray-600 dark:text-gray-400 text-lg">
+              {searchQuery ? "Arama sonucu bulunamadı" : "Henüz aktif öğrenci bulunmuyor"}
+            </p>
+            <p className="text-gray-400 dark:text-gray-500 text-sm mt-2">
+              {searchQuery ? "Farklı bir arama terimi deneyin" : "Yeni öğrenci eklemek için yukarıdaki butonu kullanın"}
+            </p>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {students.map((student, index) => (
+            {students.filter(s => s.ad_soyad.toLowerCase().includes(searchQuery.toLowerCase())).map((student, index) => (
               <div key={student.id} className="stagger-item" style={{ animationDelay: `${index * 0.1}s` }}>
                 <StudentCard student={student} onUpdate={fetchData} />
               </div>
