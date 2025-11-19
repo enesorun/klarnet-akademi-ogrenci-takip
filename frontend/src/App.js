@@ -49,6 +49,8 @@ function App() {
             <Route index element={<Dashboard />} />
             <Route path="students" element={<AllStudents />} />
             <Route path="students/:id" element={<StudentDetail />} />
+            <Route path="grup-dersleri" element={<GrupDersleri />} />
+            <Route path="grup-dersleri/:grupId" element={<GrupDetay />} />
             <Route path="reports" element={<Reports />} />
           </Route>
           <Route path="*" element={<Navigate to="/" replace />} />
