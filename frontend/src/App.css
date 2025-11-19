@@ -78,6 +78,13 @@ button:active {
 [class*="emergent"],
 [class*="watermark"],
 div[style*="position: fixed"][style*="bottom"],
-div[style*="position: fixed"][style*="right"] {
+div[style*="position: fixed"][style*="right"],
+a[href*="emergent"],
+a[href*="Emergent"],
+div:has(> a[href*="emergent"]),
+div:has(> a[href*="Emergent"]) {
   display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
 }
