@@ -186,11 +186,34 @@ const Dashboard = () => {
 
       {/* Students Grid */}
       <div className="animate-fade-in">
-        <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4" data-testid="active-students-title">
-          Aktif Öğrenciler ({students.length})
-        </h2>
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-xl font-bold text-gray-900 dark:text-white" data-testid="active-students-title">
+            Aktif Öğrenciler ({students.filter(s => s.ad_soyad.toLowerCase().includes(searchQuery.toLowerCase())).length})
+          </h2>
+          
+          {/* Search Bar */}
+          <div className="relative w-80">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+            <input
+              type="text"
+              placeholder="Ada göre öğrenci ara..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-[#4d5deb] focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 transition-all"
+              data-testid="student-search-input"
+            />
+            {searchQuery && (
+              <button
+                onClick={() => setSearchQuery("")}
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+              >
+                ×
+              </button>
+            )}
+          </div>
+        </div>
         
-        {students.length === 0 ? (
+        {students.filter(s => s.ad_soyad.toLowerCase().includes(searchQuery.toLowerCase())).length === 0 ? (
           <div className="bg-white dark:bg-gray-800 rounded-xl p-12 text-center shadow-sm border border-gray-100 dark:border-gray-700 animate-scale-in">
             <Users className="w-16 h-16 text-gray-300 dark:text-gray-600 mx-auto mb-4 animate-pulse-slow" />
             <p className="text-gray-600 dark:text-gray-400 text-lg">Henüz aktif öğrenci bulunmuyor</p>
