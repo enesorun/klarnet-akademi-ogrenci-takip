@@ -44,10 +44,29 @@ const AddStudentModal = ({ isOpen, onClose, onSuccess }) => {
     setLoading(true);
 
     try {
-      await axios.post(`${API}/students`, {
-        ...formData,
+      const response = await axios.post(`${API}/students`, {
+        ad_soyad: formData.ad_soyad,
+        konum: formData.konum,
+        seviye: formData.seviye,
+        email: formData.email,
         yas: parseInt(formData.yas),
+        meslek: formData.meslek,
+        ilk_ders_tarihi: formData.ilk_ders_tarihi,
+        referans: formData.referans,
+        notlar: formData.notlar,
       });
+
+      // Tarife oluştur
+      if (formData.ucret && parseFloat(formData.ucret) > 0) {
+        await axios.post(`${API}/tariffs`, {
+          ogrenci_id: response.data.id,
+          baslangic_tarihi: formData.ilk_ders_tarihi,
+          ucret: parseFloat(formData.ucret),
+          aylik_ders_sayisi: parseInt(formData.aylik_ders_sayisi),
+          not_: formData.tarife_not || "İlk tarife",
+        });
+      }
+
       toast.success("Öğrenci başarıyla eklendi!");
       onSuccess();
       onClose();
@@ -62,6 +81,9 @@ const AddStudentModal = ({ isOpen, onClose, onSuccess }) => {
         ilk_ders_tarihi: new Date().toISOString().split('T')[0],
         referans: "Diğer",
         notlar: "",
+        ucret: "",
+        aylik_ders_sayisi: 4,
+        tarife_not: "",
       });
     } catch (error) {
       toast.error("Öğrenci eklenirken hata oluştu");
