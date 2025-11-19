@@ -148,6 +148,80 @@ class AylikRapor(BaseModel):
     birakan: int
     ay_sonu_toplam: int
 
+# ==================== GRUP DERSLERI MODELS ====================
+
+class Sezon(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    sezon_adi: str
+    baslangic_tarihi: str
+    bitis_tarihi: str
+    created_at: str = Field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
+
+class SezonCreate(BaseModel):
+    sezon_adi: str
+    baslangic_tarihi: str
+    bitis_tarihi: str
+
+class Grup(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    sezon_id: str
+    grup_adi: str
+    kur_etap: str  # "1. Etap", "2. Etap", "Tam Paket"
+    gun_saat: str  # Örn: "Pazartesi 18:00"
+    max_kapasite: int
+    toplam_ders_sayisi: int = 16
+    yapilan_ders_sayisi: int = 0
+    durum: str = "aktif"  # aktif, tamamlandi
+    created_at: str = Field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
+
+class GrupCreate(BaseModel):
+    sezon_id: str
+    grup_adi: str
+    kur_etap: str
+    gun_saat: str
+    max_kapasite: int
+    toplam_ders_sayisi: int = 16
+
+class GrupOgrenci(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    sezon_id: str
+    grup_id: str
+    ad_soyad: str
+    telefon: str
+    eposta: Optional[str] = ""
+    paket_tipi: str  # "1. Etap", "2. Etap", "Tam Paket"
+    ucret: float
+    odeme_sekli: str  # "Peşin", "2 Taksit", "4 Taksit"
+    odenen_tutar: float = 0
+    kalan_tutar: float = 0
+    ilk_odeme_tutari: Optional[float] = 0
+    ilk_odeme_tarihi: Optional[str] = ""
+    kayit_tarihi: str = Field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
+    durum: str = "aktif"  # aktif, ayrildi, beklemede
+    created_at: str = Field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
+
+class GrupOgrenciCreate(BaseModel):
+    sezon_id: str
+    grup_id: str
+    ad_soyad: str
+    telefon: str
+    eposta: Optional[str] = ""
+    paket_tipi: str
+    ucret: float
+    odeme_sekli: str
+    ilk_odeme_tutari: Optional[float] = 0
+    ilk_odeme_tarihi: Optional[str] = ""
+
+class GrupDashboardStats(BaseModel):
+    toplam_grup_sayisi: int
+    toplam_ogrenci_sayisi: int
+    tahmini_toplam_gelir: float
+    odeme_tamamlanan: int
+    taksitte_olan: int
+
 class AylikGelirRapor(BaseModel):
     ay: str
     donem: str
