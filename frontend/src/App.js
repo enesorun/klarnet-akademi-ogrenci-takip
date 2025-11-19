@@ -5,6 +5,8 @@ import Dashboard from "./pages/Dashboard";
 import AllStudents from "./pages/AllStudents";
 import StudentDetail from "./pages/StudentDetail";
 import Reports from "./pages/Reports";
+import GrupDersleri from "./pages/GrupDersleri";
+import GrupDetay from "./pages/GrupDetay";
 import Login from "./pages/Login";
 import Layout from "./components/Layout";
 
