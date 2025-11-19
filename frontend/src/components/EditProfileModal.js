@@ -193,10 +193,11 @@ const EditProfileModal = ({ isOpen, onClose, student, currentTariff, onSuccess }
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="Arkadaş Tavsiyesi">Arkadaş Tavsiyesi</SelectItem>
+                      <SelectItem value="Tavsiye">Tavsiye</SelectItem>
+                      <SelectItem value="Google Arama">Google Arama</SelectItem>
                       <SelectItem value="Sosyal Medya">Sosyal Medya</SelectItem>
-                      <SelectItem value="Google">Google</SelectItem>
-                      <SelectItem value="Eski Öğrenci">Eski Öğrenci</SelectItem>
+                      <SelectItem value="Meta Reklam">Meta Reklam</SelectItem>
+                      <SelectItem value="Google Reklam">Google Reklam</SelectItem>
                       <SelectItem value="Diğer">Diğer</SelectItem>
                     </SelectContent>
                   </Select>
