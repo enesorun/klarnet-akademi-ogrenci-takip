@@ -24,6 +24,7 @@ const Layout = ({ onLogout }) => {
     { to: "/students", icon: Users, label: "Tüm Öğrenciler" },
     { to: "/grup-dersleri", icon: Users, label: "Grup Dersleri" },
     { to: "/reports", icon: BarChart3, label: "Raporlar" },
+    { to: "/ayarlar", icon: Settings, label: "Ayarlar" },
   ];
 
   return (
