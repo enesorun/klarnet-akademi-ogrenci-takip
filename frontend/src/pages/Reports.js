@@ -74,46 +74,46 @@ const Reports = () => {
       {/* Genel İstatistikler */}
       {genelStats && (
         <div>
-          <h2 className="text-xl font-bold text-gray-900 mb-4" data-testid="general-stats-title">Tüm Zamanların Genel İstatistikleri</h2>
+          <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4" data-testid="general-stats-title">Tüm Zamanların Genel İstatistikleri</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
-            <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100" data-testid="total-students-stat">
+            <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-100 dark:border-gray-700" data-testid="total-students-stat">
               <div className="flex items-center justify-between mb-3">
-                <div className="p-3 bg-blue-50 rounded-lg">
-                  <Users className="w-6 h-6 text-[#4d5deb]" />
+                <div className="p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+                  <Users className="w-6 h-6 text-[#4d5deb] dark:text-blue-400" />
                 </div>
               </div>
-              <div className="text-3xl font-bold text-gray-900">{genelStats.toplam_ogrenci}</div>
-              <div className="text-sm text-gray-600 mt-1">Toplam Öğrenci</div>
+              <div className="text-3xl font-bold text-gray-900 dark:text-white">{genelStats.toplam_ogrenci}</div>
+              <div className="text-sm text-gray-600 dark:text-gray-400 mt-1">Toplam Öğrenci</div>
             </div>
 
-            <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100" data-testid="total-lessons-stat">
+            <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-100 dark:border-gray-700" data-testid="total-lessons-stat">
               <div className="flex items-center justify-between mb-3">
-                <div className="p-3 bg-green-50 rounded-lg">
-                  <Award className="w-6 h-6 text-green-600" />
+                <div className="p-3 bg-green-50 dark:bg-green-900/20 rounded-lg">
+                  <Award className="w-6 h-6 text-green-600 dark:text-green-400" />
                 </div>
               </div>
-              <div className="text-3xl font-bold text-gray-900">{genelStats.toplam_yapilan_ders}</div>
-              <div className="text-sm text-gray-600 mt-1">Toplam Yapılan Ders</div>
+              <div className="text-3xl font-bold text-gray-900 dark:text-white">{genelStats.toplam_yapilan_ders}</div>
+              <div className="text-sm text-gray-600 dark:text-gray-400 mt-1">Toplam Yapılan Ders</div>
             </div>
 
-            <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100" data-testid="total-revenue-stat">
+            <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-100 dark:border-gray-700" data-testid="total-revenue-stat">
               <div className="flex items-center justify-between mb-3">
-                <div className="p-3 bg-purple-50 rounded-lg">
-                  <DollarSign className="w-6 h-6 text-purple-600" />
+                <div className="p-3 bg-purple-50 dark:bg-purple-900/20 rounded-lg">
+                  <DollarSign className="w-6 h-6 text-purple-600 dark:text-purple-400" />
                 </div>
               </div>
-              <div className="text-2xl font-bold text-gray-900">{formatCurrency(genelStats.toplam_kazanilan_para)}</div>
-              <div className="text-sm text-gray-600 mt-1">Toplam Kazanılan Para</div>
+              <div className="text-2xl font-bold text-gray-900 dark:text-white">{formatCurrency(genelStats.toplam_kazanilan_para)}</div>
+              <div className="text-sm text-gray-600 dark:text-gray-400 mt-1">Toplam Kazanılan Para</div>
             </div>
 
-            <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100" data-testid="avg-lesson-price-stat">
+            <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-100 dark:border-gray-700" data-testid="avg-lesson-price-stat">
               <div className="flex items-center justify-between mb-3">
-                <div className="p-3 bg-yellow-50 rounded-lg">
-                  <TrendingUp className="w-6 h-6 text-yellow-600" />
+                <div className="p-3 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg">
+                  <TrendingUp className="w-6 h-6 text-yellow-600 dark:text-yellow-400" />
                 </div>
               </div>
-              <div className="text-2xl font-bold text-gray-900">{formatCurrency(genelStats.ortalama_ders_ucreti)}</div>
-              <div className="text-sm text-gray-600 mt-1">Ortalama Ders Ücreti</div>
+              <div className="text-2xl font-bold text-gray-900 dark:text-white">{formatCurrency(genelStats.ortalama_ders_ucreti)}</div>
+              <div className="text-sm text-gray-600 dark:text-gray-400 mt-1">Ortalama Ders Ücreti</div>
             </div>
 
             <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-100 dark:border-gray-700" data-testid="avg-lessons-per-student-stat">
