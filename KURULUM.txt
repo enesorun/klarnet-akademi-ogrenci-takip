@@ -1,0 +1,119 @@
+========================================
+  KLARNET AKADEMI OGRENCI TAKIP SISTEMI
+  Kurulum Rehberi
+========================================
+
+1. GEREKLI PROGRAMLAR
+---------------------
+Asagidaki programlari indirip kurun:
+
+□ Python 3.8+
+  Indir: https://www.python.org/downloads/
+  Kurulumda "Add Python to PATH" secenegini isaretleyin!
+
+□ Node.js 16+
+  Indir: https://nodejs.org/
+  LTS (Long Term Support) versiyonunu seçin
+
+□ MongoDB Community Server
+  Indir: https://www.mongodb.com/try/download/community
+  Kurulumda "Install as a Service" secenegini isaretleyin!
+
+
+2. ILK KURULUM (Sadece bir kez)
+--------------------------------
+Windows icin:
+  1. Bu klasorde sag tiklayin
+  2. "Terminal'de ac" veya "PowerShell'de ac" secin
+  3. Asagidaki komutlari sirayla calistirin:
+
+     cd backend
+     pip install -r requirements.txt
+     cd ..
+
+     cd frontend
+     npm install
+     cd ..
+
+Mac/Linux icin:
+  1. Terminal'i acin
+  2. Bu klasore gidin: cd [klasor-yolu]
+  3. Calistirma izni verin:
+     chmod +x start.sh stop.sh
+  4. Asagidaki komutlari calistirin:
+
+     cd backend
+     pip install -r requirements.txt
+     cd ..
+
+     cd frontend
+     npm install
+     cd ..
+
+
+3. SISTEMI BASLATMA
+-------------------
+Windows:
+  START.bat dosyasina cift tiklayin
+
+Mac/Linux:
+  ./start.sh
+
+Otomatik olarak tarayicinizda acilacak: http://localhost:3000
+
+Giris Bilgileri:
+  Kullanici: enesorun
+  Parola: 316400
+
+
+4. SISTEMI DURDURMA
+-------------------
+Windows:
+  STOP.bat dosyasina cift tiklayin
+
+Mac/Linux:
+  ./stop.sh
+
+
+5. SORUN GIDERME
+----------------
+
+Problem: "Python bulunamadi"
+Cozum: Python'u PATH'e ekleyin veya yeniden kurun
+
+Problem: "MongoDB baglanti hatasi"
+Cozum: MongoDB servisinin calistigindan emin olun
+       Windows: Servisler > MongoDB > Baslat
+       Mac/Linux: sudo systemctl start mongod
+
+Problem: "Port zaten kullaniliyor"
+Cozum: STOP.bat/stop.sh calistirip tekrar deneyin
+
+Problem: "npm install hatasi"
+Cozum: npm cache clean --force
+       Sonra tekrar: npm install
+
+
+6. YEDEKLEME
+------------
+Onemli: Verilerinizi duzenli olarak yedekleyin!
+
+Yedeklenecek klasorler:
+  □ Tum proje klasoru
+  □ MongoDB data klasoru:
+    Windows: C:\Program Files\MongoDB\Server\[versiyon]\data
+    Mac: /usr/local/var/mongodb
+    Linux: /var/lib/mongodb
+
+
+7. DESTEK
+---------
+Sorun yasarsaniz:
+  1. KURULUM.txt dosyasini tekrar okuyun
+  2. Tum adimlari sirayla takip ettiginizden emin olun
+  3. Terminal/Command Prompt'taki hata mesajlarini kaydedin
+
+
+========================================
+  Sisteminizin keyifle kullanin!
+========================================
