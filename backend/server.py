@@ -222,6 +222,25 @@ class GrupDashboardStats(BaseModel):
     odeme_tamamlanan: int
     taksitte_olan: int
 
+# ==================== AYARLAR (SETTINGS) MODELS ====================
+
+class AyarItem(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    kategori: str  # "seviyeler", "etaplar", "ogrenci_durumlari", "grup_durumlari", "referans_kaynaklari", "odeme_sekilleri"
+    deger: str  # Görünen değer (örn: "Başlangıç", "1. Etap")
+    varsayilan_ucret: Optional[float] = None  # Sadece etaplar için
+    sira: int = 0  # Sıralama için
+    aktif: bool = True
+    created_at: str = Field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
+
+class AyarItemCreate(BaseModel):
+    kategori: str
+    deger: str
+    varsayilan_ucret: Optional[float] = None
+    sira: int = 0
+    aktif: bool = True
+
 class AylikGelirRapor(BaseModel):
     ay: str
     donem: str
