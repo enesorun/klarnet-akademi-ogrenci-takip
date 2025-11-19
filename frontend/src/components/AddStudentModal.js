@@ -198,15 +198,62 @@ const AddStudentModal = ({ isOpen, onClose, onSuccess }) => {
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="Arkadaş Tavsiyesi">Arkadaş Tavsiyesi</SelectItem>
+                  <SelectItem value="Tavsiye">Tavsiye</SelectItem>
+                  <SelectItem value="Google Arama">Google Arama</SelectItem>
                   <SelectItem value="Sosyal Medya">Sosyal Medya</SelectItem>
-                  <SelectItem value="Google">Google</SelectItem>
-                  <SelectItem value="Eski Öğrenci">Eski Öğrenci</SelectItem>
+                  <SelectItem value="Meta Reklam">Meta Reklam</SelectItem>
+                  <SelectItem value="Google Reklam">Google Reklam</SelectItem>
                   <SelectItem value="Diğer">Diğer</SelectItem>
                 </SelectContent>
               </Select>
             </div>
+          </div>
 
+          {/* Tarife Bilgileri */}
+          <div className="border-t border-gray-200 dark:border-gray-700 pt-4 mt-4">
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Tarife Bilgileri</h3>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="ucret">Ücret (4 derslik paket) *</Label>
+                <Input
+                  id="ucret"
+                  type="number"
+                  step="0.01"
+                  value={formData.ucret}
+                  onChange={(e) => setFormData({ ...formData, ucret: e.target.value })}
+                  required
+                  placeholder="Örn: 6000"
+                  data-testid="student-tariff-price-input"
+                />
+              </div>
+
+              <div>
+                <Label htmlFor="aylik_ders_sayisi">Aylık Ders Sayısı *</Label>
+                <Input
+                  id="aylik_ders_sayisi"
+                  type="number"
+                  value={formData.aylik_ders_sayisi}
+                  onChange={(e) => setFormData({ ...formData, aylik_ders_sayisi: e.target.value })}
+                  required
+                  data-testid="student-tariff-lessons-input"
+                />
+              </div>
+
+              <div className="col-span-2">
+                <Label htmlFor="tarife_not">Tarife Notu</Label>
+                <Input
+                  id="tarife_not"
+                  value={formData.tarife_not}
+                  onChange={(e) => setFormData({ ...formData, tarife_not: e.target.value })}
+                  placeholder="Örn: Standart tarife"
+                  data-testid="student-tariff-note-input"
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Genel Notlar */}
+          <div className="border-t border-gray-200 dark:border-gray-700 pt-4 mt-4">
             <div className="col-span-2">
               <Label htmlFor="notlar">Genel Notlar</Label>
               <Textarea
