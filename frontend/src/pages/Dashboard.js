@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { Users, TrendingUp, Clock, AlertCircle } from "lucide-react";
+import { Users, TrendingUp, Clock, AlertCircle, Eye, EyeOff } from "lucide-react";
 import StudentCard from "@/components/StudentCard";
 import { Button } from "@/components/ui/button";
 import AddStudentModal from "@/components/AddStudentModal";
@@ -16,6 +16,7 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(true);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [paymentModalData, setPaymentModalData] = useState({ isOpen: false, students: [], title: '', statusColor: '' });
+  const [showIncome, setShowIncome] = useState(false);
 
   useEffect(() => {
     fetchData();
@@ -120,14 +121,27 @@ const Dashboard = () => {
             <div className="text-sm text-gray-600 dark:text-gray-400 mt-1">Aktif Öğrenci</div>
           </div>
 
-          {/* Stat 2 */}
+          {/* Stat 2 - Potansiyel Aylık Gelir (Gizlenebilir) */}
           <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-100 dark:border-gray-700 card-hover stagger-item" data-testid="stat-potential-income">
             <div className="flex items-center justify-between mb-4">
               <div className="p-3 bg-green-50 dark:bg-green-900/20 rounded-lg">
                 <TrendingUp className="w-6 h-6 text-green-600 dark:text-green-400" />
               </div>
+              <button
+                onClick={() => setShowIncome(!showIncome)}
+                className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
+                data-testid="toggle-income-visibility"
+              >
+                {showIncome ? (
+                  <EyeOff className="w-5 h-5 text-gray-600 dark:text-gray-400" />
+                ) : (
+                  <Eye className="w-5 h-5 text-gray-600 dark:text-gray-400" />
+                )}
+              </button>
             </div>
-            <div className="text-3xl font-bold text-gray-900 dark:text-white">{formatCurrency(stats.potansiyel_aylik_gelir)}</div>
+            <div className="text-3xl font-bold text-gray-900 dark:text-white">
+              {showIncome ? formatCurrency(stats.potansiyel_aylik_gelir) : '****'}
+            </div>
             <div className="text-sm text-gray-600 dark:text-gray-400 mt-1">Potansiyel Aylık Gelir</div>
           </div>
 
