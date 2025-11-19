@@ -132,7 +132,11 @@ const Dashboard = () => {
           </div>
 
           {/* Stat 3 */}
-          <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-100 dark:border-gray-700 card-hover stagger-item" data-testid="stat-payment-approaching">
+          <div 
+            onClick={() => handlePaymentClick('yaklasan')}
+            className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-100 dark:border-gray-700 card-hover stagger-item cursor-pointer hover:border-yellow-400 dark:hover:border-yellow-400 transition-all" 
+            data-testid="stat-payment-approaching"
+          >
             <div className="flex items-center justify-between mb-4">
               <div className="p-3 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg">
                 <Clock className="w-6 h-6 text-yellow-600 dark:text-yellow-400" />
@@ -142,10 +146,15 @@ const Dashboard = () => {
             <div className="text-sm text-gray-600 dark:text-gray-400 mt-1">Öğrenci</div>
             <div className="text-xs text-gray-500 dark:text-gray-500 mt-1">Yaklaşan Ödeme</div>
             <div className="text-sm font-semibold text-yellow-600 dark:text-yellow-400 mt-2">≈ {formatCurrency(stats.odeme_yaklasan.tutar)}</div>
+            <div className="text-xs text-gray-400 dark:text-gray-500 mt-2 italic">Detaylar için tıklayın</div>
           </div>
 
           {/* Stat 4 */}
-          <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-100 dark:border-gray-700 card-hover stagger-item" data-testid="stat-payment-pending">
+          <div 
+            onClick={() => handlePaymentClick('bekleyen')}
+            className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-100 dark:border-gray-700 card-hover stagger-item cursor-pointer hover:border-red-400 dark:hover:border-red-400 transition-all" 
+            data-testid="stat-payment-pending"
+          >
             <div className="flex items-center justify-between mb-4">
               <div className="p-3 bg-red-50 dark:bg-red-900/20 rounded-lg">
                 <AlertCircle className="w-6 h-6 text-red-600 dark:text-red-400" />
@@ -155,6 +164,7 @@ const Dashboard = () => {
             <div className="text-sm text-gray-600 dark:text-gray-400 mt-1">Öğrenci</div>
             <div className="text-xs text-gray-500 dark:text-gray-500 mt-1">Ödeme Bekliyor</div>
             <div className="text-sm font-semibold text-red-600 dark:text-red-400 mt-2">≈ {formatCurrency(stats.odeme_bekleyen.tutar)}</div>
+            <div className="text-xs text-gray-400 dark:text-gray-500 mt-2 italic">Detaylar için tıklayın</div>
           </div>
         </div>
       )}
