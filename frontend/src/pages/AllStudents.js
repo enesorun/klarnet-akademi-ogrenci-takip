@@ -6,8 +6,16 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { Button } from "@/components/ui/button";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import StudentCard from "@/components/StudentCard";
-import { Users } from "lucide-react";
+import { Users, Grid, List, Filter, X } from "lucide-react";
 import { toast } from "sonner";
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
@@ -18,6 +26,17 @@ const AllStudents = () => {
   const [araVerdiStudents, setAraVerdiStudents] = useState([]);
   const [eskiStudents, setEskiStudents] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [viewMode, setViewMode] = useState("card"); // card or list
+  const [showFilters, setShowFilters] = useState(false);
+  
+  // Filtreler
+  const [filters, setFilters] = useState({
+    konum: "",
+    seviye: "",
+    referans: "",
+    baslangicAyi: "",
+    tarifeSiralama: "",
+  });
 
   useEffect(() => {
     fetchStudents();
@@ -40,6 +59,129 @@ const AllStudents = () => {
     }
   };
 
+  const applyFilters = (students) => {
+    let filtered = [...students];
+
+    // Konum filtresi
+    if (filters.konum) {
+      filtered = filtered.filter(s => 
+        s.konum.toLowerCase().includes(filters.konum.toLowerCase())
+      );
+    }
+
+    // Seviye filtresi
+    if (filters.seviye) {
+      filtered = filtered.filter(s => s.seviye === filters.seviye);
+    }
+
+    // Referans filtresi
+    if (filters.referans) {
+      filtered = filtered.filter(s => s.referans === filters.referans);
+    }
+
+    // Başlangıç ayı filtresi
+    if (filters.baslangicAyi) {
+      filtered = filtered.filter(s => {
+        const studentDate = new Date(s.ilk_ders_tarihi);
+        const monthYear = `${studentDate.getFullYear()}-${String(studentDate.getMonth() + 1).padStart(2, '0')}`;
+        return monthYear === filters.baslangicAyi;
+      });
+    }
+
+    return filtered;
+  };
+
+  const sortByTariff = async (students) => {
+    if (!filters.tarifeSiralama) return students;
+
+    const studentsWithTariff = await Promise.all(
+      students.map(async (student) => {
+        try {
+          const calcRes = await axios.get(`${API}/calculate/${student.id}`);
+          return { ...student, tariff: calcRes.data.tariff };
+        } catch {
+          return { ...student, tariff: { ucret: 0 } };
+        }
+      })
+    );
+
+    return studentsWithTariff.sort((a, b) => {
+      if (filters.tarifeSiralama === "artan") {
+        return (a.tariff?.ucret || 0) - (b.tariff?.ucret || 0);
+      } else {
+        return (b.tariff?.ucret || 0) - (a.tariff?.ucret || 0);
+      }
+    });
+  };
+
+  const clearFilters = () => {
+    setFilters({
+      konum: "",
+      seviye: "",
+      referans: "",
+      baslangicAyi: "",
+      tarifeSiralama: "",
+    });
+  };
+
+  const hasActiveFilters = Object.values(filters).some(v => v !== "");
+
+  const renderStudentList = (students) => {
+    if (viewMode === "card") {
+      return (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
+          {students.map((student) => (
+            <StudentCard key={student.id} student={student} onUpdate={fetchStudents} />
+          ))}
+        </div>
+      );
+    }
+
+    // Liste görünümü
+    return (
+      <div className="mt-4 overflow-x-auto">
+        <table className="w-full">
+          <thead className="bg-gray-50 dark:bg-gray-700">
+            <tr>
+              <th className="px-4 py-3 text-left text-xs font-medium text-gray-700 dark:text-gray-300 uppercase">Ad Soyad</th>
+              <th className="px-4 py-3 text-left text-xs font-medium text-gray-700 dark:text-gray-300 uppercase">Konum</th>
+              <th className="px-4 py-3 text-left text-xs font-medium text-gray-700 dark:text-gray-300 uppercase">Seviye</th>
+              <th className="px-4 py-3 text-left text-xs font-medium text-gray-700 dark:text-gray-300 uppercase">Referans</th>
+              <th className="px-4 py-3 text-left text-xs font-medium text-gray-700 dark:text-gray-300 uppercase">İlk Ders</th>
+              <th className="px-4 py-3 text-left text-xs font-medium text-gray-700 dark:text-gray-300 uppercase">Durum</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
+            {students.map((student) => (
+              <tr 
+                key={student.id} 
+                onClick={() => window.location.href = `/students/${student.id}`}
+                className="hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer transition-colors"
+              >
+                <td className="px-4 py-3 text-sm font-medium text-gray-900 dark:text-white">{student.ad_soyad}</td>
+                <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">{student.konum}</td>
+                <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">{student.seviye}</td>
+                <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">{student.referans}</td>
+                <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">
+                  {new Date(student.ilk_ders_tarihi).toLocaleDateString('tr-TR')}
+                </td>
+                <td className="px-4 py-3 text-sm">
+                  <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
+                    student.genel_durum === 'aktif' ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400' :
+                    student.genel_durum === 'ara_verdi' ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400' :
+                    'bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-400'
+                  }`}>
+                    {student.genel_durum === 'aktif' ? 'Aktif' : student.genel_durum === 'ara_verdi' ? 'Ara Verdi' : 'Eski'}
+                  </span>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    );
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center h-96">
@@ -50,40 +192,180 @@ const AllStudents = () => {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold text-gray-900" data-testid="all-students-title">Tüm Öğrenciler</h1>
-        <p className="text-gray-600 mt-1">Öğrencileri kategorilere göre görüntüleyin</p>
+      <div className="flex justify-between items-start">
+        <div>
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white" data-testid="all-students-title">Tüm Öğrenciler</h1>
+          <p className="text-gray-600 dark:text-gray-400 mt-1">Öğrencileri kategorilere göre görüntüleyin</p>
+        </div>
+
+        {/* View Toggle & Filters */}
+        <div className="flex items-center space-x-3">
+          {/* View Mode Toggle */}
+          <div className="flex bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-1">
+            <button
+              onClick={() => setViewMode("card")}
+              className={`px-3 py-2 rounded-md transition-colors ${
+                viewMode === "card" 
+                  ? "bg-[#4d5deb] text-white" 
+                  : "text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700"
+              }`}
+              data-testid="view-card-button"
+            >
+              <Grid className="w-5 h-5" />
+            </button>
+            <button
+              onClick={() => setViewMode("list")}
+              className={`px-3 py-2 rounded-md transition-colors ${
+                viewMode === "list" 
+                  ? "bg-[#4d5deb] text-white" 
+                  : "text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700"
+              }`}
+              data-testid="view-list-button"
+            >
+              <List className="w-5 h-5" />
+            </button>
+          </div>
+
+          {/* Filter Toggle */}
+          <Button
+            onClick={() => setShowFilters(!showFilters)}
+            variant="outline"
+            className={`${
+              showFilters ? "bg-[#4d5deb] text-white border-[#4d5deb]" : ""
+            }`}
+            data-testid="filter-toggle-button"
+          >
+            <Filter className="w-4 h-4 mr-2" />
+            Filtreler
+            {hasActiveFilters && (
+              <span className="ml-2 bg-red-500 text-white rounded-full w-2 h-2"></span>
+            )}
+          </Button>
+        </div>
       </div>
 
+      {/* Filters Panel */}
+      {showFilters && (
+        <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-200 dark:border-gray-700 animate-fade-in">
+          <div className="flex justify-between items-center mb-4">
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Filtreler</h3>
+            {hasActiveFilters && (
+              <Button
+                onClick={clearFilters}
+                variant="ghost"
+                size="sm"
+                className="text-red-600 hover:text-red-700 hover:bg-red-50"
+              >
+                <X className="w-4 h-4 mr-1" />
+                Temizle
+              </Button>
+            )}
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+            {/* Konum */}
+            <div>
+              <label className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 block">Konum</label>
+              <input
+                type="text"
+                placeholder="Şehir ara..."
+                value={filters.konum}
+                onChange={(e) => setFilters({ ...filters, konum: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-[#4d5deb] bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+              />
+            </div>
+
+            {/* Seviye */}
+            <div>
+              <label className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 block">Seviye</label>
+              <Select value={filters.seviye} onValueChange={(value) => setFilters({ ...filters, seviye: value })}>
+                <SelectTrigger className="dark:bg-gray-700 dark:border-gray-600">
+                  <SelectValue placeholder="Tümü" />
+                </SelectTrigger>
+                <SelectContent className="dark:bg-gray-700">
+                  <SelectItem value=" ">Tümü</SelectItem>
+                  <SelectItem value="Başlangıç">Başlangıç</SelectItem>
+                  <SelectItem value="Orta">Orta</SelectItem>
+                  <SelectItem value="İleri">İleri</SelectItem>
+                  <SelectItem value="Uzman">Uzman</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Referans */}
+            <div>
+              <label className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 block">Referans</label>
+              <Select value={filters.referans} onValueChange={(value) => setFilters({ ...filters, referans: value })}>
+                <SelectTrigger className="dark:bg-gray-700 dark:border-gray-600">
+                  <SelectValue placeholder="Tümü" />
+                </SelectTrigger>
+                <SelectContent className="dark:bg-gray-700">
+                  <SelectItem value=" ">Tümü</SelectItem>
+                  <SelectItem value="Tavsiye">Tavsiye</SelectItem>
+                  <SelectItem value="Google Arama">Google Arama</SelectItem>
+                  <SelectItem value="Sosyal Medya">Sosyal Medya</SelectItem>
+                  <SelectItem value="Meta Reklam">Meta Reklam</SelectItem>
+                  <SelectItem value="Google Reklam">Google Reklam</SelectItem>
+                  <SelectItem value="Diğer">Diğer</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Başlangıç Ayı */}
+            <div>
+              <label className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 block">Başlangıç Ayı</label>
+              <input
+                type="month"
+                value={filters.baslangicAyi}
+                onChange={(e) => setFilters({ ...filters, baslangicAyi: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-[#4d5deb] bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+              />
+            </div>
+
+            {/* Tarife Sıralama */}
+            <div>
+              <label className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 block">Tarife Sıralama</label>
+              <Select value={filters.tarifeSiralama} onValueChange={(value) => setFilters({ ...filters, tarifeSiralama: value })}>
+                <SelectTrigger className="dark:bg-gray-700 dark:border-gray-600">
+                  <SelectValue placeholder="Sıralama yok" />
+                </SelectTrigger>
+                <SelectContent className="dark:bg-gray-700">
+                  <SelectItem value=" ">Sıralama yok</SelectItem>
+                  <SelectItem value="artan">Artan fiyat</SelectItem>
+                  <SelectItem value="azalan">Azalan fiyat</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Accordion Categories */}
       <Accordion type="multiple" defaultValue={["aktif"]} className="space-y-4">
         {/* Aktif Öğrenciler */}
         <AccordionItem
           value="aktif"
-          className="bg-white rounded-xl border border-gray-200 px-6 overflow-hidden"
+          className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 px-6 overflow-hidden"
           data-testid="accordion-active"
         >
           <AccordionTrigger className="hover:no-underline py-6">
             <div className="flex items-center space-x-3">
-              <div className="p-2 bg-green-100 rounded-lg">
-                <Users className="w-5 h-5 text-green-600" />
+              <div className="p-2 bg-green-100 dark:bg-green-900/30 rounded-lg">
+                <Users className="w-5 h-5 text-green-600 dark:text-green-400" />
               </div>
               <div className="text-left">
-                <h3 className="text-lg font-bold text-gray-900">
+                <h3 className="text-lg font-bold text-gray-900 dark:text-white">
                   Aktif Öğrenciler
                 </h3>
-                <p className="text-sm text-gray-600">{aktifStudents.length} öğrenci</p>
+                <p className="text-sm text-gray-600 dark:text-gray-400">{applyFilters(aktifStudents).length} öğrenci</p>
               </div>
             </div>
           </AccordionTrigger>
           <AccordionContent className="pb-6">
-            {aktifStudents.length === 0 ? (
-              <p className="text-center text-gray-500 py-8">Aktif öğrenci bulunmuyor</p>
+            {applyFilters(aktifStudents).length === 0 ? (
+              <p className="text-center text-gray-500 py-8">Aktif öğrenci bulunamadı</p>
             ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
-                {aktifStudents.map((student) => (
-                  <StudentCard key={student.id} student={student} onUpdate={fetchStudents} />
-                ))}
-              </div>
+              renderStudentList(applyFilters(aktifStudents))
             )}
           </AccordionContent>
         </AccordionItem>
@@ -91,29 +373,25 @@ const AllStudents = () => {
         {/* Ara Verdi */}
         <AccordionItem
           value="ara_verdi"
-          className="bg-white rounded-xl border border-gray-200 px-6 overflow-hidden"
+          className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 px-6 overflow-hidden"
           data-testid="accordion-paused"
         >
           <AccordionTrigger className="hover:no-underline py-6">
             <div className="flex items-center space-x-3">
-              <div className="p-2 bg-yellow-100 rounded-lg">
-                <Users className="w-5 h-5 text-yellow-600" />
+              <div className="p-2 bg-yellow-100 dark:bg-yellow-900/30 rounded-lg">
+                <Users className="w-5 h-5 text-yellow-600 dark:text-yellow-400" />
               </div>
               <div className="text-left">
-                <h3 className="text-lg font-bold text-gray-900">Ara Verdi</h3>
-                <p className="text-sm text-gray-600">{araVerdiStudents.length} öğrenci</p>
+                <h3 className="text-lg font-bold text-gray-900 dark:text-white">Ara Verdi</h3>
+                <p className="text-sm text-gray-600 dark:text-gray-400">{applyFilters(araVerdiStudents).length} öğrenci</p>
               </div>
             </div>
           </AccordionTrigger>
           <AccordionContent className="pb-6">
-            {araVerdiStudents.length === 0 ? (
-              <p className="text-center text-gray-500 py-8">Ara veren öğrenci bulunmuyor</p>
+            {applyFilters(araVerdiStudents).length === 0 ? (
+              <p className="text-center text-gray-500 py-8">Ara veren öğrenci bulunamadı</p>
             ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
-                {araVerdiStudents.map((student) => (
-                  <StudentCard key={student.id} student={student} onUpdate={fetchStudents} />
-                ))}
-              </div>
+              renderStudentList(applyFilters(araVerdiStudents))
             )}
           </AccordionContent>
         </AccordionItem>
@@ -121,29 +399,25 @@ const AllStudents = () => {
         {/* Eski Öğrenci */}
         <AccordionItem
           value="eski"
-          className="bg-white rounded-xl border border-gray-200 px-6 overflow-hidden"
+          className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 px-6 overflow-hidden"
           data-testid="accordion-former"
         >
           <AccordionTrigger className="hover:no-underline py-6">
             <div className="flex items-center space-x-3">
-              <div className="p-2 bg-gray-100 rounded-lg">
-                <Users className="w-5 h-5 text-gray-600" />
+              <div className="p-2 bg-gray-100 dark:bg-gray-700 rounded-lg">
+                <Users className="w-5 h-5 text-gray-600 dark:text-gray-400" />
               </div>
               <div className="text-left">
-                <h3 className="text-lg font-bold text-gray-900">Eski Öğrenci</h3>
-                <p className="text-sm text-gray-600">{eskiStudents.length} öğrenci</p>
+                <h3 className="text-lg font-bold text-gray-900 dark:text-white">Eski Öğrenci</h3>
+                <p className="text-sm text-gray-600 dark:text-gray-400">{applyFilters(eskiStudents).length} öğrenci</p>
               </div>
             </div>
           </AccordionTrigger>
           <AccordionContent className="pb-6">
-            {eskiStudents.length === 0 ? (
-              <p className="text-center text-gray-500 py-8">Eski öğrenci bulunmuyor</p>
+            {applyFilters(eskiStudents).length === 0 ? (
+              <p className="text-center text-gray-500 py-8">Eski öğrenci bulunamadı</p>
             ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
-                {eskiStudents.map((student) => (
-                  <StudentCard key={student.id} student={student} onUpdate={fetchStudents} />
-                ))}
-              </div>
+              renderStudentList(applyFilters(eskiStudents))
             )}
           </AccordionContent>
         </AccordionItem>
