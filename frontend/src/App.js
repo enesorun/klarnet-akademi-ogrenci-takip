@@ -53,6 +53,7 @@ function App() {
             <Route path="grup-dersleri" element={<GrupDersleri />} />
             <Route path="grup-dersleri/:grupId" element={<GrupDetay />} />
             <Route path="reports" element={<Reports />} />
+            <Route path="ayarlar" element={<Ayarlar />} />
           </Route>
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
