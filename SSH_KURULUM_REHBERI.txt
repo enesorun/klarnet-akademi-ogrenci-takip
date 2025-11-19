@@ -1,0 +1,398 @@
+╔════════════════════════════════════════════════════════════╗
+║                                                            ║
+║        SSH İLE SUNUCUYA AKTARMA REHBERİ                   ║
+║     Klarnet Akademi Öğrenci Takip Sistemi                 ║
+║                                                            ║
+╚════════════════════════════════════════════════════════════╝
+
+
+📋 GEREKSINIMLER
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Sunucunuzda olması gerekenler:
+  ✓ Ubuntu/Debian veya CentOS/RHEL Linux
+  ✓ Python 3.8+
+  ✓ Node.js 16+ (LTS)
+  ✓ MongoDB
+  ✓ Nginx (opsiyonel, önerilir)
+  ✓ SSH erişimi (port 22 veya özel port)
+
+
+═══════════════════════════════════════════════════════════
+ YÖNTEM 1: SCP İLE DOSYA AKTARIMI (EN KOLAY)
+═══════════════════════════════════════════════════════════
+
+ADIM 1: Projeyi Zipleyip Aktarın
+─────────────────────────────────────────────────────────
+
+Windows'ta (PowerShell):
+  1. Proje klasörüne gidin
+  2. Zip oluşturun:
+     
+     Compress-Archive -Path .\* -DestinationPath klarnet-akademi.zip
+
+  3. Sunucuya gönderin:
+     
+     scp klarnet-akademi.zip kullanici@sunucu-ip:/home/kullanici/
+     
+     Örnek:
+     scp klarnet-akademi.zip root@192.168.1.100:/root/
+
+Mac/Linux'ta (Terminal):
+  1. Proje klasörüne gidin
+  2. Zip oluşturun:
+     
+     zip -r klarnet-akademi.zip . -x "node_modules/*" -x ".git/*"
+
+  3. Sunucuya gönderin:
+     
+     scp klarnet-akademi.zip kullanici@sunucu-ip:/home/kullanici/
+
+
+ADIM 2: Sunucuda Kurulum
+─────────────────────────────────────────────────────────
+
+SSH ile sunucuya bağlanın:
+
+  ssh kullanici@sunucu-ip
+
+Sonra:
+
+  # 1. Zip'i açın
+  cd /home/kullanici
+  unzip klarnet-akademi.zip -d klarnet-akademi
+  cd klarnet-akademi
+
+  # 2. Backend bağımlılıklarını kurun
+  cd backend
+  pip3 install -r requirements.txt
+  cd ..
+
+  # 3. Frontend bağımlılıklarını kurun
+  cd frontend
+  npm install
+  npm run build  # Production build
+  cd ..
+
+  # 4. MongoDB'yi başlatın
+  sudo systemctl start mongod
+  sudo systemctl enable mongod
+
+  # 5. Backend'i başlatın (arka planda)
+  cd backend
+  nohup python3 server.py > backend.log 2>&1 &
+  cd ..
+
+
+═══════════════════════════════════════════════════════════
+ YÖNTEM 2: RSYNC İLE AKTARIM (DAHA HIZLI, ÖNERİLİR)
+═══════════════════════════════════════════════════════════
+
+ADIM 1: Rsync ile Aktarım
+─────────────────────────────────────────────────────────
+
+Mac/Linux'ta:
+
+  rsync -avz --progress \
+    --exclude 'node_modules' \
+    --exclude '.git' \
+    --exclude '__pycache__' \
+    --exclude '*.pyc' \
+    /yerel/proje/yolu/ kullanici@sunucu-ip:/home/kullanici/klarnet-akademi/
+
+Windows'ta (WSL veya Git Bash):
+
+  rsync -avz --progress \
+    --exclude 'node_modules' \
+    --exclude '.git' \
+    /c/Users/Kullanici/klarnet-akademi/ kullanici@sunucu-ip:/home/kullanici/klarnet-akademi/
+
+
+ADIM 2: Sunucuda Kurulum
+─────────────────────────────────────────────────────────
+
+SSH ile bağlanın ve yukarıdaki "ADIM 2: Sunucuda Kurulum" adımlarını takip edin.
+
+
+═══════════════════════════════════════════════════════════
+ YÖNTEM 3: GIT İLE AKTARIM (EN PROFESYONELve ÖNERİLEN)
+═══════════════════════════════════════════════════════════
+
+ADIM 1: GitHub/GitLab'a Yükleyin (Yerel Bilgisayar)
+─────────────────────────────────────────────────────────
+
+1. GitHub'da yeni repo oluşturun (private önerilir)
+
+2. Projenizi Git'e ekleyin:
+
+   git init
+   git add .
+   git commit -m "İlk commit"
+   git branch -M main
+   git remote add origin https://github.com/kullanici/klarnet-akademi.git
+   git push -u origin main
+
+
+ADIM 2: Sunucudan Çekin
+─────────────────────────────────────────────────────────
+
+SSH ile sunucuya bağlanın:
+
+  ssh kullanici@sunucu-ip
+
+Sonra:
+
+  # 1. Git'i kurun (yoksa)
+  sudo apt update
+  sudo apt install git
+
+  # 2. Projeyi klonlayın
+  cd /home/kullanici
+  git clone https://github.com/kullanici/klarnet-akademi.git
+  cd klarnet-akademi
+
+  # 3. Kurulum adımlarını takip edin (Yöntem 1'deki gibi)
+
+
+GÜNCELLEME (Sonraki Deploylar):
+
+  cd /home/kullanici/klarnet-akademi
+  git pull origin main
+  
+  # Backend güncelleme
+  cd backend
+  pip3 install -r requirements.txt
+  pkill -f "python3 server.py"
+  nohup python3 server.py > backend.log 2>&1 &
+  
+  # Frontend güncelleme
+  cd ../frontend
+  npm install
+  npm run build
+
+
+═══════════════════════════════════════════════════════════
+ PRODUCTION KURULUMU (NGINX + PM2)
+═══════════════════════════════════════════════════════════
+
+ÖNERİLEN: Production ortamı için PM2 ve Nginx kullanın
+
+ADIM 1: PM2 Kurulumu (Process Manager)
+─────────────────────────────────────────────────────────
+
+  # PM2'yi global olarak kurun
+  sudo npm install -g pm2
+
+  # Backend'i PM2 ile başlatın
+  cd /home/kullanici/klarnet-akademi/backend
+  pm2 start server.py --name klarnet-backend --interpreter python3
+
+  # Sunucu açılışında otomatik başlat
+  pm2 startup
+  pm2 save
+
+  # Frontend build (static dosyalar)
+  cd ../frontend
+  npm run build
+
+
+ADIM 2: Nginx Kurulumu
+─────────────────────────────────────────────────────────
+
+  # Nginx'i kurun
+  sudo apt update
+  sudo apt install nginx
+
+  # Nginx config dosyası oluşturun
+  sudo nano /etc/nginx/sites-available/klarnet-akademi
+
+  # Aşağıdaki içeriği yapıştırın:
+
+server {
+    listen 80;
+    server_name sunucu-ip-veya-domain;
+
+    # Frontend (React build)
+    location / {
+        root /home/kullanici/klarnet-akademi/frontend/build;
+        try_files $uri $uri/ /index.html;
+    }
+
+    # Backend API
+    location /api {
+        proxy_pass http://localhost:8001;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_cache_bypass $http_upgrade;
+    }
+}
+
+  # Config'i aktif edin
+  sudo ln -s /etc/nginx/sites-available/klarnet-akademi /etc/nginx/sites-enabled/
+  sudo nginx -t  # Test
+  sudo systemctl restart nginx
+
+  # Firewall (varsa)
+  sudo ufw allow 80
+  sudo ufw allow 443
+
+
+ADIM 3: SSL (HTTPS) Kurulumu (Opsiyonel ama Önerilir)
+─────────────────────────────────────────────────────────
+
+  # Let's Encrypt (ücretsiz SSL)
+  sudo apt install certbot python3-certbot-nginx
+  sudo certbot --nginx -d domain.com -d www.domain.com
+
+
+═══════════════════════════════════════════════════════════
+ ÖNEMLİ DOSYALAR VE AYARLAR
+═══════════════════════════════════════════════════════════
+
+1. ENVIRONMENT VARIABLES (Sunucuda)
+─────────────────────────────────────────────────────────
+
+backend/.env dosyasını düzenleyin:
+
+  MONGO_URL=mongodb://localhost:27017/klarnet_akademi
+  CORS_ORIGINS=http://sunucu-ip,http://domain.com
+
+frontend/.env dosyasını düzenleyin:
+
+  REACT_APP_BACKEND_URL=http://sunucu-ip
+
+
+2. MongoDB GÜVENLİK (ZORUNLU!)
+─────────────────────────────────────────────────────────
+
+MongoDB'ye parola ekleyin:
+
+  mongo
+  use admin
+  db.createUser({
+    user: "klarnet_admin",
+    pwd: "güçlü_parola_buraya",
+    roles: ["root"]
+  })
+  exit
+
+  # MongoDB config'i düzenleyin
+  sudo nano /etc/mongod.conf
+
+  # Şunu ekleyin:
+  security:
+    authorization: enabled
+
+  # Yeniden başlatın
+  sudo systemctl restart mongod
+
+  # backend/.env'i güncelleyin
+  MONGO_URL=mongodb://klarnet_admin:güçlü_parola@localhost:27017/klarnet_akademi?authSource=admin
+
+
+3. FIREWALL AYARLARI
+─────────────────────────────────────────────────────────
+
+  sudo ufw enable
+  sudo ufw allow 22    # SSH
+  sudo ufw allow 80    # HTTP
+  sudo ufw allow 443   # HTTPS
+  sudo ufw status
+
+
+═══════════════════════════════════════════════════════════
+ YEDEKLEME
+═══════════════════════════════════════════════════════════
+
+MANUEL YEDEK:
+
+  # MongoDB yedekleme
+  mongodump --db klarnet_akademi --out /backup/$(date +%Y%m%d)
+
+  # Tüm proje yedekleme
+  tar -czf klarnet-backup-$(date +%Y%m%d).tar.gz /home/kullanici/klarnet-akademi
+
+
+OTOMATİK YEDEK (Crontab):
+
+  crontab -e
+
+  # Her gece saat 2'de yedek al
+  0 2 * * * mongodump --db klarnet_akademi --out /backup/$(date +\%Y\%m\%d)
+
+
+═══════════════════════════════════════════════════════════
+ SORUN GİDERME
+═══════════════════════════════════════════════════════════
+
+1. Backend Çalışmıyor:
+
+   # Log'a bakın
+   pm2 logs klarnet-backend
+   
+   # veya
+   tail -f /home/kullanici/klarnet-akademi/backend/backend.log
+
+2. Frontend 404 Hatası:
+
+   # Build'i yenileyin
+   cd /home/kullanici/klarnet-akademi/frontend
+   npm run build
+   sudo systemctl restart nginx
+
+3. MongoDB Bağlantı Hatası:
+
+   # MongoDB durumunu kontrol edin
+   sudo systemctl status mongod
+   
+   # Yeniden başlatın
+   sudo systemctl restart mongod
+
+4. Port Çakışması:
+
+   # Hangi portlar kullanılıyor?
+   sudo netstat -tulpn | grep :8001
+   sudo netstat -tulpn | grep :3000
+
+
+═══════════════════════════════════════════════════════════
+ HIZLI KOMUTLAR
+═══════════════════════════════════════════════════════════
+
+Backend'i yeniden başlat:
+  pm2 restart klarnet-backend
+
+Tüm PM2 uygulamalarını göster:
+  pm2 list
+
+Log'ları göster:
+  pm2 logs
+
+Nginx'i yeniden yükle:
+  sudo systemctl reload nginx
+
+MongoDB status:
+  sudo systemctl status mongod
+
+
+═══════════════════════════════════════════════════════════
+ ÖNERİLEN İŞ AKIŞI
+═══════════════════════════════════════════════════════════
+
+1. Geliştirme: Yerel bilgisayarınızda çalışın
+2. Git: Değişiklikleri GitHub'a push edin
+3. Deploy: Sunucuda git pull + build + restart
+4. Test: Canlı siteyi test edin
+5. Yedek: Günlük otomatik yedek alın
+
+
+╔════════════════════════════════════════════════════════════╗
+║                                                            ║
+║           BAŞARILAR! İYİ DERSLER! 🎵                      ║
+║                                                            ║
+╚════════════════════════════════════════════════════════════╝
+
+
+Sorularınız için: https://github.com/kullanici/klarnet-akademi/issues
