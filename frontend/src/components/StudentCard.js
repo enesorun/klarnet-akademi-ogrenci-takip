@@ -57,7 +57,7 @@ const StudentCard = ({ student, onUpdate }) => {
   return (
     <div
       onClick={() => navigate(`/students/${student.id}`)}
-      className="bg-white rounded-xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition-shadow cursor-pointer"
+      className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-100 dark:border-gray-700 hover:shadow-md dark:hover:shadow-xl transition-all duration-300 cursor-pointer transform hover:scale-[1.02] card-hover animate-scale-in"
       data-testid={`student-card-${student.id}`}
     >
       {/* Header */}
