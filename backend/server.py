@@ -884,6 +884,99 @@ async def get_grup_dashboard_stats(sezon_id: str):
         taksitte_olan=taksitte_olan
     )
 
+# ==================== AYARLAR (SETTINGS) ENDPOINTS ====================
+
+@api_router.get("/ayarlar", response_model=List[AyarItem])
+async def get_ayarlar(kategori: Optional[str] = None, aktif: Optional[bool] = None):
+    query = {}
+    if kategori:
+        query["kategori"] = kategori
+    if aktif is not None:
+        query["aktif"] = aktif
+    
+    ayarlar = await db.ayarlar.find(query, {"_id": 0}).sort("sira", 1).to_list(1000)
+    return ayarlar
+
+@api_router.post("/ayarlar", response_model=AyarItem)
+async def create_ayar(ayar: AyarItemCreate):
+    new_ayar = AyarItem(**ayar.dict())
+    await db.ayarlar.insert_one(new_ayar.dict())
+    return new_ayar
+
+@api_router.put("/ayarlar/{ayar_id}", response_model=AyarItem)
+async def update_ayar(ayar_id: str, ayar: AyarItemCreate):
+    result = await db.ayarlar.update_one(
+        {"id": ayar_id},
+        {"$set": ayar.dict()}
+    )
+    if result.matched_count == 0:
+        raise HTTPException(status_code=404, detail="Ayar bulunamadı")
+    updated_ayar = await db.ayarlar.find_one({"id": ayar_id}, {"_id": 0})
+    return updated_ayar
+
+@api_router.delete("/ayarlar/{ayar_id}")
+async def delete_ayar(ayar_id: str):
+    result = await db.ayarlar.delete_one({"id": ayar_id})
+    if result.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="Ayar bulunamadı")
+    return {"message": "Ayar silindi"}
+
+# Varsayılan ayarları yükle
+@api_router.post("/ayarlar/initialize")
+async def initialize_ayarlar():
+    # Kontrol et, varsa tekrar yükleme
+    existing = await db.ayarlar.count_documents({})
+    if existing > 0:
+        return {"message": "Ayarlar zaten mevcut", "count": existing}
+    
+    varsayilan_ayarlar = [
+        # Seviyeler
+        {"kategori": "seviyeler", "deger": "Başlangıç", "sira": 1, "aktif": True},
+        {"kategori": "seviyeler", "deger": "Orta", "sira": 2, "aktif": True},
+        {"kategori": "seviyeler", "deger": "İleri", "sira": 3, "aktif": True},
+        {"kategori": "seviyeler", "deger": "Uzman", "sira": 4, "aktif": True},
+        
+        # Öğrenci Durumları
+        {"kategori": "ogrenci_durumlari", "deger": "aktif", "sira": 1, "aktif": True},
+        {"kategori": "ogrenci_durumlari", "deger": "ara_verdi", "sira": 2, "aktif": True},
+        {"kategori": "ogrenci_durumlari", "deger": "eski", "sira": 3, "aktif": True},
+        
+        # Referans Kaynakları
+        {"kategori": "referans_kaynaklari", "deger": "Tavsiye", "sira": 1, "aktif": True},
+        {"kategori": "referans_kaynaklari", "deger": "Google Arama", "sira": 2, "aktif": True},
+        {"kategori": "referans_kaynaklari", "deger": "Sosyal Medya", "sira": 3, "aktif": True},
+        {"kategori": "referans_kaynaklari", "deger": "Meta Reklam", "sira": 4, "aktif": True},
+        {"kategori": "referans_kaynaklari", "deger": "Google Reklam", "sira": 5, "aktif": True},
+        {"kategori": "referans_kaynaklari", "deger": "Diğer", "sira": 6, "aktif": True},
+        
+        # Grup Etapları
+        {"kategori": "grup_etaplari", "deger": "1. Etap", "varsayilan_ucret": 5000.0, "sira": 1, "aktif": True},
+        {"kategori": "grup_etaplari", "deger": "2. Etap", "varsayilan_ucret": 5500.0, "sira": 2, "aktif": True},
+        {"kategori": "grup_etaplari", "deger": "Tam Paket", "varsayilan_ucret": 9500.0, "sira": 3, "aktif": True},
+        
+        # Grup Durumları
+        {"kategori": "grup_durumlari", "deger": "planlanan", "sira": 1, "aktif": True},
+        {"kategori": "grup_durumlari", "deger": "aktif", "sira": 2, "aktif": True},
+        {"kategori": "grup_durumlari", "deger": "tamamlandi", "sira": 3, "aktif": True},
+        {"kategori": "grup_durumlari", "deger": "iptal", "sira": 4, "aktif": True},
+        
+        # Grup Öğrenci Durumları
+        {"kategori": "grup_ogrenci_durumlari", "deger": "aktif", "sira": 1, "aktif": True},
+        {"kategori": "grup_ogrenci_durumlari", "deger": "beklemede", "sira": 2, "aktif": True},
+        {"kategori": "grup_ogrenci_durumlari", "deger": "ayrildi", "sira": 3, "aktif": True},
+        
+        # Ödeme Şekilleri
+        {"kategori": "odeme_sekilleri", "deger": "Peşin", "sira": 1, "aktif": True},
+        {"kategori": "odeme_sekilleri", "deger": "2 Taksit", "sira": 2, "aktif": True},
+        {"kategori": "odeme_sekilleri", "deger": "4 Taksit", "sira": 3, "aktif": True},
+    ]
+    
+    for ayar_data in varsayilan_ayarlar:
+        ayar = AyarItem(**ayar_data)
+        await db.ayarlar.insert_one(ayar.dict())
+    
+    return {"message": "Varsayılan ayarlar yüklendi", "count": len(varsayilan_ayarlar)}
+
 # Include the router in the main app
 app.include_router(api_router)
 
