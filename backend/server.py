@@ -717,6 +717,165 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# ==================== GRUP DERSLERI ENDPOINTS ====================
+
+# Sezon endpoints
+@api_router.get("/grup-dersleri/sezonlar", response_model=List[Sezon])
+async def get_sezonlar():
+    sezonlar = await db.sezonlar.find({}, {"_id": 0}).to_list(1000)
+    return sezonlar
+
+@api_router.post("/grup-dersleri/sezonlar", response_model=Sezon)
+async def create_sezon(sezon: SezonCreate):
+    new_sezon = Sezon(**sezon.dict())
+    await db.sezonlar.insert_one(new_sezon.dict())
+    return new_sezon
+
+@api_router.delete("/grup-dersleri/sezonlar/{sezon_id}")
+async def delete_sezon(sezon_id: str):
+    result = await db.sezonlar.delete_one({"id": sezon_id})
+    if result.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="Sezon bulunamadı")
+    return {"message": "Sezon silindi"}
+
+# Grup endpoints
+@api_router.get("/grup-dersleri/gruplar", response_model=List[Grup])
+async def get_gruplar(sezon_id: Optional[str] = None):
+    query = {}
+    if sezon_id:
+        query["sezon_id"] = sezon_id
+    gruplar = await db.gruplar.find(query, {"_id": 0}).to_list(1000)
+    return gruplar
+
+@api_router.post("/grup-dersleri/gruplar", response_model=Grup)
+async def create_grup(grup: GrupCreate):
+    new_grup = Grup(**grup.dict())
+    await db.gruplar.insert_one(new_grup.dict())
+    return new_grup
+
+@api_router.get("/grup-dersleri/gruplar/{grup_id}", response_model=Grup)
+async def get_grup(grup_id: str):
+    grup = await db.gruplar.find_one({"id": grup_id}, {"_id": 0})
+    if not grup:
+        raise HTTPException(status_code=404, detail="Grup bulunamadı")
+    return grup
+
+@api_router.put("/grup-dersleri/gruplar/{grup_id}", response_model=Grup)
+async def update_grup(grup_id: str, grup: GrupCreate):
+    result = await db.gruplar.update_one(
+        {"id": grup_id},
+        {"$set": grup.dict()}
+    )
+    if result.matched_count == 0:
+        raise HTTPException(status_code=404, detail="Grup bulunamadı")
+    updated_grup = await db.gruplar.find_one({"id": grup_id}, {"_id": 0})
+    return updated_grup
+
+@api_router.delete("/grup-dersleri/gruplar/{grup_id}")
+async def delete_grup(grup_id: str):
+    result = await db.gruplar.delete_one({"id": grup_id})
+    if result.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="Grup bulunamadı")
+    return {"message": "Grup silindi"}
+
+# Grup öğrenci endpoints
+@api_router.get("/grup-dersleri/ogrenciler", response_model=List[GrupOgrenci])
+async def get_grup_ogrenciler(
+    sezon_id: Optional[str] = None,
+    grup_id: Optional[str] = None,
+    durum: Optional[str] = None
+):
+    query = {}
+    if sezon_id:
+        query["sezon_id"] = sezon_id
+    if grup_id:
+        query["grup_id"] = grup_id
+    if durum:
+        query["durum"] = durum
+    
+    ogrenciler = await db.grup_ogrenciler.find(query, {"_id": 0}).to_list(1000)
+    return ogrenciler
+
+@api_router.post("/grup-dersleri/ogrenciler", response_model=GrupOgrenci)
+async def create_grup_ogrenci(ogrenci: GrupOgrenciCreate):
+    new_ogrenci = GrupOgrenci(**ogrenci.dict())
+    
+    # İlk ödeme varsa, ödenen tutarı güncelle
+    if new_ogrenci.ilk_odeme_tutari and new_ogrenci.ilk_odeme_tutari > 0:
+        new_ogrenci.odenen_tutar = new_ogrenci.ilk_odeme_tutari
+    
+    # Kalan tutarı hesapla
+    new_ogrenci.kalan_tutar = new_ogrenci.ucret - new_ogrenci.odenen_tutar
+    
+    await db.grup_ogrenciler.insert_one(new_ogrenci.dict())
+    return new_ogrenci
+
+@api_router.get("/grup-dersleri/ogrenciler/{ogrenci_id}", response_model=GrupOgrenci)
+async def get_grup_ogrenci(ogrenci_id: str):
+    ogrenci = await db.grup_ogrenciler.find_one({"id": ogrenci_id}, {"_id": 0})
+    if not ogrenci:
+        raise HTTPException(status_code=404, detail="Öğrenci bulunamadı")
+    return ogrenci
+
+@api_router.put("/grup-dersleri/ogrenciler/{ogrenci_id}", response_model=GrupOgrenci)
+async def update_grup_ogrenci(ogrenci_id: str, ogrenci: GrupOgrenciCreate):
+    # Mevcut öğrenciyi al
+    existing = await db.grup_ogrenciler.find_one({"id": ogrenci_id}, {"_id": 0})
+    if not existing:
+        raise HTTPException(status_code=404, detail="Öğrenci bulunamadı")
+    
+    # Yeni öğrenci objesi oluştur
+    updated_ogrenci = GrupOgrenci(**ogrenci.dict())
+    updated_ogrenci.id = ogrenci_id
+    updated_ogrenci.kayit_tarihi = existing["kayit_tarihi"]
+    updated_ogrenci.created_at = existing["created_at"]
+    
+    # Ödenen tutarı koru (güncelleme sırasında değişmez)
+    updated_ogrenci.odenen_tutar = existing.get("odenen_tutar", 0)
+    
+    # Kalan tutarı hesapla
+    updated_ogrenci.kalan_tutar = updated_ogrenci.ucret - updated_ogrenci.odenen_tutar
+    
+    result = await db.grup_ogrenciler.update_one(
+        {"id": ogrenci_id},
+        {"$set": updated_ogrenci.dict()}
+    )
+    
+    return updated_ogrenci
+
+@api_router.delete("/grup-dersleri/ogrenciler/{ogrenci_id}")
+async def delete_grup_ogrenci(ogrenci_id: str):
+    result = await db.grup_ogrenciler.delete_one({"id": ogrenci_id})
+    if result.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="Öğrenci bulunamadı")
+    return {"message": "Öğrenci silindi"}
+
+# Grup dersleri dashboard
+@api_router.get("/grup-dersleri/dashboard/{sezon_id}", response_model=GrupDashboardStats)
+async def get_grup_dashboard_stats(sezon_id: str):
+    # Sezona ait grupları al
+    gruplar = await db.gruplar.find({"sezon_id": sezon_id}, {"_id": 0}).to_list(1000)
+    toplam_grup_sayisi = len(gruplar)
+    
+    # Sezona ait öğrencileri al
+    ogrenciler = await db.grup_ogrenciler.find({"sezon_id": sezon_id}, {"_id": 0}).to_list(1000)
+    toplam_ogrenci_sayisi = len(ogrenciler)
+    
+    # Gelir hesaplama
+    tahmini_toplam_gelir = sum(o["ucret"] for o in ogrenciler)
+    
+    # Ödeme durumu
+    odeme_tamamlanan = len([o for o in ogrenciler if o["kalan_tutar"] == 0])
+    taksitte_olan = len([o for o in ogrenciler if o["kalan_tutar"] > 0])
+    
+    return GrupDashboardStats(
+        toplam_grup_sayisi=toplam_grup_sayisi,
+        toplam_ogrenci_sayisi=toplam_ogrenci_sayisi,
+        tahmini_toplam_gelir=tahmini_toplam_gelir,
+        odeme_tamamlanan=odeme_tamamlanan,
+        taksitte_olan=taksitte_olan
+    )
+
 # Configure logging
 logging.basicConfig(
     level=logging.INFO,
