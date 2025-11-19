@@ -36,6 +36,43 @@ const Dashboard = () => {
     }
   };
 
+  const handlePaymentClick = async (type) => {
+    try {
+      const studentsRes = await axios.get(`${API}/students?status=aktif`);
+      const activeStudents = studentsRes.data;
+      
+      const studentsWithPaymentStatus = [];
+      
+      for (const student of activeStudents) {
+        const calcRes = await axios.get(`${API}/calculate/${student.id}`);
+        const calc = calcRes.data;
+        
+        if (type === 'yaklasan' && calc.kalan_ders === 1) {
+          studentsWithPaymentStatus.push({
+            student,
+            tariff: calc.tariff,
+            kalan_ders: calc.kalan_ders,
+          });
+        } else if (type === 'bekleyen' && calc.kalan_ders === 0) {
+          studentsWithPaymentStatus.push({
+            student,
+            tariff: calc.tariff,
+            kalan_ders: calc.kalan_ders,
+          });
+        }
+      }
+      
+      setPaymentModalData({
+        isOpen: true,
+        students: studentsWithPaymentStatus,
+        title: type === 'yaklasan' ? 'Ödemesi Yaklaşan Öğrenciler' : 'Ödeme Bekleyen Öğrenciler',
+        statusColor: type === 'yaklasan' ? 'yellow' : 'red',
+      });
+    } catch (error) {
+      toast.error("Öğrenci verileri yüklenirken hata oluştu");
+    }
+  };
+
   const formatCurrency = (amount) => {
     return new Intl.NumberFormat('tr-TR', {
       style: 'decimal',
