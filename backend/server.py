@@ -411,9 +411,20 @@ async def get_referans_raporu():
         referans_data[ref]["ogrenci_sayisi"] += 1
         
         # Kalış süresi hesapla (ay)
-        ilk_ders = datetime.fromisoformat(student["ilk_ders_tarihi"].replace("Z", "+00:00"))
-        now = datetime.now(timezone.utc)
-        kalis_suresi = (now - ilk_ders).days / 30
+        try:
+            if isinstance(student["ilk_ders_tarihi"], str):
+                ilk_ders = datetime.fromisoformat(student["ilk_ders_tarihi"].replace("Z", "+00:00"))
+            else:
+                ilk_ders = student["ilk_ders_tarihi"]
+            
+            # Make sure both datetimes are timezone-aware
+            if ilk_ders.tzinfo is None:
+                ilk_ders = ilk_ders.replace(tzinfo=timezone.utc)
+                
+            now = datetime.now(timezone.utc)
+            kalis_suresi = (now - ilk_ders).days / 30
+        except:
+            kalis_suresi = 0
         referans_data[ref]["toplam_kalis_suresi"] += kalis_suresi
         
         # Toplam gelir
