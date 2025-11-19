@@ -73,3 +73,11 @@ button:active {
 .page-transition {
   animation: fadeIn 0.3s ease-out;
 }
+
+/* Hide Emergent watermark */
+[class*="emergent"],
+[class*="watermark"],
+div[style*="position: fixed"][style*="bottom"],
+div[style*="position: fixed"][style*="right"] {
+  display: none !important;
+}
