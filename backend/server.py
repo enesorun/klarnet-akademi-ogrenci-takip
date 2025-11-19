@@ -187,15 +187,8 @@ async def create_student(student: StudentCreate):
     doc = student_obj.model_dump()
     await db.students.insert_one(doc)
     
-    # İlk tarife oluştur
-    tariff = Tariff(
-        ogrenci_id=student_obj.id,
-        baslangic_tarihi=student_obj.ilk_ders_tarihi,
-        ucret=6000,
-        aylik_ders_sayisi=4,
-        not_="İlk tarife"
-    )
-    await db.tariffs.insert_one(tariff.model_dump())
+    # Frontend'den tarife gönderilmezse, otomatik oluşturulmaz
+    # Frontend manuel tarife ekleyecek
     
     return student_obj
 
