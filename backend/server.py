@@ -148,6 +148,13 @@ class AylikRapor(BaseModel):
     birakan: int
     ay_sonu_toplam: int
 
+class AylikGelirRapor(BaseModel):
+    ay: str
+    donem: str
+    toplam_gelir: float
+    onceki_ay_fark: float
+    degisim_yuzde: float
+
 class GenelIstatistik(BaseModel):
     toplam_ogrenci: int
     toplam_yapilan_ders: int
