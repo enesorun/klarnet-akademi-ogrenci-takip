@@ -198,6 +198,15 @@ const Dashboard = () => {
         onClose={() => setIsAddModalOpen(false)}
         onSuccess={fetchData}
       />
+
+      {/* Payment Status Modal */}
+      <PaymentStatusModal
+        isOpen={paymentModalData.isOpen}
+        onClose={() => setPaymentModalData({ ...paymentModalData, isOpen: false })}
+        students={paymentModalData.students}
+        title={paymentModalData.title}
+        statusColor={paymentModalData.statusColor}
+      />
     </div>
   );
 };
