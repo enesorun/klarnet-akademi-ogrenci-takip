@@ -33,6 +33,9 @@ const AddStudentModal = ({ isOpen, onClose, onSuccess }) => {
     ilk_ders_tarihi: new Date().toISOString().split('T')[0],
     referans: "Diğer",
     notlar: "",
+    ucret: "",
+    aylik_ders_sayisi: 4,
+    tarife_not: "",
   });
   const [loading, setLoading] = useState(false);
 
