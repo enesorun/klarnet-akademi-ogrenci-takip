@@ -4,6 +4,7 @@ import { Users, TrendingUp, Clock, AlertCircle } from "lucide-react";
 import StudentCard from "@/components/StudentCard";
 import { Button } from "@/components/ui/button";
 import AddStudentModal from "@/components/AddStudentModal";
+import PaymentStatusModal from "@/components/PaymentStatusModal";
 import { toast } from "sonner";
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
@@ -14,6 +15,7 @@ const Dashboard = () => {
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [paymentModalData, setPaymentModalData] = useState({ isOpen: false, students: [], title: '', statusColor: '' });
 
   useEffect(() => {
     fetchData();
