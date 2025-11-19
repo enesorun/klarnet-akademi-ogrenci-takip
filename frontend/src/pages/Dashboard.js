@@ -71,7 +71,7 @@ const Dashboard = () => {
       {stats && (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {/* Stat 1 */}
-          <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100" data-testid="stat-active-students">
+          <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-100 dark:border-gray-700 card-hover stagger-item" data-testid="stat-active-students">
             <div className="flex items-center justify-between mb-4">
               <div className="p-3 bg-blue-50 rounded-lg">
                 <Users className="w-6 h-6 text-[#4d5deb]" />
