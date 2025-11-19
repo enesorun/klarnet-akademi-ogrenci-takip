@@ -98,6 +98,27 @@ const StudentCard = ({ student, onUpdate }) => {
         </div>
       </div>
 
+      {/* Tariff Info */}
+      {calculations.tariff && (
+        <div className="mb-3 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-100 dark:border-blue-800">
+          <div className="flex justify-between items-center">
+            <span className="text-sm font-medium text-blue-900 dark:text-blue-300">
+              Aylık Tarife
+            </span>
+            <span className="text-lg font-bold text-blue-600 dark:text-blue-400">
+              {new Intl.NumberFormat('tr-TR', {
+                style: 'decimal',
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0,
+              }).format(calculations.tariff.ucret)}₺
+            </span>
+          </div>
+          <div className="text-xs text-blue-700 dark:text-blue-400 mt-1">
+            Ayda {calculations.tariff.aylik_ders_sayisi} ders
+          </div>
+        </div>
+      )}
+
       {/* Footer */}
       <div className="text-xs text-gray-500 dark:text-gray-400 pt-3 border-t border-gray-100 dark:border-gray-700">
         İlk Ders: {new Date(student.ilk_ders_tarihi).toLocaleDateString('tr-TR')}
