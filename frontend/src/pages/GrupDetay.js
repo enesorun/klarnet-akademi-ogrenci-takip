@@ -323,7 +323,7 @@ const GrupDetay = () => {
           </p>
         </div>
         <Button
-          onClick={() => setIsOgrenciModalOpen(true)}
+          onClick={() => handleOpenOgrenciModal()}
           className="bg-[#4d5deb] hover:bg-[#3a4ad4]"
         >
           <Plus className="w-4 h-4 mr-2" />
