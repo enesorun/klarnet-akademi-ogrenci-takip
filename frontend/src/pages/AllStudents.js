@@ -131,6 +131,35 @@ const AllStudents = () => {
 
   const hasActiveFilters = Object.values(filters).some(v => v !== "");
 
+  const handleExportCSV = async () => {
+    try {
+      toast.info("CSV dosyası indiriliyor...");
+      
+      const response = await axios.get(`${API}/export/students/csv`, {
+        responseType: 'blob'
+      });
+      
+      // Blob oluştur ve indir
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      
+      const contentDisposition = response.headers['content-disposition'];
+      const filename = contentDisposition 
+        ? contentDisposition.split('filename=')[1].replace(/"/g, '')
+        : `ogrenciler_${new Date().getTime()}.csv`;
+      
+      link.setAttribute('download', filename);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      
+      toast.success("CSV dosyası indirildi!");
+    } catch (error) {
+      toast.error("CSV export sırasında hata oluştu");
+    }
+  };
+
   const renderStudentList = (students) => {
     if (viewMode === "card") {
       return (
