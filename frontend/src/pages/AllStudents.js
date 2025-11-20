@@ -594,15 +594,15 @@ const AllStudents = () => {
               </div>
               <div className="text-left">
                 <h3 className="text-lg font-bold text-gray-900 dark:text-white">Eski Öğrenci</h3>
-                <p className="text-sm text-gray-600 dark:text-gray-400">{applyFilters(eskiStudents).length} öğrenci</p>
+                <p className="text-sm text-gray-600 dark:text-gray-400">{filteredEski.length} öğrenci</p>
               </div>
             </div>
           </AccordionTrigger>
           <AccordionContent className="pb-6">
-            {applyFilters(eskiStudents).length === 0 ? (
+            {filteredEski.length === 0 ? (
               <p className="text-center text-gray-500 py-8">Eski öğrenci bulunamadı</p>
             ) : (
-              renderStudentList(applyFilters(eskiStudents))
+              renderStudentList(filteredEski))
             )}
           </AccordionContent>
         </AccordionItem>
