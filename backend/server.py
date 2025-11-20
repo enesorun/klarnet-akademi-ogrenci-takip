@@ -431,16 +431,17 @@ async def update_student(student_id: str, student_update: StudentUpdate):
 @api_router.delete("/students/{student_id}")
 async def delete_student(student_id: str):
     """Öğrenciyi ve tüm ilişkili verileri sil (Cascade Delete)"""
-    # Önce öğrencinin var olduğunu kontrol et
-    student = await db.students.find_one({"id": student_id})
+    # SQLite: Önce öğrencinin var olduğunu kontrol et
+    student = await db.find_one("students", where={"id": student_id})
     if not student:
         raise HTTPException(status_code=404, detail="Öğrenci bulunamadı")
     
-    # Tüm ilişkili verileri sil
-    await db.students.delete_one({"id": student_id})
-    await db.tariffs.delete_many({"ogrenci_id": student_id})
-    await db.payments.delete_many({"ogrenci_id": student_id})
-    await db.lessons.delete_many({"ogrenci_id": student_id})
+    # SQLite: CASCADE ON DELETE sayesinde ilişkili veriler otomatik silinecek
+    # Ancak güvenlik için manuel olarak da silelim
+    await db.delete("students", "id", student_id)
+    await db.execute("DELETE FROM tarifeler WHERE ogrenci_id = ?", (student_id,))
+    await db.execute("DELETE FROM odemeler WHERE ogrenci_id = ?", (student_id,))
+    await db.execute("DELETE FROM dersler WHERE ogrenci_id = ?", (student_id,))
     
     return {
         "message": "Öğrenci ve tüm ilişkili veriler silindi",
