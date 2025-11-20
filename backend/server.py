@@ -1344,7 +1344,7 @@ async def export_students_csv():
     
     try:
         # Öğrencileri al
-        students = await db.ogrenciler.find({}, {"_id": 0}).to_list(10000)
+        students = await db.students.find({}, {"_id": 0}).to_list(10000)
         
         if not students:
             raise HTTPException(status_code=404, detail="Öğrenci bulunamadı")
