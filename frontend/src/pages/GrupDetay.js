@@ -51,12 +51,30 @@ const GrupDetay = () => {
     ad_soyad: "",
     telefon: "",
     eposta: "",
-    paket_tipi: "1. Etap",
+    paket_tipi: "",
     ucret: "",
-    odeme_sekli: "Peşin",
+    odeme_sekli: "",
     ilk_odeme_tutari: "",
     ilk_odeme_tarihi: new Date().toISOString().split('T')[0],
   });
+
+  // Etaplar ve ödeme şekilleri yüklenince default değerleri set et
+  useEffect(() => {
+    if (etaplar.length > 0 && !ogrenciForm.paket_tipi) {
+      const defaultEtap = etaplar[0];
+      setOgrenciForm(prev => ({ 
+        ...prev, 
+        paket_tipi: defaultEtap.deger,
+        ucret: defaultEtap.varsayilan_ucret || ""
+      }));
+    }
+  }, [etaplar]);
+
+  useEffect(() => {
+    if (odemeSekilleri.length > 0 && !ogrenciForm.odeme_sekli) {
+      setOgrenciForm(prev => ({ ...prev, odeme_sekli: odemeSekilleri[0].deger }));
+    }
+  }, [odemeSekilleri]);
 
   const [dersForm, setDersForm] = useState({
     tarih: new Date().toISOString().split('T')[0],
