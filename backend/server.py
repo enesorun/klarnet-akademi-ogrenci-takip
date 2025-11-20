@@ -477,15 +477,16 @@ async def create_tariff(tariff: TariffCreate):
 async def update_tariff(tariff_id: str, tariff_update: TariffCreate):
     update_data = tariff_update.model_dump()
     
-    result = await db.tariffs.update_one(
-        {"id": tariff_id},
-        {"$set": update_data}
-    )
-    
-    if result.matched_count == 0:
+    # SQLite: Önce tarifeyi kontrol et
+    existing = await db.find_one("tarifeler", where={"id": tariff_id})
+    if not existing:
         raise HTTPException(status_code=404, detail="Tarife bulunamadı")
     
-    updated_tariff = await db.tariffs.find_one({"id": tariff_id}, {"_id": 0})
+    # SQLite: Update
+    await db.update("tarifeler", update_data, "id", tariff_id)
+    
+    # Güncellenmiş tarifeyi getir
+    updated_tariff = await db.find_one("tarifeler", where={"id": tariff_id})
     return updated_tariff
 
 # ==================== PAYMENT ENDPOINTS ====================
