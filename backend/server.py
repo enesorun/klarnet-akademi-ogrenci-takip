@@ -241,6 +241,24 @@ class AyarItemCreate(BaseModel):
     sira: int = 0
     aktif: bool = True
 
+# ==================== ÖZEL ALAN MODEL ====================
+
+class OzelAlan(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    model_tipi: str  # "ogrenci", "grup", "grup_ogrenci"
+    alan_adi: str
+    alan_tipi: str  # "text", "number", "date"
+    aktif: bool = True
+    sira: int = 0
+    created_at: str = Field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
+
+class OzelAlanCreate(BaseModel):
+    model_tipi: str
+    alan_adi: str
+    alan_tipi: str
+    aktif: bool = True
+
 # ==================== GRUP DERS KAYDI MODEL ====================
 
 class GrupDersKaydi(BaseModel):
