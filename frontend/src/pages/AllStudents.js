@@ -275,6 +275,16 @@ const AllStudents = () => {
               <span className="ml-2 bg-red-500 text-white rounded-full w-2 h-2"></span>
             )}
           </Button>
+
+          {/* CSV Export */}
+          <Button
+            onClick={handleExportCSV}
+            variant="outline"
+            className="border-green-500 text-green-600 hover:bg-green-50 dark:border-green-600 dark:text-green-400 dark:hover:bg-green-900/20"
+          >
+            <FileDown className="w-4 h-4 mr-2" />
+            CSV İndir
+          </Button>
         </div>
       </div>
 
