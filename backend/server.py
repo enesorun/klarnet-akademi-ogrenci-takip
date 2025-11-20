@@ -1014,7 +1014,7 @@ async def create_grup_ders_kaydi(kayit: GrupDersKaydiCreate):
     
     return new_kayit
 
-@api_router.put("/grup-dersleri/ders-kayitlari/{kayit_id}", response_model=GrupDersKaydi])
+@api_router.put("/grup-dersleri/ders-kayitlari/{kayit_id}", response_model=GrupDersKaydi)
 async def update_grup_ders_kaydi(kayit_id: str, kayit: GrupDersKaydiCreate):
     result = await db.grup_ders_kayitlari.update_one(
         {"id": kayit_id},
