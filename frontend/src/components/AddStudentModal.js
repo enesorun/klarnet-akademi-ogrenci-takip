@@ -137,13 +137,18 @@ const AddStudentModal = ({ isOpen, onClose, onSuccess }) => {
                 onValueChange={(value) => setFormData({ ...formData, seviye: value })}
               >
                 <SelectTrigger data-testid="student-level-select" className="dark:bg-gray-700 dark:border-gray-600 dark:text-white">
-                  <SelectValue />
+                  <SelectValue placeholder="Seviye seçiniz" />
                 </SelectTrigger>
                 <SelectContent className="dark:bg-gray-700 dark:border-gray-600">
-                  <SelectItem value="Başlangıç" className="dark:text-white dark:focus:bg-gray-600">Başlangıç</SelectItem>
-                  <SelectItem value="Orta" className="dark:text-white dark:focus:bg-gray-600">Orta</SelectItem>
-                  <SelectItem value="İleri" className="dark:text-white dark:focus:bg-gray-600">İleri</SelectItem>
-                  <SelectItem value="Uzman" className="dark:text-white dark:focus:bg-gray-600">Uzman</SelectItem>
+                  {seviyeler.map((seviye) => (
+                    <SelectItem 
+                      key={seviye.id} 
+                      value={seviye.deger} 
+                      className="dark:text-white dark:focus:bg-gray-600"
+                    >
+                      {seviye.deger}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </div>
