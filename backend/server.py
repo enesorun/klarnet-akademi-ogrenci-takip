@@ -938,15 +938,10 @@ async def get_grup_ogrenci(ogrenci_id: str):
 
 @api_router.put("/grup-dersleri/ogrenciler/{ogrenci_id}", response_model=GrupOgrenci)
 async def update_grup_ogrenci(ogrenci_id: str, ogrenci: GrupOgrenciCreate):
-    # Debug logging
-    print(f"DEBUG: Updating student {ogrenci_id} with data: {ogrenci.dict()}")
-    
     # Mevcut öğrenciyi kontrol et
     existing = await db.grup_ogrenciler.find_one({"id": ogrenci_id}, {"_id": 0})
     if not existing:
         raise HTTPException(status_code=404, detail="Öğrenci bulunamadı")
-    
-    print(f"DEBUG: Existing student data: {existing}")
     
     # Güncelleme dictionary'si oluştur
     update_data = {
