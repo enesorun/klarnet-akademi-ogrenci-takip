@@ -1014,20 +1014,28 @@ async def calculate_student_data(student_id: str):
 # Sezon endpoints
 @api_router.get("/grup-dersleri/sezonlar", response_model=List[Sezon])
 async def get_sezonlar():
-    sezonlar = await db.sezonlar.find({}, {"_id": 0}).to_list(1000)
+    # SQLite: Tüm sezonları getir
+    sezonlar = await db.find_all("grup_sezonlar", order_by="created_at DESC")
     return sezonlar
 
 @api_router.post("/grup-dersleri/sezonlar", response_model=Sezon)
 async def create_sezon(sezon: SezonCreate):
     new_sezon = Sezon(**sezon.dict())
-    await db.sezonlar.insert_one(new_sezon.dict())
+    sezon_dict = new_sezon.dict()
+    
+    # SQLite: Insert
+    await db.insert("grup_sezonlar", sezon_dict)
     return new_sezon
 
 @api_router.delete("/grup-dersleri/sezonlar/{sezon_id}")
 async def delete_sezon(sezon_id: str):
-    result = await db.sezonlar.delete_one({"id": sezon_id})
-    if result.deleted_count == 0:
+    # SQLite: Önce sezonu kontrol et
+    existing = await db.find_one("grup_sezonlar", where={"id": sezon_id})
+    if not existing:
         raise HTTPException(status_code=404, detail="Sezon bulunamadı")
+    
+    # SQLite: CASCADE ON DELETE ile ilişkili gruplar da silinecek
+    await db.delete("grup_sezonlar", "id", sezon_id)
     return {"message": "Sezon silindi"}
 
 # Grup endpoints
