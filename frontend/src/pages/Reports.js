@@ -204,7 +204,13 @@ const Reports = () => {
             </AccordionTrigger>
             <AccordionContent className="px-6 pb-6">
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-              <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm">
+              <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm relative group">
+                <button
+                  onClick={() => handleOpenEditModal("grup_toplam_ogrenci", "Grup Toplam Öğrenci", grupStats.toplam_grup_ogrencisi)}
+                  className="absolute top-3 right-3 p-1.5 rounded-lg bg-gray-100 dark:bg-gray-700 opacity-0 group-hover:opacity-100 transition-opacity hover:bg-blue-100 dark:hover:bg-blue-900/20"
+                >
+                  <Edit2 className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+                </button>
                 <div className="flex items-center justify-between mb-3">
                   <div className="p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
                     <Users className="w-6 h-6 text-blue-600 dark:text-blue-400" />
@@ -214,7 +220,13 @@ const Reports = () => {
                 <div className="text-sm text-gray-600 dark:text-gray-400 mt-1">Toplam Grup Öğrencisi</div>
               </div>
 
-              <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm">
+              <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm relative group">
+                <button
+                  onClick={() => handleOpenEditModal("grup_toplam_ders", "Grup Toplam Ders", grupStats.toplam_yapilan_grup_dersi)}
+                  className="absolute top-3 right-3 p-1.5 rounded-lg bg-gray-100 dark:bg-gray-700 opacity-0 group-hover:opacity-100 transition-opacity hover:bg-green-100 dark:hover:bg-green-900/20"
+                >
+                  <Edit2 className="w-4 h-4 text-green-600 dark:text-green-400" />
+                </button>
                 <div className="flex items-center justify-between mb-3">
                   <div className="p-3 bg-green-50 dark:bg-green-900/20 rounded-lg">
                     <Award className="w-6 h-6 text-green-600 dark:text-green-400" />
@@ -224,7 +236,13 @@ const Reports = () => {
                 <div className="text-sm text-gray-600 dark:text-gray-400 mt-1">Toplam Yapılan Grup Dersi</div>
               </div>
 
-              <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm">
+              <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm relative group">
+                <button
+                  onClick={() => handleOpenEditModal("grup_toplam_gelir", "Grup Toplam Gelir", grupStats.toplam_grup_geliri)}
+                  className="absolute top-3 right-3 p-1.5 rounded-lg bg-gray-100 dark:bg-gray-700 opacity-0 group-hover:opacity-100 transition-opacity hover:bg-purple-100 dark:hover:bg-purple-900/20"
+                >
+                  <Edit2 className="w-4 h-4 text-purple-600 dark:text-purple-400" />
+                </button>
                 <div className="flex items-center justify-between mb-3">
                   <div className="p-3 bg-purple-50 dark:bg-purple-900/20 rounded-lg">
                     <DollarSign className="w-6 h-6 text-purple-600 dark:text-purple-400" />
