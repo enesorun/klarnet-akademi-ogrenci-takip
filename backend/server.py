@@ -733,7 +733,8 @@ async def get_grup_istatistikleri():
 
 @api_router.get("/reports/referans", response_model=List[ReferansRapor])
 async def get_referans_raporu():
-    students = await db.students.find({}, {"_id": 0}).to_list(1000)
+    # SQLite: Tüm öğrencileri getir
+    students = await db.find_all("students")
     
     referans_data = {}
     
