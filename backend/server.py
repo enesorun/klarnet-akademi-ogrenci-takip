@@ -767,8 +767,8 @@ async def get_referans_raporu():
             kalis_suresi = 0
         referans_data[ref]["toplam_kalis_suresi"] += kalis_suresi
         
-        # Toplam gelir
-        payments = await db.payments.find({"ogrenci_id": student["id"]}, {"_id": 0}).to_list(1000)
+        # SQLite: Toplam gelir
+        payments = await db.find_all("odemeler", where={"ogrenci_id": student["id"]})
         toplam_odeme = sum(p["tutar"] for p in payments)
         referans_data[ref]["toplam_gelir"] += toplam_odeme
     
