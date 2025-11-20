@@ -966,20 +966,20 @@ async def get_genel_istatistik():
 async def calculate_student_data(student_id: str):
     """Öğrenci için tüm hesaplamaları yap"""
     
-    # Güncel tarife
-    tariff = await db.tariffs.find_one(
-        {"ogrenci_id": student_id, "bitis_tarihi": None},
-        {"_id": 0}
+    # SQLite: Güncel tarife (bitis_tarihi NULL olan)
+    tariff = await db.fetch_one(
+        "SELECT * FROM tarifeler WHERE ogrenci_id = ? AND bitis_tarihi IS NULL LIMIT 1",
+        (student_id,)
     )
     
-    # Ödemeler
-    payments = await db.payments.find({"ogrenci_id": student_id}, {"_id": 0}).to_list(1000)
+    # SQLite: Ödemeler
+    payments = await db.find_all("odemeler", where={"ogrenci_id": student_id})
     toplam_odenen = sum(p["tutar"] for p in payments)
-    toplam_ders_kredisi = sum(p["ders_sayisi"] for p in payments)
+    toplam_ders_kredisi = sum(p.get("ders_sayisi", 0) for p in payments)
     son_odeme = payments[0] if payments else None
     
-    # Dersler
-    lessons = await db.lessons.find({"ogrenci_id": student_id}, {"_id": 0}).to_list(1000)
+    # SQLite: Dersler
+    lessons = await db.find_all("dersler", where={"ogrenci_id": student_id})
     yapilan_ders = len(lessons)
     kalan_ders = toplam_ders_kredisi - yapilan_ders
     
