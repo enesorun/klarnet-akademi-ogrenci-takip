@@ -52,6 +52,7 @@ const GrupDersleri = () => {
   const { ayarlar: etaplar } = useAyarlar("grup_etaplari");
   const { ayarlar: grupDurumlari } = useAyarlar("grup_durumlari");
   const { ayarlar: odemeSekilleri } = useAyarlar("odeme_sekilleri");
+  const { ozelAlanlar: grupOzelAlanlar } = useOzelAlanlar("grup");
 
   const [sezonForm, setSezonForm] = useState({
     sezon_adi: "",
