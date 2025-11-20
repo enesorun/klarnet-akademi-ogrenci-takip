@@ -60,6 +60,7 @@ const GrupDetay = () => {
   useEffect(() => {
     fetchGrupDetay();
     fetchOgrenciler();
+    fetchDersKayitlari();
   }, [grupId]);
 
   useEffect(() => {
