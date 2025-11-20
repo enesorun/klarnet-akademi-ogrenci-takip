@@ -193,14 +193,14 @@ const LessonsTab = ({ studentId, onUpdate }) => {
 
       {/* Add Lesson Modal */}
       <Dialog open={isAddModalOpen} onOpenChange={setIsAddModalOpen}>
-        <DialogContent data-testid="add-lesson-modal">
+        <DialogContent data-testid="add-lesson-modal" className="bg-white dark:bg-gray-800">
           <DialogHeader>
-            <DialogTitle>Yeni Ders Ekle</DialogTitle>
+            <DialogTitle className="text-gray-900 dark:text-white">Yeni Ders Ekle</DialogTitle>
           </DialogHeader>
 
           <form onSubmit={handleSubmit} className="space-y-4 mt-4">
             <div>
-              <Label htmlFor="tarih">Tarih *</Label>
+              <Label htmlFor="tarih" className="text-gray-700 dark:text-gray-300">Tarih *</Label>
               <Input
                 id="tarih"
                 type="date"
@@ -208,11 +208,12 @@ const LessonsTab = ({ studentId, onUpdate }) => {
                 onChange={(e) => setFormData({ ...formData, tarih: e.target.value })}
                 required
                 data-testid="lesson-date-input"
+                className="dark:bg-gray-700 dark:border-gray-600 dark:text-white"
               />
             </div>
 
             <div>
-              <Label htmlFor="sure">Süre (dakika) *</Label>
+              <Label htmlFor="sure" className="text-gray-700 dark:text-gray-300">Süre (dakika) *</Label>
               <Input
                 id="sure"
                 type="number"
@@ -220,11 +221,12 @@ const LessonsTab = ({ studentId, onUpdate }) => {
                 onChange={(e) => setFormData({ ...formData, sure: parseInt(e.target.value) })}
                 required
                 data-testid="lesson-duration-input"
+                className="dark:bg-gray-700 dark:border-gray-600 dark:text-white"
               />
             </div>
 
             <div>
-              <Label htmlFor="islenen_konu">Bu derste ne işlendi? *</Label>
+              <Label htmlFor="islenen_konu" className="text-gray-700 dark:text-gray-300">Bu derste ne işlendi? *</Label>
               <Textarea
                 id="islenen_konu"
                 value={formData.islenen_konu}
@@ -232,17 +234,19 @@ const LessonsTab = ({ studentId, onUpdate }) => {
                 required
                 rows={3}
                 data-testid="lesson-topic-input"
+                className="dark:bg-gray-700 dark:border-gray-600 dark:text-white"
               />
             </div>
 
             <div>
-              <Label htmlFor="odev_not">Ödev / Not</Label>
+              <Label htmlFor="odev_not" className="text-gray-700 dark:text-gray-300">Ödev / Not</Label>
               <Textarea
                 id="odev_not"
                 value={formData.odev_not}
                 onChange={(e) => setFormData({ ...formData, odev_not: e.target.value })}
                 rows={2}
                 data-testid="lesson-homework-input"
+                className="dark:bg-gray-700 dark:border-gray-600 dark:text-white"
               />
             </div>
 
@@ -253,7 +257,7 @@ const LessonsTab = ({ studentId, onUpdate }) => {
                 onCheckedChange={(checked) => setFormData({ ...formData, onemli: checked })}
                 data-testid="lesson-important-checkbox"
               />
-              <Label htmlFor="onemli" className="cursor-pointer">Önemli Ders</Label>
+              <Label htmlFor="onemli" className="cursor-pointer text-gray-700 dark:text-gray-300">Önemli Ders</Label>
             </div>
 
             <div className="flex justify-end space-x-3 pt-4">
