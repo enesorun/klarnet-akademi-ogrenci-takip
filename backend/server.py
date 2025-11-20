@@ -1324,37 +1324,49 @@ async def get_grup_dashboard_stats(sezon_id: str):
 
 @api_router.get("/ayarlar", response_model=List[AyarItem])
 async def get_ayarlar(kategori: Optional[str] = None, aktif: Optional[bool] = None):
-    query = {}
+    # SQLite: Dinamik filtre
+    where_clause = {}
     if kategori:
-        query["kategori"] = kategori
+        where_clause["kategori"] = kategori
     if aktif is not None:
-        query["aktif"] = aktif
+        where_clause["aktif"] = 1 if aktif else 0
     
-    ayarlar = await db.ayarlar.find(query, {"_id": 0}).sort("sira", 1).to_list(1000)
+    if where_clause:
+        ayarlar = await db.find_all("ayarlar", where=where_clause, order_by="sira ASC")
+    else:
+        ayarlar = await db.find_all("ayarlar", order_by="sira ASC")
     return ayarlar
 
 @api_router.post("/ayarlar", response_model=AyarItem)
 async def create_ayar(ayar: AyarItemCreate):
     new_ayar = AyarItem(**ayar.dict())
-    await db.ayarlar.insert_one(new_ayar.dict())
+    # SQLite: Insert
+    await db.insert("ayarlar", new_ayar.dict())
     return new_ayar
 
 @api_router.put("/ayarlar/{ayar_id}", response_model=AyarItem)
 async def update_ayar(ayar_id: str, ayar: AyarItemCreate):
-    result = await db.ayarlar.update_one(
-        {"id": ayar_id},
-        {"$set": ayar.dict()}
-    )
-    if result.matched_count == 0:
+    # SQLite: Önce ayarı kontrol et
+    existing = await db.find_one("ayarlar", where={"id": ayar_id})
+    if not existing:
         raise HTTPException(status_code=404, detail="Ayar bulunamadı")
-    updated_ayar = await db.ayarlar.find_one({"id": ayar_id}, {"_id": 0})
+    
+    # SQLite: Update
+    await db.update("ayarlar", ayar.dict(), "id", ayar_id)
+    
+    # Güncellenmiş ayarı getir
+    updated_ayar = await db.find_one("ayarlar", where={"id": ayar_id})
     return updated_ayar
 
 @api_router.delete("/ayarlar/{ayar_id}")
 async def delete_ayar(ayar_id: str):
-    result = await db.ayarlar.delete_one({"id": ayar_id})
-    if result.deleted_count == 0:
+    # SQLite: Önce ayarı kontrol et
+    existing = await db.find_one("ayarlar", where={"id": ayar_id})
+    if not existing:
         raise HTTPException(status_code=404, detail="Ayar bulunamadı")
+    
+    # SQLite: Delete
+    await db.delete("ayarlar", "id", ayar_id)
     return {"message": "Ayar silindi"}
 
 # Varsayılan ayarları yükle
