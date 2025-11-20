@@ -1279,14 +1279,14 @@ async def update_grup_ogrenci(ogrenci_id: str, ogrenci: GrupOgrenciCreate):
 @api_router.delete("/grup-dersleri/ogrenciler/{ogrenci_id}")
 async def delete_grup_ogrenci(ogrenci_id: str):
     """Grup öğrencisini ve tüm ilişkili verileri sil (Cascade Delete)"""
-    # Önce öğrencinin var olduğunu kontrol et
-    ogrenci = await db.grup_ogrenciler.find_one({"id": ogrenci_id})
+    # SQLite: Önce öğrencinin var olduğunu kontrol et
+    ogrenci = await db.find_one("grup_ogrenciler", where={"id": ogrenci_id})
     if not ogrenci:
         raise HTTPException(status_code=404, detail="Öğrenci bulunamadı")
     
-    # Tüm ilişkili verileri sil
-    await db.grup_ogrenciler.delete_one({"id": ogrenci_id})
-    await db.grup_ogrenci_odemeler.delete_many({"ogrenci_id": ogrenci_id})
+    # SQLite: CASCADE ON DELETE ile ilişkili ödemeler silinecek
+    await db.delete("grup_ogrenciler", "id", ogrenci_id)
+    await db.execute("DELETE FROM grup_ogrenci_odemeler WHERE ogrenci_id = ?", (ogrenci_id,))
     
     return {
         "message": "Grup öğrencisi ve tüm ödemeleri silindi",
