@@ -791,12 +791,37 @@ const GrupDetay = () => {
                 İptal
               </Button>
               <Button type="submit" className="bg-[#4d5deb] hover:bg-[#3a4ad4]">
-                Kaydet
+                {editingOgrenci ? "Güncelle" : "Kaydet"}
               </Button>
             </div>
           </form>
         </DialogContent>
       </Dialog>
+
+      {/* Öğrenci Silme Onay */}
+      <AlertDialog open={!!deleteOgrenciId} onOpenChange={() => setDeleteOgrenciId(null)}>
+        <AlertDialogContent className="dark:bg-gray-800">
+          <AlertDialogHeader>
+            <AlertDialogTitle className="text-gray-900 dark:text-white">
+              Öğrenciyi silmek istediğinize emin misiniz?
+            </AlertDialogTitle>
+            <AlertDialogDescription className="text-gray-600 dark:text-gray-400">
+              Bu işlem geri alınamaz. Öğrenciye ait tüm ödeme kayıtları da silinecektir.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel className="dark:bg-gray-700 dark:text-white">
+              İptal
+            </AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleDeleteOgrenci}
+              className="bg-red-600 hover:bg-red-700 text-white"
+            >
+              Sil
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
 
       {/* Ders Ekle Modal */}
       <Dialog open={isDersModalOpen} onOpenChange={setIsDersModalOpen}>
