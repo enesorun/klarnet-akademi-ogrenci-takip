@@ -142,14 +142,14 @@ const StudentCard = ({ student, onUpdate, onEdit, onDelete }) => {
         </div>
       </div>
 
-      {/* Monthly Payment - Modern Badge Style */}
+      {/* Monthly Payment - Elegant Badge Style */}
       {calculations.tariff && (
         <div 
           className="mt-3 cursor-pointer"
           onClick={() => navigate(`/students/${student.id}`)}
         >
-          <div className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-blue-500 to-blue-600 dark:from-blue-600 dark:to-blue-700 rounded-lg shadow-sm">
-            <span className="text-sm font-medium text-white mr-2">Aylık</span>
+          <div className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-[#4d5deb] to-[#6366f1] dark:from-[#5b63d3] dark:to-[#7c3aed] rounded-lg shadow-sm hover:shadow-md transition-all">
+            <span className="text-sm font-medium text-white/90 mr-2">Aylık</span>
             <span className="text-lg font-bold text-white">
               {new Intl.NumberFormat('tr-TR', {
                 style: 'decimal',
