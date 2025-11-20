@@ -42,6 +42,76 @@ const VeriYonetimi = () => {
     }
   };
 
+  const handleExport = async () => {
+    try {
+      toast.info("Veriler indiriliyor...");
+      
+      // Dosyayı indir
+      const response = await axios.get(`${API}/export/data`, {
+        responseType: 'blob'
+      });
+      
+      // Blob oluştur ve indir
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      
+      // Dosya adını header'dan al veya varsayılan kullan
+      const contentDisposition = response.headers['content-disposition'];
+      const filename = contentDisposition 
+        ? contentDisposition.split('filename=')[1].replace(/"/g, '')
+        : `klarnet_akademi_export_${new Date().getTime()}.json`;
+      
+      link.setAttribute('download', filename);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      
+      toast.success("Veriler başarıyla indirildi!");
+    } catch (error) {
+      toast.error("Export sırasında hata oluştu");
+    }
+  };
+
+  const handleImportClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleFileChange = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // JSON kontrolü
+    if (!file.name.endsWith('.json')) {
+      toast.error("Lütfen geçerli bir JSON dosyası seçin");
+      return;
+    }
+
+    setImporting(true);
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+
+      const response = await axios.post(`${API}/import/data`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      });
+
+      const stats = response.data.stats;
+      toast.success(
+        `Import başarılı! ${stats.total_imported} kayıt eklendi, ${stats.total_skipped} kayıt atlandı (duplicate).`
+      );
+      
+      // Input'u temizle
+      e.target.value = '';
+    } catch (error) {
+      toast.error(error.response?.data?.detail || "Import sırasında hata oluştu");
+    } finally {
+      setImporting(false);
+    }
+  };
+
   const formatDate = (isoString) => {
     const date = new Date(isoString);
     return date.toLocaleString('tr-TR', {
