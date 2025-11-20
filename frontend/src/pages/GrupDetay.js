@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
-import { ArrowLeft, Plus, Filter, BookOpen, Users, Trash2 } from "lucide-react";
+import { ArrowLeft, Plus, Filter, BookOpen, Users, Trash2, Pencil } from "lucide-react";
 import { useAyarlar } from "@/hooks/useAyarlar";
 import { Button } from "@/components/ui/button";
 import {
@@ -10,6 +10,16 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
