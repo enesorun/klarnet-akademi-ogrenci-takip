@@ -67,6 +67,7 @@ const GrupDersleri = () => {
     max_kapasite: 10,
     toplam_ders_sayisi: 16,
   });
+  const [grupOzelAlanlarData, setGrupOzelAlanlarData] = useState({});
 
   // Etaplar yüklenince default değeri set et
   useEffect(() => {
