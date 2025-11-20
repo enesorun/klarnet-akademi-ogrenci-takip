@@ -136,7 +136,9 @@ const Dashboard = () => {
                 {formatCurrency(stats.aylik_gelir || 0)}
               </div>
               <div className="text-sm text-gray-600 dark:text-gray-400 mt-1">Aylık Gelir</div>
-              <div className="text-xs text-gray-500 dark:text-gray-500">Ayın 15'inden bugüne</div>
+              <div className="text-xs text-gray-500 dark:text-gray-500">
+                Ayın {stats.baslangic_gunu || 15}'inden bugüne
+              </div>
             </div>
             
             {/* Potansiyel - Küçük */}
