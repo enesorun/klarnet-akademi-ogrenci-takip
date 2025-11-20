@@ -248,15 +248,26 @@ const VeriYonetimi = () => {
       {/* Bilgilendirme */}
       <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-xl p-6">
         <h3 className="text-lg font-semibold text-amber-900 dark:text-amber-300 mb-2">
-          Yedekleme Hakkında
+          Veri Yönetimi Hakkında
         </h3>
-        <ul className="text-sm text-amber-800 dark:text-amber-300 space-y-2">
-          <li>• Yedekler JSON formatında saklanır</li>
-          <li>• Her ay için ayrı klasör oluşturulur (YYYY-MM)</li>
-          <li>• Tüm koleksiyonlar yedeklenir (öğrenciler, ödemeler, gruplar, vb.)</li>
-          <li>• Yedek dosyaları /app/data/backup/ dizininde bulunur</li>
-          <li>• Düzenli yedekleme almanız önerilir</li>
-        </ul>
+        <div className="grid md:grid-cols-2 gap-4">
+          <div>
+            <h4 className="font-semibold text-amber-900 dark:text-amber-300 mb-2">Yedekleme:</h4>
+            <ul className="text-sm text-amber-800 dark:text-amber-300 space-y-1">
+              <li>• Yedekler JSON formatında saklanır</li>
+              <li>• YYYY-MM klasör yapısı kullanılır</li>
+              <li>• Sunucu üzerinde /app/data/backup/ dizininde</li>
+            </ul>
+          </div>
+          <div>
+            <h4 className="font-semibold text-amber-900 dark:text-amber-300 mb-2">Export/Import:</h4>
+            <ul className="text-sm text-amber-800 dark:text-amber-300 space-y-1">
+              <li>• Export: Tüm veriyi bilgisayarınıza indirin</li>
+              <li>• Import: Başka yerden veri yükleyin</li>
+              <li>• Deduplication: Aynı ID'li kayıtlar atlanır</li>
+            </ul>
+          </div>
+        </div>
       </div>
     </div>
   );
