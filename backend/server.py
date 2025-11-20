@@ -668,7 +668,7 @@ async def get_dashboard_stats():
     grup_payments = await db.find_all("grup_ogrenci_odemeler")
     for payment in grup_payments:
         try:
-            payment_date_str = payment["odeme_tarihi"].replace("Z", "+00:00")
+            payment_date_str = payment["tarih"].replace("Z", "+00:00")
             payment_date = datetime.fromisoformat(payment_date_str)
             # Eğer timezone bilgisi yoksa UTC olarak kabul et
             if payment_date.tzinfo is None:
