@@ -43,6 +43,9 @@ const GrupDersleri = () => {
   const [isSezonModalOpen, setIsSezonModalOpen] = useState(false);
   const [isGrupModalOpen, setIsGrupModalOpen] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [editingGrup, setEditingGrup] = useState(null);
+  const [deleteSezonId, setDeleteSezonId] = useState(null);
+  const [deleteGrupId, setDeleteGrupId] = useState(null);
 
   // Dinamik ayarlar
   const { ayarlar: etaplar } = useAyarlar("grup_etaplari");
