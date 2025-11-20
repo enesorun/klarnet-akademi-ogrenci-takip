@@ -368,3 +368,135 @@
 **Test Ortamı:** Emergent Kubernetes Container
 **Test Durumu:** TÜM TEST ADIMLARI BAŞARILI ✅
 
+---
+
+## Bireysel Öğrenci Formları Dinamik Dropdown Doğrulama Test Raporu - 2025-11-20
+
+### ✅ BAŞARILI TEST EDİLEN ÖZELLİKLER
+
+#### 1. Ayarlar Sayfasında Yeni Seviye Ekleme (P0)
+**Durum:** ✅ BAŞARILI
+**Test Sonuçları:**
+- ✅ Ayarlar sayfasına navigasyon başarılı
+- ✅ "Öğrenci Seviyeleri" tabı aktif
+- ✅ "Yeni Ekle" modal açılıyor
+- ✅ Form doldurulabiliyor:
+  * Değer: "Test Seviye" ✅
+  * Sıra: 5 ✅
+- ✅ "Ekle" butonuna tıklama başarılı (force=True ile)
+- ✅ Toast mesajı: "Ayar eklendi" gösteriliyor
+- ✅ Backend'e kaydediliyor (MongoDB)
+- ✅ Ayarlar tablosunda "Test Seviye" görünüyor (sıra: 5)
+
+#### 2. Ayarlar Sayfasında Yeni Referans Kaynağı Ekleme (P0)
+**Durum:** ✅ BAŞARILI
+**Test Sonuçları:**
+- ✅ "Referans Kaynakları" tabına tıklama başarılı
+- ✅ "Yeni Ekle" modal açılıyor
+- ✅ Form doldurulabiliyor:
+  * Değer: "Test Referans" ✅
+  * Sıra: 7 ✅
+- ✅ "Ekle" butonuna tıklama başarılı (force=True ile)
+- ✅ Toast mesajı: "Ayar eklendi" gösteriliyor
+- ✅ Backend'e kaydediliyor (MongoDB)
+- ✅ Ayarlar tablosunda "Test Referans" görünüyor (sıra: 7)
+
+#### 3. Ana Sayfa - Yeni Öğrenci Formunda Dropdown Kontrolü (P0)
+**Durum:** ⚠️ KISMEN BAŞARILI
+**Test Sonuçları:**
+- ✅ Ana Sayfa'ya navigasyon başarılı
+- ✅ "Yeni Öğrenci Ekle" modal açılıyor
+- ✅ **Seviye dropdown kontrolü:**
+  * Dropdown açılıyor ✅
+  * "Test Seviye" seçeneği görünüyor ✅
+  * Diğer seçenekler: Başlangıç, Orta, İleri, Uzman ✅
+- ❌ **Referans dropdown kontrolü:**
+  * Dropdown açılıyor ✅
+  * "Test Referans" seçeneği görünmüyor ❌
+  * Mevcut seçenekler: Tavsiye, Google Arama, Sosyal Medya, Meta Reklam, Google Reklam, Diğer
+  * **SORUN:** "Test Referans" değeri Seviye dropdown'ında görünüyor (yanlış kategori)
+
+#### 4. Tüm Öğrenciler Sayfasında Filtre Dropdown Kontrolü (P0)
+**Durum:** ❌ SORUNLU
+**Test Sonuçları:**
+- ✅ Tüm Öğrenciler sayfasına navigasyon başarılı
+- ✅ Filtre paneli açılıyor
+- ❌ **Seviye filtre dropdown:**
+  * "Test Seviye" seçeneği görünmüyor ❌
+  * Yanlış veriler gösteriliyor (Referans verileri)
+- ❌ **Referans filtre dropdown:**
+  * "Test Referans" seçeneği görünmüyor ❌
+  * Tarife sıralama seçenekleri gösteriliyor (yanlış dropdown)
+
+### ❌ KRITIK SORUNLAR
+
+#### 1. Dropdown Kategori Karışıklığı (P0 - Kritik)
+**Durum:** ❌ KRITIK SORUN
+**Açıklama:** 
+- "Test Referans" değeri Seviye dropdown'ında görünüyor
+- Bu, useAyarlar hook'unda veya API'de kategori filtreleme sorunu olduğunu gösteriyor
+- Dinamik dropdown sistemi kategori bazlı doğru filtreleme yapmıyor
+
+**Etki:** Yüksek - Kullanıcılar yanlış kategorilerde değerler görecek
+**Çözüm Önerisi:** 
+- useAyarlar hook'unda kategori parametresi kontrolü
+- Backend API'de kategori filtreleme doğrulaması
+- Frontend'de dropdown veri mapping kontrolü
+
+#### 2. Filtre Dropdown Mapping Sorunu (P1)
+**Durum:** ❌ SORUNLU
+**Açıklama:** 
+- AllStudents sayfasındaki filtre dropdown'ları yanlış verileri gösteriyor
+- Seviye filtresi referans verilerini gösteriyor
+- Referans filtresi tarife sıralama seçeneklerini gösteriyor
+
+**Etki:** Orta - Filtreleme işlevi çalışmıyor
+**Çözüm Önerisi:**
+- AllStudents.js'de dropdown sıralaması kontrolü
+- useAyarlar hook çağrılarının doğru kategori ile yapılması
+
+### 📊 Test Kapsamı
+- ✅ Settings: %100 test edildi - Yeni değer ekleme çalışıyor
+- ⚠️ Dashboard Add Student Modal: %50 başarılı (Seviye ✅, Referans ❌)
+- ❌ All Students Filter: %0 başarılı (Kategori karışıklığı)
+- ❌ Dinamik dropdown sistemi: Kategori filtreleme sorunu var
+
+### 🎯 Test Senaryosu Sonuçları
+**Kısmen başarılı - Kritik sorunlar tespit edildi:**
+
+1. ✅ **Ayarlar Sayfasında Yeni Seviye Ekleme:**
+   - "Test Seviye" başarıyla eklendi
+   - Toast mesajı gösterildi
+
+2. ✅ **Ayarlar Sayfasında Yeni Referans Ekleme:**
+   - "Test Referans" başarıyla eklendi
+   - Toast mesajı gösterildi
+
+3. ⚠️ **Ana Sayfa Dropdown Kontrolü:**
+   - "Test Seviye" Seviye dropdown'ında görünüyor ✅
+   - "Test Referans" yanlış dropdown'da görünüyor ❌
+
+4. ❌ **Tüm Öğrenciler Filtre Kontrolü:**
+   - Her iki yeni değer de doğru filtrelerde görünmüyor ❌
+
+### 🔧 ACİL DÜZELTİLMESİ GEREKEN SORUNLAR
+
+1. **useAyarlar Hook Kategori Filtreleme** (P0)
+   - Kategori parametresi doğru çalışmıyor
+   - API çağrısında kategori filtresi kontrol edilmeli
+
+2. **AddStudentModal Dropdown Mapping** (P0)
+   - Referans dropdown yanlış veri çekiyor
+   - useAyarlar("referans_kaynaklari") çağrısı kontrol edilmeli
+
+3. **AllStudents Filter Dropdown Sıralaması** (P1)
+   - Dropdown sıralaması ve veri mapping hatası
+   - Filter panel'deki select elementleri yeniden kontrol edilmeli
+
+---
+**Test Eden:** E1 (Testing Agent)
+**Test Tarihi:** 2025-11-20
+**Test Yöntemi:** Playwright automation + End-to-end testing
+**Test Ortamı:** Emergent Kubernetes Container
+**Test Durumu:** KISMEN BAŞARILI - KRİTİK SORUNLAR TESPİT EDİLDİ ⚠️
+
