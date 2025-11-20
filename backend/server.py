@@ -587,8 +587,8 @@ async def delete_lesson(lesson_id: str):
 
 @api_router.get("/dashboard/stats", response_model=DashboardStats)
 async def get_dashboard_stats():
-    # Aktif öğrenciler
-    aktif_students = await db.students.find({"genel_durum": "aktif"}, {"_id": 0}).to_list(1000)
+    # SQLite: Aktif öğrenciler
+    aktif_students = await db.find_all("students", where={"genel_durum": "aktif"})
     aktif_count = len(aktif_students)
     
     # Her öğrenci için hesaplamalar
