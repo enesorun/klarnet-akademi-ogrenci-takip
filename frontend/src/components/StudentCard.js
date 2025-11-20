@@ -1,13 +1,14 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { MapPin, Award } from "lucide-react";
+import { MapPin, Award, Edit, Trash2 } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
+import { Button } from "@/components/ui/button";
 import axios from "axios";
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
 
-const StudentCard = ({ student, onUpdate }) => {
+const StudentCard = ({ student, onUpdate, onEdit, onDelete }) => {
   const navigate = useNavigate();
   const [calculations, setCalculations] = useState(null);
 
