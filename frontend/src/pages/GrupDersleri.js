@@ -34,6 +34,11 @@ const GrupDersleri = () => {
   const [isGrupModalOpen, setIsGrupModalOpen] = useState(false);
   const [loading, setLoading] = useState(true);
 
+  // Dinamik ayarlar
+  const { ayarlar: etaplar } = useAyarlar("grup_etaplari");
+  const { ayarlar: grupDurumlari } = useAyarlar("grup_durumlari");
+  const { ayarlar: odemeSekilleri } = useAyarlar("odeme_sekilleri");
+
   const [sezonForm, setSezonForm] = useState({
     sezon_adi: "",
     baslangic_tarihi: "",
