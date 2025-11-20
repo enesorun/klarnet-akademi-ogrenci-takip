@@ -14,6 +14,7 @@ const Reports = () => {
   const [genelStats, setGenelStats] = useState(null);
   const [aylikGelirData, setAylikGelirData] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [grupStats, setGrupStats] = useState(null);
 
   useEffect(() => {
     fetchData();
