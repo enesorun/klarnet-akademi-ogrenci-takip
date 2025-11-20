@@ -60,9 +60,9 @@ const StudentCard = ({ student, onUpdate, onEdit, onDelete }) => {
       className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-100 dark:border-gray-700 hover:shadow-md dark:hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02] card-hover animate-scale-in relative"
       data-testid={`student-card-${student.id}`}
     >
-      {/* Edit & Delete Buttons */}
+      {/* Edit & Delete Buttons - Fixed position top right */}
       {(onEdit || onDelete) && (
-        <div className="absolute top-4 right-4 flex items-center space-x-2 z-10">
+        <div className="absolute top-3 right-3 flex items-center space-x-1 z-20 bg-white dark:bg-gray-800 rounded-lg shadow-sm p-1">
           {onEdit && (
             <Button
               variant="ghost"
@@ -71,7 +71,7 @@ const StudentCard = ({ student, onUpdate, onEdit, onDelete }) => {
                 e.stopPropagation();
                 onEdit(student, e);
               }}
-              className="hover:bg-blue-50 dark:hover:bg-blue-900/20 p-2"
+              className="hover:bg-blue-50 dark:hover:bg-blue-900/20 p-1.5 h-auto"
             >
               <Edit className="w-4 h-4 text-blue-600 dark:text-blue-400" />
             </Button>
@@ -84,7 +84,7 @@ const StudentCard = ({ student, onUpdate, onEdit, onDelete }) => {
                 e.stopPropagation();
                 onDelete(student, e);
               }}
-              className="hover:bg-red-50 dark:hover:bg-red-900/20 p-2"
+              className="hover:bg-red-50 dark:hover:bg-red-900/20 p-1.5 h-auto"
             >
               <Trash2 className="w-4 h-4 text-red-600 dark:text-red-400" />
             </Button>
@@ -94,28 +94,34 @@ const StudentCard = ({ student, onUpdate, onEdit, onDelete }) => {
 
       {/* Header */}
       <div 
-        className="flex justify-between items-start mb-4 cursor-pointer"
+        className="cursor-pointer mb-4"
         onClick={() => navigate(`/students/${student.id}`)}
       >
-        <div className="pr-20">
-          <h3 className="text-lg font-bold text-gray-900 dark:text-white" data-testid="student-name">{student.ad_soyad}</h3>
-          <div className="flex items-center space-x-3 mt-2">
-            <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
-              <MapPin className="w-4 h-4 mr-1" />
-              {student.konum}
-            </div>
-            <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
-              <Award className="w-4 h-4 mr-1" />
-              {student.seviye}
+        <div className="flex items-start justify-between mb-3">
+          <div className="flex-1 pr-16">
+            <h3 className="text-lg font-bold text-gray-900 dark:text-white" data-testid="student-name">{student.ad_soyad}</h3>
+            <div className="flex items-center space-x-3 mt-2">
+              <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
+                <MapPin className="w-4 h-4 mr-1" />
+                {student.konum}
+              </div>
+              <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
+                <Award className="w-4 h-4 mr-1" />
+                {student.seviye}
+              </div>
             </div>
           </div>
         </div>
-        {getStatusBadge()}
+        
+        {/* Status Badge */}
+        <div className="mb-3">
+          {getStatusBadge()}
+        </div>
       </div>
 
       {/* Remaining Lessons */}
       <div 
-        className="mb-3 cursor-pointer"
+        className="mb-4 cursor-pointer"
         onClick={() => navigate(`/students/${student.id}`)}
       >
         <div className="flex justify-between items-center mb-2">
@@ -136,37 +142,21 @@ const StudentCard = ({ student, onUpdate, onEdit, onDelete }) => {
         </div>
       </div>
 
-      {/* Tariff Info */}
+      {/* Monthly Payment - Simplified and Prominent */}
       {calculations.tariff && (
         <div 
-          className="mb-3 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-100 dark:border-blue-800 cursor-pointer"
+          className="text-center py-3 border-t border-gray-100 dark:border-gray-700 cursor-pointer"
           onClick={() => navigate(`/students/${student.id}`)}
         >
-          <div className="flex justify-between items-center">
-            <span className="text-sm font-medium text-blue-900 dark:text-blue-300">
-              Aylık Tarife
-            </span>
-            <span className="text-lg font-bold text-blue-600 dark:text-blue-400">
-              {new Intl.NumberFormat('tr-TR', {
-                style: 'decimal',
-                minimumFractionDigits: 0,
-                maximumFractionDigits: 0,
-              }).format(calculations.tariff.ucret)}₺
-            </span>
-          </div>
-          <div className="text-xs text-blue-700 dark:text-blue-400 mt-1">
-            Ayda {calculations.tariff.aylik_ders_sayisi} ders
+          <div className="text-3xl font-bold text-blue-600 dark:text-blue-400">
+            {new Intl.NumberFormat('tr-TR', {
+              style: 'decimal',
+              minimumFractionDigits: 0,
+              maximumFractionDigits: 0,
+            }).format(calculations.tariff.ucret)}₺
           </div>
         </div>
       )}
-
-      {/* Footer */}
-      <div 
-        className="text-xs text-gray-500 dark:text-gray-400 pt-3 border-t border-gray-100 dark:border-gray-700 cursor-pointer"
-        onClick={() => navigate(`/students/${student.id}`)}
-      >
-        İlk Ders: {new Date(student.ilk_ders_tarihi).toLocaleDateString('tr-TR')}
-      </div>
     </div>
   );
 };
