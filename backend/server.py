@@ -1332,6 +1332,132 @@ async def import_data(file: UploadFile):
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Import hatası: {str(e)}")
 
+# ==================== CSV EXPORT SİSTEMİ ====================
+
+@api_router.get("/export/students/csv")
+async def export_students_csv():
+    """Bireysel öğrencileri CSV olarak export et"""
+    from fastapi.responses import StreamingResponse
+    import io
+    import csv
+    from datetime import datetime
+    
+    try:
+        # Öğrencileri al
+        students = await db.ogrenciler.find({}, {"_id": 0}).to_list(10000)
+        
+        if not students:
+            raise HTTPException(status_code=404, detail="Öğrenci bulunamadı")
+        
+        # CSV oluştur
+        output = io.StringIO()
+        writer = csv.writer(output)
+        
+        # Header
+        headers = [
+            "Ad Soyad", "Konum", "Seviye", "Email", "Yaş", "Meslek",
+            "İlk Ders Tarihi", "Referans", "Genel Durum", "Notlar", "Kayıt Tarihi"
+        ]
+        writer.writerow(headers)
+        
+        # Satırlar
+        for student in students:
+            row = [
+                student.get("ad_soyad", ""),
+                student.get("konum", ""),
+                student.get("seviye", ""),
+                student.get("email", ""),
+                student.get("yas", ""),
+                student.get("meslek", ""),
+                student.get("ilk_ders_tarihi", ""),
+                student.get("referans", ""),
+                student.get("genel_durum", ""),
+                student.get("notlar", ""),
+                student.get("created_at", "")
+            ]
+            writer.writerow(row)
+        
+        # CSV'yi bytes'a çevir
+        output.seek(0)
+        csv_content = output.getvalue().encode('utf-8-sig')  # BOM ekle (Excel için)
+        
+        return StreamingResponse(
+            io.BytesIO(csv_content),
+            media_type="text/csv",
+            headers={
+                "Content-Disposition": f"attachment; filename=ogrenciler_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv"
+            }
+        )
+    
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"CSV export hatası: {str(e)}")
+
+@api_router.get("/export/grup-ogrenciler/csv")
+async def export_grup_ogrenciler_csv(grup_id: Optional[str] = None):
+    """Grup öğrencilerini CSV olarak export et"""
+    from fastapi.responses import StreamingResponse
+    import io
+    import csv
+    from datetime import datetime
+    
+    try:
+        # Query oluştur
+        query = {}
+        if grup_id:
+            query["grup_id"] = grup_id
+        
+        # Grup öğrencilerini al
+        grup_ogrenciler = await db.grup_ogrenciler.find(query, {"_id": 0}).to_list(10000)
+        
+        if not grup_ogrenciler:
+            raise HTTPException(status_code=404, detail="Grup öğrencisi bulunamadı")
+        
+        # CSV oluştur
+        output = io.StringIO()
+        writer = csv.writer(output)
+        
+        # Header
+        headers = [
+            "Ad Soyad", "Telefon", "E-posta", "Paket Tipi", "Ücret",
+            "Ödeme Şekli", "Ödenen Tutar", "Kalan Tutar", "Durum", "Kayıt Tarihi"
+        ]
+        writer.writerow(headers)
+        
+        # Satırlar
+        for ogrenci in grup_ogrenciler:
+            row = [
+                ogrenci.get("ad_soyad", ""),
+                ogrenci.get("telefon", ""),
+                ogrenci.get("eposta", ""),
+                ogrenci.get("paket_tipi", ""),
+                ogrenci.get("ucret", ""),
+                ogrenci.get("odeme_sekli", ""),
+                ogrenci.get("odenen_tutar", ""),
+                ogrenci.get("kalan_tutar", ""),
+                ogrenci.get("durum", ""),
+                ogrenci.get("kayit_tarihi", "")
+            ]
+            writer.writerow(row)
+        
+        # CSV'yi bytes'a çevir
+        output.seek(0)
+        csv_content = output.getvalue().encode('utf-8-sig')  # BOM ekle (Excel için)
+        
+        filename = f"grup_ogrenciler_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv"
+        if grup_id:
+            filename = f"grup_{grup_id}_ogrenciler_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv"
+        
+        return StreamingResponse(
+            io.BytesIO(csv_content),
+            media_type="text/csv",
+            headers={
+                "Content-Disposition": f"attachment; filename={filename}"
+            }
+        )
+    
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"CSV export hatası: {str(e)}")
+
 # ==================== GRUP DERS KAYDI ENDPOINTS ====================
 
 @api_router.get("/grup-dersleri/ders-kayitlari", response_model=List[GrupDersKaydi])
