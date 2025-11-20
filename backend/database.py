@@ -217,6 +217,61 @@ class Database:
         cursor = await self._db.execute(query, params)
         rows = await cursor.fetchall()
         return [dict(row) for row in rows]
+    
+    # ==================== HELPER METHODS ====================
+    
+    async def insert(self, table, data):
+        """Insert a record and commit"""
+        columns = ', '.join(data.keys())
+        placeholders = ', '.join(['?' for _ in data])
+        query = f"INSERT INTO {table} ({columns}) VALUES ({placeholders})"
+        await self.execute(query, tuple(data.values()))
+    
+    async def update(self, table, data, where_field, where_value):
+        """Update a record and commit"""
+        set_clause = ', '.join([f"{k} = ?" for k in data.keys()])
+        query = f"UPDATE {table} SET {set_clause} WHERE {where_field} = ?"
+        params = tuple(data.values()) + (where_value,)
+        await self.execute(query, params)
+    
+    async def delete(self, table, where_field, where_value):
+        """Delete a record and commit"""
+        query = f"DELETE FROM {table} WHERE {where_field} = ?"
+        await self.execute(query, (where_value,))
+    
+    async def find_all(self, table, where=None, order_by=None):
+        """Find all records matching criteria"""
+        query = f"SELECT * FROM {table}"
+        params = ()
+        
+        if where:
+            where_clause = ' AND '.join([f"{k} = ?" for k in where.keys()])
+            query += f" WHERE {where_clause}"
+            params = tuple(where.values())
+        
+        if order_by:
+            query += f" ORDER BY {order_by}"
+        
+        return await self.fetch_all(query, params)
+    
+    async def find_one(self, table, where):
+        """Find one record"""
+        where_clause = ' AND '.join([f"{k} = ?" for k in where.keys()])
+        query = f"SELECT * FROM {table} WHERE {where_clause} LIMIT 1"
+        return await self.fetch_one(query, tuple(where.values()))
+    
+    async def count(self, table, where=None):
+        """Count records"""
+        query = f"SELECT COUNT(*) as count FROM {table}"
+        params = ()
+        
+        if where:
+            where_clause = ' AND '.join([f"{k} = ?" for k in where.keys()])
+            query += f" WHERE {where_clause}"
+            params = tuple(where.values())
+        
+        result = await self.fetch_one(query, params)
+        return result['count'] if result else 0
 
 # Global database instance
 db = Database()
