@@ -149,6 +149,45 @@ const VeriYonetimi = () => {
         </Button>
       </div>
 
+      {/* Export/Import */}
+      <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-100 dark:border-gray-700">
+        <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+          Veri Dışa/İçe Aktarma
+        </h2>
+        <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
+          Verilerinizi tek bir JSON dosyası olarak dışa aktarın veya başka bir yerden veri içe aktarın.
+        </p>
+
+        <div className="flex gap-3">
+          <Button
+            onClick={handleExport}
+            variant="outline"
+            className="border-green-500 text-green-600 hover:bg-green-50 dark:border-green-600 dark:text-green-400 dark:hover:bg-green-900/20"
+          >
+            <FileDown className="w-4 h-4 mr-2" />
+            Dışa Aktar (Export)
+          </Button>
+
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept=".json"
+            onChange={handleFileChange}
+            className="hidden"
+          />
+          
+          <Button
+            onClick={handleImportClick}
+            disabled={importing}
+            variant="outline"
+            className="border-orange-500 text-orange-600 hover:bg-orange-50 dark:border-orange-600 dark:text-orange-400 dark:hover:bg-orange-900/20"
+          >
+            <Upload className="w-4 h-4 mr-2" />
+            {importing ? "İçe Aktarılıyor..." : "İçe Aktar (Import)"}
+          </Button>
+        </div>
+      </div>
+
       {/* Yedek Listesi */}
       <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700">
         <div className="p-6 border-b border-gray-100 dark:border-gray-700">
