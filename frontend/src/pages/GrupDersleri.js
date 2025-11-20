@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { Users, TrendingUp, CheckCircle, Clock, Plus } from "lucide-react";
+import { useAyarlar } from "@/hooks/useAyarlar";
 import { Button } from "@/components/ui/button";
 import {
   Select,
