@@ -94,6 +94,17 @@ const GrupDetay = () => {
     }
   };
 
+  const fetchDersKayitlari = async () => {
+    try {
+      const response = await axios.get(`${API}/grup-dersleri/ders-kayitlari`, {
+        params: { grup_id: grupId },
+      });
+      setDersKayitlari(response.data);
+    } catch (error) {
+      console.error("Ders kayıtları yüklenemedi:", error);
+    }
+  };
+
   const applyFilters = () => {
     let filtered = [...ogrenciler];
 
