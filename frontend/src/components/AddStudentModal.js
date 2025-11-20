@@ -44,6 +44,7 @@ const AddStudentModal = ({ isOpen, onClose, onSuccess }) => {
     aylik_ders_sayisi: 4,
     tarife_not: "",
   });
+  const [ozelAlanlarData, setOzelAlanlarData] = useState({});
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
