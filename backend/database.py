@@ -163,12 +163,11 @@ class Database:
             CREATE TABLE IF NOT EXISTS grup_ders_kayitlari (
                 id TEXT PRIMARY KEY,
                 grup_id TEXT NOT NULL,
-                sezon_id TEXT NOT NULL,
-                ders_tarihi TEXT NOT NULL,
+                tarih TEXT NOT NULL,
+                konu TEXT,
                 not_ TEXT,
                 created_at TEXT DEFAULT CURRENT_TIMESTAMP,
-                FOREIGN KEY (grup_id) REFERENCES gruplar(id) ON DELETE CASCADE,
-                FOREIGN KEY (sezon_id) REFERENCES grup_sezonlar(id) ON DELETE CASCADE
+                FOREIGN KEY (grup_id) REFERENCES gruplar(id) ON DELETE CASCADE
             )
         """)
         
