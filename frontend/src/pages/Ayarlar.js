@@ -186,7 +186,7 @@ const Ayarlar = () => {
 
       {/* Tabs */}
       <Tabs value={selectedKategori} onValueChange={setSelectedKategori}>
-        <TabsList className="grid grid-cols-4 lg:grid-cols-8 gap-2 h-auto bg-white dark:bg-gray-800 p-2 rounded-lg border border-gray-200 dark:border-gray-700">
+        <TabsList className="grid grid-cols-4 lg:grid-cols-9 gap-2 h-auto bg-white dark:bg-gray-800 p-2 rounded-lg border border-gray-200 dark:border-gray-700">
           {KATEGORILER.map((kategori) => (
             <TabsTrigger
               key={kategori.key}
@@ -201,6 +201,12 @@ const Ayarlar = () => {
             className="data-[state=active]:bg-[#4d5deb] data-[state=active]:text-white dark:text-gray-300 px-3 py-2 text-sm"
           >
             Özel Alanlar
+          </TabsTrigger>
+          <TabsTrigger
+            value="gelir_raporu"
+            className="data-[state=active]:bg-[#4d5deb] data-[state=active]:text-white dark:text-gray-300 px-3 py-2 text-sm"
+          >
+            Gelir Raporu
           </TabsTrigger>
         </TabsList>
 
