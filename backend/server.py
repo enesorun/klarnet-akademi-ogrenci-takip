@@ -1012,6 +1012,50 @@ async def initialize_ayarlar():
     
     return {"message": "Varsayılan ayarlar yüklendi", "count": len(varsayilan_ayarlar)}
 
+# ==================== ÖZEL ALAN ENDPOINTS ====================
+
+@api_router.get("/ozel-alanlar", response_model=List[OzelAlan])
+async def get_ozel_alanlar(model_tipi: Optional[str] = None, aktif: Optional[bool] = None):
+    query = {}
+    if model_tipi:
+        query["model_tipi"] = model_tipi
+    if aktif is not None:
+        query["aktif"] = aktif
+    
+    ozel_alanlar = await db.ozel_alanlar.find(query, {"_id": 0}).sort("sira", 1).to_list(1000)
+    return ozel_alanlar
+
+@api_router.post("/ozel-alanlar", response_model=OzelAlan)
+async def create_ozel_alan(alan: OzelAlanCreate):
+    # Aynı model_tipi için maksimum sıra numarasını bul
+    existing_alanlar = await db.ozel_alanlar.find(
+        {"model_tipi": alan.model_tipi}, 
+        {"_id": 0}
+    ).to_list(1000)
+    max_sira = max([a.get("sira", 0) for a in existing_alanlar], default=0)
+    
+    new_alan = OzelAlan(**alan.dict(), sira=max_sira + 1)
+    await db.ozel_alanlar.insert_one(new_alan.dict())
+    return new_alan
+
+@api_router.put("/ozel-alanlar/{alan_id}", response_model=OzelAlan)
+async def update_ozel_alan(alan_id: str, alan: OzelAlanCreate):
+    result = await db.ozel_alanlar.update_one(
+        {"id": alan_id},
+        {"$set": alan.dict()}
+    )
+    if result.matched_count == 0:
+        raise HTTPException(status_code=404, detail="Özel alan bulunamadı")
+    updated_alan = await db.ozel_alanlar.find_one({"id": alan_id}, {"_id": 0})
+    return updated_alan
+
+@api_router.delete("/ozel-alanlar/{alan_id}")
+async def delete_ozel_alan(alan_id: str):
+    result = await db.ozel_alanlar.delete_one({"id": alan_id})
+    if result.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="Özel alan bulunamadı")
+    return {"message": "Özel alan silindi"}
+
 # ==================== GRUP DERS KAYDI ENDPOINTS ====================
 
 @api_router.get("/grup-dersleri/ders-kayitlari", response_model=List[GrupDersKaydi])
