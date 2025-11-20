@@ -118,18 +118,20 @@ class Lesson(BaseModel):
     ogrenci_id: str
     tarih: str
     sure: int = 50
-    islenen_konu: str
+    islenen_konu: str = ""
     odev_not: str = ""
     onemli: bool = False
+    not_: str = ""
     created_at: str = Field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
 
 class LessonCreate(BaseModel):
     ogrenci_id: str
     tarih: str
     sure: int = 50
-    islenen_konu: str
+    islenen_konu: str = ""
     odev_not: str = ""
     onemli: bool = False
+    not_: str = ""
 
 class DashboardStats(BaseModel):
     aktif_ogrenci_sayisi: int
