@@ -312,6 +312,11 @@ const Ayarlar = () => {
         <TabsContent value="ozel_alanlar">
           <OzelAlanlar />
         </TabsContent>
+
+        {/* Gelir Raporu Tab */}
+        <TabsContent value="gelir_raporu">
+          <GelirRaporuAyarlari />
+        </TabsContent>
       </Tabs>
 
       {/* Add/Edit Modal */}
