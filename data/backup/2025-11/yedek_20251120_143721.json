@@ -1,0 +1,574 @@
+{
+  "ogrenciler": [],
+  "payments": [
+    {
+      "id": "c8b0a9d5-337f-43a6-953a-84c0a25ac1c4",
+      "ogrenci_id": "f150fee1-f894-4eee-b67d-e475d2fa1340",
+      "tarih": "2025-11-19",
+      "tutar": 6000.0,
+      "ders_sayisi": 4,
+      "not_": "",
+      "created_at": "2025-11-19T09:07:50.256188+00:00"
+    },
+    {
+      "id": "3018282f-1955-4b67-bc97-e7c63b511c1f",
+      "ogrenci_id": "b8e2050e-47cc-4182-b1de-09184428c21d",
+      "tarih": "2025-11-19",
+      "tutar": 12000.0,
+      "ders_sayisi": 8,
+      "not_": "2 aylık ödeme sonrasında 6400 olacak",
+      "created_at": "2025-11-19T09:13:11.160285+00:00"
+    },
+    {
+      "id": "0b2869fd-0579-4e9e-a95f-f58aba421dee",
+      "ogrenci_id": "02b5302e-8436-4816-a398-5f264d712fd5",
+      "tarih": "2025-11-19",
+      "tutar": 5500.0,
+      "ders_sayisi": 4,
+      "not_": "",
+      "created_at": "2025-11-19T09:22:26.667879+00:00"
+    },
+    {
+      "id": "37bf1726-e5c6-48df-9d80-99b1bcfba4fe",
+      "ogrenci_id": "02b5302e-8436-4816-a398-5f264d712fd5",
+      "tarih": "2025-11-19",
+      "tutar": 5500.0,
+      "ders_sayisi": 4,
+      "not_": "",
+      "created_at": "2025-11-19T09:44:14.169344+00:00"
+    },
+    {
+      "id": "7071b09d-aa62-4884-b050-2beb11df856e",
+      "ogrenci_id": "babf124e-ba71-4942-98a2-9edf8d56717f",
+      "tarih": "2025-11-19",
+      "tutar": 5500.0,
+      "ders_sayisi": 4,
+      "not_": "",
+      "created_at": "2025-11-19T09:59:57.115882+00:00"
+    },
+    {
+      "id": "92817b25-57fb-4b09-9830-79afd2a5a96e",
+      "ogrenci_id": "01055c08-0fe0-4aa8-aef6-bb776f041a06",
+      "tarih": "2025-11-19",
+      "tutar": 6000.0,
+      "ders_sayisi": 4,
+      "not_": "",
+      "created_at": "2025-11-19T10:01:01.688992+00:00"
+    },
+    {
+      "id": "777e2c86-6d1f-4d73-b4af-2e78d253c237",
+      "ogrenci_id": "babf124e-ba71-4942-98a2-9edf8d56717f",
+      "tarih": "2025-10-01",
+      "tutar": 6400.0,
+      "ders_sayisi": 4,
+      "not_": "",
+      "created_at": "2025-11-20T14:11:28.650948+00:00"
+    }
+  ],
+  "tariffs": [
+    {
+      "id": "e2ca2932-a9b4-4914-a703-d5163efa1e2b",
+      "ogrenci_id": "f150fee1-f894-4eee-b67d-e475d2fa1340",
+      "baslangic_tarihi": "2025-11-19",
+      "bitis_tarihi": null,
+      "ucret": 6000.0,
+      "aylik_ders_sayisi": 4,
+      "not_": "İlk tarife",
+      "created_at": "2025-11-19T09:06:09.816929+00:00"
+    },
+    {
+      "id": "034ad7a5-39ec-4b87-b882-c613e0ac5f8a",
+      "ogrenci_id": "b8e2050e-47cc-4182-b1de-09184428c21d",
+      "baslangic_tarihi": "2025-11-25",
+      "bitis_tarihi": "2025-11-19T09:12:44.912Z",
+      "ucret": 6000.0,
+      "aylik_ders_sayisi": 4,
+      "not_": "İlk tarife",
+      "created_at": "2025-11-19T09:12:17.923086+00:00"
+    },
+    {
+      "id": "0cdcf587-e3de-450c-882e-5da9d4aa8691",
+      "ogrenci_id": "b8e2050e-47cc-4182-b1de-09184428c21d",
+      "baslangic_tarihi": "2025-11-19T09:12:44.912Z",
+      "bitis_tarihi": null,
+      "ucret": 6400.0,
+      "aylik_ders_sayisi": 4,
+      "not_": "İlk tarife",
+      "created_at": "2025-11-19T09:12:44.980204+00:00"
+    },
+    {
+      "id": "04715801-a080-400f-970c-eb2fbe77e6e7",
+      "ogrenci_id": "02b5302e-8436-4816-a398-5f264d712fd5",
+      "baslangic_tarihi": "2025-11-18",
+      "bitis_tarihi": "2025-11-19T09:21:54.214Z",
+      "ucret": 6000.0,
+      "aylik_ders_sayisi": 4,
+      "not_": "İlk tarife",
+      "created_at": "2025-11-19T09:21:34.665301+00:00"
+    },
+    {
+      "id": "f499f9d3-b64d-4e8f-8fb5-a36c689d0753",
+      "ogrenci_id": "02b5302e-8436-4816-a398-5f264d712fd5",
+      "baslangic_tarihi": "2025-11-19T09:21:54.214Z",
+      "bitis_tarihi": null,
+      "ucret": 5500.0,
+      "aylik_ders_sayisi": 4,
+      "not_": "İlk tarife",
+      "created_at": "2025-11-19T09:21:54.302003+00:00"
+    },
+    {
+      "id": "a8fe2896-e839-4922-ad07-0219fed0aa7f",
+      "ogrenci_id": "2653b4b6-3a1e-4691-bc8e-5ecb4055ad46",
+      "baslangic_tarihi": "2025-11-19",
+      "bitis_tarihi": null,
+      "ucret": 7000.0,
+      "aylik_ders_sayisi": 4,
+      "not_": "Özel tarife",
+      "created_at": "2025-11-19T09:27:22.572030+00:00"
+    },
+    {
+      "id": "a0b4a023-0150-412d-ae9c-75536f3eea3b",
+      "ogrenci_id": "e71cad92-fbd8-44fa-8e47-3d954ba39658",
+      "baslangic_tarihi": "2025-11-19",
+      "bitis_tarihi": null,
+      "ucret": 6500.0,
+      "aylik_ders_sayisi": 4,
+      "not_": "İlk tarife",
+      "created_at": "2025-11-19T09:34:36.156996+00:00"
+    },
+    {
+      "id": "cfb0494e-928e-483f-91e1-e37bc4c86003",
+      "ogrenci_id": "ad70ca04-7861-4b03-b29d-fd8cd425433c",
+      "baslangic_tarihi": "2025-11-19",
+      "bitis_tarihi": null,
+      "ucret": 8000.0,
+      "aylik_ders_sayisi": 4,
+      "not_": "İlk tarife",
+      "created_at": "2025-11-19T09:40:50.625067+00:00"
+    },
+    {
+      "id": "7322df90-1e3a-44ee-8c8f-ef3455903ef5",
+      "ogrenci_id": "73a8957d-5e44-4536-9a30-3946d8d3c5a2",
+      "baslangic_tarihi": "2025-11-19",
+      "bitis_tarihi": null,
+      "ucret": 5000.0,
+      "aylik_ders_sayisi": 4,
+      "not_": "İlk tarife",
+      "created_at": "2025-11-19T09:46:28.731442+00:00"
+    },
+    {
+      "id": "0c4296d8-d274-420a-b8fd-2b737df18f85",
+      "ogrenci_id": "396ce9a7-aafa-440f-8f1b-a8615f2ce767",
+      "baslangic_tarihi": "2025-11-19",
+      "bitis_tarihi": null,
+      "ucret": 6000.0,
+      "aylik_ders_sayisi": 4,
+      "not_": "İlk tarife",
+      "created_at": "2025-11-19T09:50:51.838794+00:00"
+    },
+    {
+      "id": "0349ccfd-1dae-48ca-b0ee-fad7b6dfbd41",
+      "ogrenci_id": "babf124e-ba71-4942-98a2-9edf8d56717f",
+      "baslangic_tarihi": "2025-11-19",
+      "bitis_tarihi": null,
+      "ucret": 5500.0,
+      "aylik_ders_sayisi": 4,
+      "not_": "İlk tarife",
+      "created_at": "2025-11-19T09:59:47.734408+00:00"
+    },
+    {
+      "id": "f81d2288-8e0c-4dde-8115-804c5d58a844",
+      "ogrenci_id": "01055c08-0fe0-4aa8-aef6-bb776f041a06",
+      "baslangic_tarihi": "2025-11-19",
+      "bitis_tarihi": null,
+      "ucret": 6000.0,
+      "aylik_ders_sayisi": 4,
+      "not_": "Ocakta 6400 olacka",
+      "created_at": "2025-11-19T10:00:51.939683+00:00"
+    },
+    {
+      "id": "2ef4ae75-3fc6-44ad-9e56-fd3ec299b9d0",
+      "ogrenci_id": "e28e80e9-d36e-42bb-9df7-67fd6def3ce6",
+      "baslangic_tarihi": "2025-11-19",
+      "bitis_tarihi": null,
+      "ucret": 6400.0,
+      "aylik_ders_sayisi": 4,
+      "not_": "İlk tarife",
+      "created_at": "2025-11-19T15:56:22.336518+00:00"
+    },
+    {
+      "id": "e759f53d-da9b-4568-a7f1-4e1d534dae25",
+      "ogrenci_id": "a135490a-5b61-47eb-9501-e8c85b23ed1e",
+      "baslangic_tarihi": "2025-11-20",
+      "bitis_tarihi": null,
+      "ucret": 1000.0,
+      "aylik_ders_sayisi": 4,
+      "not_": "İlk tarife",
+      "created_at": "2025-11-20T14:18:46.375421+00:00"
+    }
+  ],
+  "ayarlar": [
+    {
+      "id": "64f41915-28ca-47e4-9e1f-5ee127c58283",
+      "kategori": "seviyeler",
+      "deger": "Başlangıç",
+      "varsayilan_ucret": null,
+      "sira": 1,
+      "aktif": true,
+      "created_at": "2025-11-19T16:50:31.732359+00:00"
+    },
+    {
+      "id": "05f0d973-b1b1-4e55-b6f2-54c91110d045",
+      "kategori": "seviyeler",
+      "deger": "Orta",
+      "varsayilan_ucret": null,
+      "sira": 2,
+      "aktif": true,
+      "created_at": "2025-11-19T16:50:31.758544+00:00"
+    },
+    {
+      "id": "29c1f06f-75f7-4ada-8764-046f2388931a",
+      "kategori": "seviyeler",
+      "deger": "İleri",
+      "varsayilan_ucret": null,
+      "sira": 3,
+      "aktif": true,
+      "created_at": "2025-11-19T16:50:31.759289+00:00"
+    },
+    {
+      "id": "1c0e0a5f-3973-47ad-b85a-539e7d82a303",
+      "kategori": "seviyeler",
+      "deger": "Uzman",
+      "varsayilan_ucret": null,
+      "sira": 4,
+      "aktif": true,
+      "created_at": "2025-11-19T16:50:31.759791+00:00"
+    },
+    {
+      "id": "35bb6b67-4396-44cc-aaf9-ac5d7753dd21",
+      "kategori": "ogrenci_durumlari",
+      "deger": "aktif",
+      "varsayilan_ucret": null,
+      "sira": 1,
+      "aktif": true,
+      "created_at": "2025-11-19T16:50:31.760195+00:00"
+    },
+    {
+      "id": "31966e39-98dd-4a4b-9ead-4601e2638574",
+      "kategori": "ogrenci_durumlari",
+      "deger": "ara_verdi",
+      "varsayilan_ucret": null,
+      "sira": 2,
+      "aktif": true,
+      "created_at": "2025-11-19T16:50:31.760596+00:00"
+    },
+    {
+      "id": "8c2527aa-7cf8-4e58-89e9-cf38fe2377ec",
+      "kategori": "ogrenci_durumlari",
+      "deger": "eski",
+      "varsayilan_ucret": null,
+      "sira": 3,
+      "aktif": true,
+      "created_at": "2025-11-19T16:50:31.760956+00:00"
+    },
+    {
+      "id": "2bd7bac2-1fef-4a85-a43f-b537b747c48c",
+      "kategori": "referans_kaynaklari",
+      "deger": "Tavsiye",
+      "varsayilan_ucret": null,
+      "sira": 1,
+      "aktif": true,
+      "created_at": "2025-11-19T16:50:31.761309+00:00"
+    },
+    {
+      "id": "fbed71a7-d6d0-49e5-a8fa-46215e2a0bfb",
+      "kategori": "referans_kaynaklari",
+      "deger": "Google Arama",
+      "varsayilan_ucret": null,
+      "sira": 2,
+      "aktif": true,
+      "created_at": "2025-11-19T16:50:31.761684+00:00"
+    },
+    {
+      "id": "869c0d1f-6062-435c-b779-2b1e693ef21a",
+      "kategori": "referans_kaynaklari",
+      "deger": "Sosyal Medya",
+      "varsayilan_ucret": null,
+      "sira": 3,
+      "aktif": true,
+      "created_at": "2025-11-19T16:50:31.762022+00:00"
+    },
+    {
+      "id": "f0d066ff-1321-4175-84f3-39ed15f749d2",
+      "kategori": "referans_kaynaklari",
+      "deger": "Meta Reklam",
+      "varsayilan_ucret": null,
+      "sira": 4,
+      "aktif": true,
+      "created_at": "2025-11-19T16:50:31.762349+00:00"
+    },
+    {
+      "id": "574316b0-6c57-4742-9202-7d7b13db3966",
+      "kategori": "referans_kaynaklari",
+      "deger": "Google Reklam",
+      "varsayilan_ucret": null,
+      "sira": 5,
+      "aktif": true,
+      "created_at": "2025-11-19T16:50:31.762686+00:00"
+    },
+    {
+      "id": "169e520d-59f1-4f39-b0d9-f0cde72d791e",
+      "kategori": "referans_kaynaklari",
+      "deger": "Diğer",
+      "varsayilan_ucret": null,
+      "sira": 6,
+      "aktif": true,
+      "created_at": "2025-11-19T16:50:31.763012+00:00"
+    },
+    {
+      "id": "4c2335cd-6d13-4adc-9ce4-0458a4b9d71e",
+      "kategori": "grup_etaplari",
+      "deger": "1. Etap",
+      "varsayilan_ucret": 4000.0,
+      "sira": 1,
+      "aktif": true,
+      "created_at": "2025-11-19T16:50:31.763336+00:00"
+    },
+    {
+      "id": "323eed3c-a527-426f-91c2-ad0abda45e93",
+      "kategori": "grup_etaplari",
+      "deger": "2. Etap",
+      "varsayilan_ucret": 4000.0,
+      "sira": 2,
+      "aktif": true,
+      "created_at": "2025-11-19T16:50:31.763689+00:00"
+    },
+    {
+      "id": "9db88a09-2a29-4039-b111-de86d09aa41d",
+      "kategori": "grup_etaplari",
+      "deger": "Tam Paket",
+      "varsayilan_ucret": 6400.0,
+      "sira": 3,
+      "aktif": true,
+      "created_at": "2025-11-19T16:50:31.764037+00:00"
+    },
+    {
+      "id": "1b5d7310-3bce-47cb-8aab-eeb01505ddf8",
+      "kategori": "grup_durumlari",
+      "deger": "planlanan",
+      "varsayilan_ucret": null,
+      "sira": 1,
+      "aktif": true,
+      "created_at": "2025-11-19T16:50:31.764342+00:00"
+    },
+    {
+      "id": "27681d93-b71e-4e0d-ab42-7421f434c2c1",
+      "kategori": "grup_durumlari",
+      "deger": "aktif",
+      "varsayilan_ucret": null,
+      "sira": 2,
+      "aktif": true,
+      "created_at": "2025-11-19T16:50:31.764649+00:00"
+    },
+    {
+      "id": "50f54ba1-4e48-4cde-903f-ad423016edd6",
+      "kategori": "grup_durumlari",
+      "deger": "tamamlandi",
+      "varsayilan_ucret": null,
+      "sira": 3,
+      "aktif": true,
+      "created_at": "2025-11-19T16:50:31.765011+00:00"
+    },
+    {
+      "id": "cd93b8ea-e475-4fdd-a9b7-37775695110b",
+      "kategori": "grup_durumlari",
+      "deger": "iptal",
+      "varsayilan_ucret": null,
+      "sira": 4,
+      "aktif": true,
+      "created_at": "2025-11-19T16:50:31.765246+00:00"
+    },
+    {
+      "id": "59a8f0f9-6f8d-4347-aeba-80e947786170",
+      "kategori": "grup_ogrenci_durumlari",
+      "deger": "aktif",
+      "varsayilan_ucret": null,
+      "sira": 1,
+      "aktif": true,
+      "created_at": "2025-11-19T16:50:31.765469+00:00"
+    },
+    {
+      "id": "fa1702ca-46d1-4935-a5a5-9f0c2324b04c",
+      "kategori": "grup_ogrenci_durumlari",
+      "deger": "beklemede",
+      "varsayilan_ucret": null,
+      "sira": 2,
+      "aktif": true,
+      "created_at": "2025-11-19T16:50:31.765666+00:00"
+    },
+    {
+      "id": "14106d86-3e62-4128-a27f-605c3770e7b6",
+      "kategori": "grup_ogrenci_durumlari",
+      "deger": "ayrildi",
+      "varsayilan_ucret": null,
+      "sira": 3,
+      "aktif": true,
+      "created_at": "2025-11-19T16:50:31.765860+00:00"
+    },
+    {
+      "id": "8c8bbff8-8aea-4a68-bbbb-36bd1012022c",
+      "kategori": "odeme_sekilleri",
+      "deger": "Peşin",
+      "varsayilan_ucret": null,
+      "sira": 1,
+      "aktif": true,
+      "created_at": "2025-11-19T16:50:31.766051+00:00"
+    },
+    {
+      "id": "d5fb7366-78d2-46a8-9f91-82b0ecb3e18e",
+      "kategori": "odeme_sekilleri",
+      "deger": "2 Taksit",
+      "varsayilan_ucret": null,
+      "sira": 3,
+      "aktif": true,
+      "created_at": "2025-11-19T16:50:31.766239+00:00"
+    },
+    {
+      "id": "a6a34496-3796-4a7f-ba80-b5c268955ffc",
+      "kategori": "grup_durumlari",
+      "deger": "basvuru",
+      "varsayilan_ucret": null,
+      "sira": 5,
+      "aktif": true,
+      "created_at": "2025-11-20T07:38:47.476844+00:00"
+    },
+    {
+      "id": "3855fac7-2901-4546-96fc-71a169d33975",
+      "kategori": "odeme_sekilleri",
+      "deger": "Shopier",
+      "varsayilan_ucret": null,
+      "sira": 2,
+      "aktif": true,
+      "created_at": "2025-11-20T13:49:16.584702+00:00"
+    }
+  ],
+  "grup_sezonlar": [],
+  "gruplar": [
+    {
+      "id": "af6f5bbd-e21a-4f01-b851-9b0516380385",
+      "sezon_id": "722c039a-79bc-4362-bc2c-d971b6496789",
+      "grup_adi": "1. Grup - Güncellendi",
+      "kur_etap": "Tam Paket",
+      "gun_saat": "Pazar 13.00",
+      "max_kapasite": 10,
+      "toplam_ders_sayisi": 16,
+      "yapilan_ders_sayisi": 2,
+      "durum": "aktif",
+      "created_at": "2025-11-19T16:09:26.565185+00:00"
+    },
+    {
+      "id": "cb901fab-2ca3-44ff-bf31-e2d7c31e20b6",
+      "sezon_id": "dc4b5a59-151b-43b1-b9d0-17a7d097a7e8",
+      "grup_adi": "Grup A",
+      "kur_etap": "1. Etap",
+      "gun_saat": "Pazartesi 18:00",
+      "max_kapasite": 10,
+      "toplam_ders_sayisi": 16,
+      "yapilan_ders_sayisi": 0,
+      "durum": "aktif",
+      "created_at": "2025-11-19T16:10:28.480840+00:00"
+    },
+    {
+      "id": "8fe59c11-6e88-4baf-a848-ac712ea77634",
+      "sezon_id": "52055d23-3d33-46c3-b2bd-539d01adbd33",
+      "grup_adi": "1. Grup",
+      "kur_etap": "Tam Paket",
+      "gun_saat": "Pazar 11",
+      "max_kapasite": 10,
+      "toplam_ders_sayisi": 16,
+      "yapilan_ders_sayisi": 0,
+      "durum": "aktif",
+      "ozel_alanlar": {},
+      "created_at": "2025-11-20T14:34:14.931337+00:00"
+    }
+  ],
+  "grup_ogrenciler": [
+    {
+      "id": "23519713-a146-46dd-80c1-662b0b34d2b5",
+      "sezon_id": "722c039a-79bc-4362-bc2c-d971b6496789",
+      "grup_id": "af6f5bbd-e21a-4f01-b851-9b0516380385",
+      "ad_soyad": "Deneme",
+      "telefon": "05424053164",
+      "eposta": "nekilabu@gmail.com",
+      "paket_tipi": "1. Etap",
+      "ucret": 4000.0,
+      "odeme_sekli": "Peşin",
+      "odenen_tutar": 0,
+      "kalan_tutar": 4000.0,
+      "ilk_odeme_tutari": 4000.0,
+      "ilk_odeme_tarihi": "2025-11-20",
+      "kayit_tarihi": "2025-11-20T13:52:04.469549+00:00",
+      "durum": "aktif",
+      "created_at": "2025-11-20T13:52:04.469561+00:00",
+      "ozel_alanlar": {}
+    },
+    {
+      "id": "d59553cc-3a18-41de-9e00-8dfe2ab78473",
+      "sezon_id": "722c039a-79bc-4362-bc2c-d971b6496789",
+      "grup_id": "af6f5bbd-e21a-4f01-b851-9b0516380385",
+      "ad_soyad": "eerer",
+      "telefon": "05424053164",
+      "eposta": "nekilabu@gmail.com",
+      "paket_tipi": "Tam Paket",
+      "ucret": 6400.0,
+      "odeme_sekli": "Peşin",
+      "odenen_tutar": 0,
+      "kalan_tutar": 6400.0,
+      "ilk_odeme_tutari": 0.0,
+      "ilk_odeme_tarihi": "2025-11-20",
+      "kayit_tarihi": "2025-11-20T14:31:55.219973+00:00",
+      "durum": "aktif",
+      "ozel_alanlar": {},
+      "created_at": "2025-11-20T14:31:55.219984+00:00"
+    },
+    {
+      "id": "924fadd8-1718-47bf-8daf-207520f364f0",
+      "sezon_id": "52055d23-3d33-46c3-b2bd-539d01adbd33",
+      "grup_id": "8fe59c11-6e88-4baf-a848-ac712ea77634",
+      "ad_soyad": "Deneme",
+      "telefon": "05424053164",
+      "eposta": "nekilabu@gmail.com",
+      "paket_tipi": "Tam Paket",
+      "ucret": 6400.0,
+      "odeme_sekli": "Peşin",
+      "odenen_tutar": 6400.0,
+      "kalan_tutar": 0.0,
+      "ilk_odeme_tutari": 6400.0,
+      "ilk_odeme_tarihi": "2025-10-20",
+      "kayit_tarihi": "2025-11-20T14:34:41.398826+00:00",
+      "durum": "aktif",
+      "ozel_alanlar": {},
+      "created_at": "2025-11-20T14:34:41.398836+00:00"
+    }
+  ],
+  "grup_ders_kayitlari": [
+    {
+      "id": "31ffcf28-c0d5-4c34-9664-e6d666d6d201",
+      "grup_id": "af6f5bbd-e21a-4f01-b851-9b0516380385",
+      "tarih": "2025-11-20",
+      "konu": "",
+      "not_": "",
+      "created_at": "2025-11-20T07:22:03.076464+00:00"
+    },
+    {
+      "id": "4a44e0a9-7f80-4e56-b135-d2fcfecd51d9",
+      "grup_id": "af6f5bbd-e21a-4f01-b851-9b0516380385",
+      "tarih": "2025-11-20",
+      "konu": "",
+      "not_": "",
+      "created_at": "2025-11-20T14:09:54.750240+00:00"
+    }
+  ],
+  "ozel_alanlar": [],
+  "gelir_raporu_ayarlari": []
+}
