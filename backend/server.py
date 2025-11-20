@@ -97,6 +97,7 @@ class Payment(BaseModel):
     model_config = ConfigDict(extra="ignore")
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     ogrenci_id: str
+    tarife_id: Optional[str] = None
     tarih: str
     tutar: float
     ders_sayisi: int = 4
@@ -105,6 +106,7 @@ class Payment(BaseModel):
 
 class PaymentCreate(BaseModel):
     ogrenci_id: str
+    tarife_id: Optional[str] = None
     tarih: str
     tutar: float
     ders_sayisi: int = 4
