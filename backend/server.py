@@ -1171,6 +1171,7 @@ async def get_grup_ogrenciler(
 
 @api_router.post("/grup-dersleri/ogrenciler", response_model=GrupOgrenci)
 async def create_grup_ogrenci(ogrenci: GrupOgrenciCreate):
+    import json
     new_ogrenci = GrupOgrenci(**ogrenci.dict())
     
     # İlk ödeme varsa, ödenen tutarı güncelle
@@ -1180,7 +1181,16 @@ async def create_grup_ogrenci(ogrenci: GrupOgrenciCreate):
     # Kalan tutarı hesapla
     new_ogrenci.kalan_tutar = new_ogrenci.ucret - new_ogrenci.odenen_tutar
     
-    await db.grup_ogrenciler.insert_one(new_ogrenci.dict())
+    ogrenci_dict = new_ogrenci.dict()
+    
+    # SQLite: ozel_alanlar dict ise JSON string'e çevir
+    if isinstance(ogrenci_dict.get("ozel_alanlar"), dict):
+        ogrenci_dict["ozel_alanlar"] = json.dumps(ogrenci_dict["ozel_alanlar"], ensure_ascii=False)
+    elif ogrenci_dict.get("ozel_alanlar") is None:
+        ogrenci_dict["ozel_alanlar"] = "{}"
+    
+    # SQLite: Insert
+    await db.insert("grup_ogrenciler", ogrenci_dict)
     return new_ogrenci
 
 @api_router.get("/grup-dersleri/ogrenciler/{ogrenci_id}", response_model=GrupOgrenci)
