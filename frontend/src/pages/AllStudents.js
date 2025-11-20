@@ -23,6 +23,10 @@ const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
 
 const AllStudents = () => {
+  // Dinamik ayarları yükle
+  const { ayarlar: seviyeler } = useAyarlar("seviyeler");
+  const { ayarlar: referansKaynaklari } = useAyarlar("referans_kaynaklari");
+
   const [aktifStudents, setAktifStudents] = useState([]);
   const [araVerdiStudents, setAraVerdiStudents] = useState([]);
   const [eskiStudents, setEskiStudents] = useState([]);
