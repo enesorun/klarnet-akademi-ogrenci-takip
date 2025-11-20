@@ -648,8 +648,8 @@ async def get_dashboard_stats():
         prev_month = now - relativedelta(months=1)
         period_start = datetime(prev_month.year, prev_month.month, baslangic_gunu, tzinfo=timezone.utc)
     
-    # Bu dönemdeki ödemeleri topla (Birebir)
-    birebir_payments = await db.payments.find({}, {"_id": 0}).to_list(10000)
+    # SQLite: Bu dönemdeki ödemeleri topla (Birebir)
+    birebir_payments = await db.find_all("odemeler")
     aylik_gelir = 0
     
     for payment in birebir_payments:
@@ -664,8 +664,8 @@ async def get_dashboard_stats():
         except Exception:
             continue
     
-    # Grup ödemelerini ekle
-    grup_payments = await db.grup_ogrenci_odemeler.find({}, {"_id": 0}).to_list(10000)
+    # SQLite: Grup ödemelerini ekle
+    grup_payments = await db.find_all("grup_ogrenci_odemeler")
     for payment in grup_payments:
         try:
             payment_date_str = payment["odeme_tarihi"].replace("Z", "+00:00")
