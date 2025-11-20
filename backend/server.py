@@ -951,6 +951,7 @@ async def update_grup_ogrenci(ogrenci_id: str, ogrenci: GrupOgrenciCreate):
         "paket_tipi": ogrenci.paket_tipi,
         "ucret": ogrenci.ucret,
         "odeme_sekli": ogrenci.odeme_sekli,
+        "ozel_alanlar": ogrenci.ozel_alanlar or existing.get("ozel_alanlar", {}),
     }
     
     # İlk ödeme tutarı varsa ve değiştiyse, ödeme kaydı oluştur
