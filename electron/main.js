@@ -24,17 +24,25 @@ function startBackend() {
     if (isDev) {
       // Development modunda Python backend'i başlat
       console.log('Starting backend in development mode...');
-      backendProcess = spawn('python', [
-        path.join(__dirname, '..', 'backend', 'server.py')
-      ], {
-        env: { ...process.env, PYTHONUNBUFFERED: '1' }
+      const devBackendPath = path.join(__dirname, '..', 'backend', 'server.py');
+      backendProcess = spawn('python', [devBackendPath], {
+        env: { 
+          ...process.env, 
+          PYTHONUNBUFFERED: '1',
+          DB_PATH: path.join(userDataPath, 'ogrenciler.db')
+        },
+        cwd: path.join(__dirname, '..', 'backend')
       });
     } else {
       // Production modunda PyInstaller ile oluşturulmuş exe'yi başlat
       console.log('Starting backend in production mode...');
       const backendPath = path.join(process.resourcesPath, 'backend', 'server.exe');
       backendProcess = spawn(backendPath, [], {
-        env: { ...process.env }
+        env: { 
+          ...process.env,
+          DB_PATH: path.join(userDataPath, 'ogrenciler.db')
+        },
+        cwd: path.join(process.resourcesPath, 'backend')
       });
     }
     
