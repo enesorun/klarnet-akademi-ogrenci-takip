@@ -272,43 +272,64 @@ const GrupDetay = () => {
         </div>
       </div>
 
-      {/* Filtreler */}
-      <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-100 dark:border-gray-700">
-        <div className="flex items-center gap-4">
-          <Filter className="w-5 h-5 text-gray-600 dark:text-gray-400" />
-          <div className="flex-1 grid grid-cols-2 gap-4">
-            <div>
-              <Label className="text-gray-700 dark:text-gray-300 mb-2 block">Durum</Label>
-              <Select value={durumFilter} onValueChange={setDurumFilter}>
-                <SelectTrigger className="dark:bg-gray-700 dark:border-gray-600 dark:text-white">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent className="dark:bg-gray-700 dark:border-gray-600">
-                  <SelectItem value="hepsi" className="dark:text-white dark:focus:bg-gray-600">Hepsi</SelectItem>
-                  <SelectItem value="aktif" className="dark:text-white dark:focus:bg-gray-600">Aktif</SelectItem>
-                  <SelectItem value="ayrildi" className="dark:text-white dark:focus:bg-gray-600">Ayrıldı</SelectItem>
-                  <SelectItem value="beklemede" className="dark:text-white dark:focus:bg-gray-600">Beklemede</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            <div>
-              <Label className="text-gray-700 dark:text-gray-300 mb-2 block">Ödeme Durumu</Label>
-              <Select value={odemeFilter} onValueChange={setOdemeFilter}>
-                <SelectTrigger className="dark:bg-gray-700 dark:border-gray-600 dark:text-white">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent className="dark:bg-gray-700 dark:border-gray-600">
-                  <SelectItem value="hepsi" className="dark:text-white dark:focus:bg-gray-600">Hepsi</SelectItem>
-                  <SelectItem value="tamamlanan" className="dark:text-white dark:focus:bg-gray-600">Tamamlanan</SelectItem>
-                  <SelectItem value="devam_eden" className="dark:text-white dark:focus:bg-gray-600">Devam Eden</SelectItem>
-                </SelectContent>
-              </Select>
+      {/* Tab Sistemi */}
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+        <TabsList className="grid grid-cols-2 w-full max-w-md bg-white dark:bg-gray-800 p-1 rounded-lg border border-gray-200 dark:border-gray-700">
+          <TabsTrigger 
+            value="ogrenciler" 
+            className="data-[state=active]:bg-[#4d5deb] data-[state=active]:text-white dark:text-gray-300 flex items-center gap-2"
+          >
+            <Users className="w-4 h-4" />
+            Öğrenciler ({filteredOgrenciler.length})
+          </TabsTrigger>
+          <TabsTrigger 
+            value="dersler"
+            className="data-[state=active]:bg-[#4d5deb] data-[state=active]:text-white dark:text-gray-300 flex items-center gap-2"
+          >
+            <BookOpen className="w-4 h-4" />
+            Dersler ({dersKayitlari.length})
+          </TabsTrigger>
+        </TabsList>
+
+        {/* Öğrenciler Tab */}
+        <TabsContent value="ogrenciler" className="space-y-6">
+          {/* Filtreler */}
+          <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-100 dark:border-gray-700">
+            <div className="flex items-center gap-4">
+              <Filter className="w-5 h-5 text-gray-600 dark:text-gray-400" />
+              <div className="flex-1 grid grid-cols-2 gap-4">
+                <div>
+                  <Label className="text-gray-700 dark:text-gray-300 mb-2 block">Durum</Label>
+                  <Select value={durumFilter} onValueChange={setDurumFilter}>
+                    <SelectTrigger className="dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent className="dark:bg-gray-700 dark:border-gray-600">
+                      <SelectItem value="hepsi" className="dark:text-white dark:focus:bg-gray-600">Hepsi</SelectItem>
+                      <SelectItem value="aktif" className="dark:text-white dark:focus:bg-gray-600">Aktif</SelectItem>
+                      <SelectItem value="ayrildi" className="dark:text-white dark:focus:bg-gray-600">Ayrıldı</SelectItem>
+                      <SelectItem value="beklemede" className="dark:text-white dark:focus:bg-gray-600">Beklemede</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div>
+                  <Label className="text-gray-700 dark:text-gray-300 mb-2 block">Ödeme Durumu</Label>
+                  <Select value={odemeFilter} onValueChange={setOdemeFilter}>
+                    <SelectTrigger className="dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent className="dark:bg-gray-700 dark:border-gray-600">
+                      <SelectItem value="hepsi" className="dark:text-white dark:focus:bg-gray-600">Hepsi</SelectItem>
+                      <SelectItem value="tamamlanan" className="dark:text-white dark:focus:bg-gray-600">Tamamlanan</SelectItem>
+                      <SelectItem value="devam_eden" className="dark:text-white dark:focus:bg-gray-600">Devam Eden</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
-      </div>
 
-      {/* Öğrenci Listesi */}
+          {/* Öğrenci Listesi */}
       <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700">
         <div className="p-6 border-b border-gray-100 dark:border-gray-700">
           <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
