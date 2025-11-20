@@ -271,15 +271,15 @@ const PaymentsTab = ({ studentId, onUpdate }) => {
 
       {/* Delete Confirmation */}
       <AlertDialog open={!!deletePaymentId} onOpenChange={() => setDeletePaymentId(null)}>
-        <AlertDialogContent>
+        <AlertDialogContent className="dark:bg-gray-800">
           <AlertDialogHeader>
-            <AlertDialogTitle>Ödeme silinsin mi?</AlertDialogTitle>
-            <AlertDialogDescription>
+            <AlertDialogTitle className="text-gray-900 dark:text-white">Ödeme silinsin mi?</AlertDialogTitle>
+            <AlertDialogDescription className="text-gray-600 dark:text-gray-400">
               Bu işlem geri alınamaz. Ödeme kaydı kalıcı olarak silinecektir.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Vazgeç</AlertDialogCancel>
+            <AlertDialogCancel className="dark:bg-gray-700 dark:text-white">Vazgeç</AlertDialogCancel>
             <AlertDialogAction onClick={handleDelete} className="bg-red-600 hover:bg-red-700">
               Sil
             </AlertDialogAction>
