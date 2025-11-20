@@ -775,31 +775,47 @@ async def get_aylik_gelir_raporu():
 
 @api_router.get("/reports/genel", response_model=GenelIstatistik)
 async def get_genel_istatistik():
-    # Başlangıç değerleri
-    BASLANGIC_ESKI = 250
-    BASLANGIC_ARA_VERDI = 17
-    BASLANGIC_DERS = 5000
-    BASLANGIC_ORTALAMA_DERS_UCRETI = 750  # 750₺ ortalama ders ücreti
-    BASLANGIC_KAZANC = BASLANGIC_DERS * BASLANGIC_ORTALAMA_DERS_UCRETI  # 5000 * 750 = 3,750,000₺
+    # Baseline değerlerini al
+    baselines = await db.istatistik_baseline.find({}, {"_id": 0}).to_list(1000)
+    baseline_dict = {b["istatistik_adi"]: b["manuel_deger"] for b in baselines}
     
+    # Manuel baseline varsa kullan, yoksa 0'dan başla
+    baseline_ogrenci = baseline_dict.get("toplam_ogrenci", 0)
+    baseline_ders = baseline_dict.get("toplam_ders", 0)
+    baseline_kazanc = baseline_dict.get("toplam_kazanilan_para", 0)
+    
+    # Gerçek verileri topla
     students = await db.students.find({}, {"_id": 0}).to_list(1000)
-    toplam_ogrenci = len(students) + BASLANGIC_ESKI
+    gercek_ogrenci = len(students)
     
-    # Tüm dersler
+    # Tüm dersler (birebir)
     all_lessons = await db.lessons.find({}, {"_id": 0}).to_list(10000)
-    toplam_ders = len(all_lessons) + BASLANGIC_DERS
+    gercek_ders = len(all_lessons)
     
-    # Tüm ödemeler
+    # Grup dersleri ekle
+    grup_ders_kayitlari = await db.grup_ders_kayitlari.find({}, {"_id": 0}).to_list(10000)
+    gercek_ders += len(grup_ders_kayitlari)
+    
+    # Tüm ödemeler (birebir)
     all_payments = await db.payments.find({}, {"_id": 0}).to_list(10000)
-    yeni_kazanc = sum(p["tutar"] for p in all_payments)
-    toplam_kazanc = yeni_kazanc + BASLANGIC_KAZANC
+    gercek_kazanc = sum(p["tutar"] for p in all_payments)
     
+    # Grup öğrenci ödemeleri ekle
+    grup_odemeler = await db.grup_ogrenci_odemeler.find({}, {"_id": 0}).to_list(10000)
+    gercek_kazanc += sum(p["tutar"] for p in grup_odemeler)
+    
+    # Toplam = baseline + gerçek veriler
+    toplam_ogrenci = baseline_ogrenci + gercek_ogrenci
+    toplam_ders = baseline_ders + gercek_ders
+    toplam_kazanc = baseline_kazanc + gercek_kazanc
+    
+    # Ortalamalar
     ortalama_ders_ucreti = toplam_kazanc / toplam_ders if toplam_ders > 0 else 0
     ogrenci_basina_ders = toplam_ders / toplam_ogrenci if toplam_ogrenci > 0 else 0
     
     return GenelIstatistik(
-        toplam_ogrenci=toplam_ogrenci,
-        toplam_yapilan_ders=toplam_ders,
+        toplam_ogrenci=int(toplam_ogrenci),
+        toplam_yapilan_ders=int(toplam_ders),
         toplam_kazanilan_para=toplam_kazanc,
         ortalama_ders_ucreti=round(ortalama_ders_ucreti, 2),
         ogrenci_basina_ortalama_ders=round(ogrenci_basina_ders, 1)
