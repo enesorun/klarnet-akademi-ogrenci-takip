@@ -173,6 +173,7 @@ const GrupDetay = () => {
           sezon_id: grup.sezon_id,
           grup_id: grupId,
           ucret: parseFloat(ogrenciForm.ucret),
+          ozel_alanlar: grupOgrenciOzelAlanlarData,
         });
         toast.success("Öğrenci güncellendi!");
       } else {
@@ -185,11 +186,13 @@ const GrupDetay = () => {
           ilk_odeme_tutari: ogrenciForm.ilk_odeme_tutari 
             ? parseFloat(ogrenciForm.ilk_odeme_tutari) 
             : 0,
+          ozel_alanlar: grupOgrenciOzelAlanlarData,
         });
         toast.success("Öğrenci eklendi!");
       }
       setIsOgrenciModalOpen(false);
       setEditingOgrenci(null);
+      setGrupOgrenciOzelAlanlarData({});
       setOgrenciForm({
         ad_soyad: "",
         telefon: "",
