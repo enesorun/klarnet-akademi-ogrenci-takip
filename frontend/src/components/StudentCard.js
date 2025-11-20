@@ -114,7 +114,10 @@ const StudentCard = ({ student, onUpdate, onEdit, onDelete }) => {
       </div>
 
       {/* Remaining Lessons */}
-      <div className="mb-3">
+      <div 
+        className="mb-3 cursor-pointer"
+        onClick={() => navigate(`/students/${student.id}`)}
+      >
         <div className="flex justify-between items-center mb-2">
           <span className="text-sm font-medium text-gray-700 dark:text-gray-300" data-testid="remaining-lessons">
             {calculations.kalan_ders} ders kaldı
@@ -135,7 +138,10 @@ const StudentCard = ({ student, onUpdate, onEdit, onDelete }) => {
 
       {/* Tariff Info */}
       {calculations.tariff && (
-        <div className="mb-3 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-100 dark:border-blue-800">
+        <div 
+          className="mb-3 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-100 dark:border-blue-800 cursor-pointer"
+          onClick={() => navigate(`/students/${student.id}`)}
+        >
           <div className="flex justify-between items-center">
             <span className="text-sm font-medium text-blue-900 dark:text-blue-300">
               Aylık Tarife
@@ -155,7 +161,10 @@ const StudentCard = ({ student, onUpdate, onEdit, onDelete }) => {
       )}
 
       {/* Footer */}
-      <div className="text-xs text-gray-500 dark:text-gray-400 pt-3 border-t border-gray-100 dark:border-gray-700">
+      <div 
+        className="text-xs text-gray-500 dark:text-gray-400 pt-3 border-t border-gray-100 dark:border-gray-700 cursor-pointer"
+        onClick={() => navigate(`/students/${student.id}`)}
+      >
         İlk Ders: {new Date(student.ilk_ders_tarihi).toLocaleDateString('tr-TR')}
       </div>
     </div>
