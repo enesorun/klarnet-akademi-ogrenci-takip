@@ -1743,8 +1743,8 @@ async def export_students_csv():
     from datetime import datetime
     
     try:
-        # Öğrencileri al
-        students = await db.students.find({}, {"_id": 0}).to_list(10000)
+        # SQLite: Öğrencileri al
+        students = await db.find_all("students")
         
         if not students:
             raise HTTPException(status_code=404, detail="Öğrenci bulunamadı")
