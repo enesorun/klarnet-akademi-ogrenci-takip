@@ -190,7 +190,6 @@ const Reports = () => {
           </AccordionItem>
         </Accordion>
       )}
-      )}
 
       {/* Aylık Gelir Raporu */}
       <div>
