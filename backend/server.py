@@ -219,6 +219,7 @@ class GrupOgrenciCreate(BaseModel):
     odeme_sekli: str
     ilk_odeme_tutari: Optional[float] = 0
     ilk_odeme_tarihi: Optional[str] = ""
+    ozel_alanlar: Optional[dict] = {}
 
 class GrupDashboardStats(BaseModel):
     toplam_grup_sayisi: int
