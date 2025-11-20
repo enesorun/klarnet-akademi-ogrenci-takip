@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/select";
 import StudentCard from "@/components/StudentCard";
 import { useAyarlar } from "@/hooks/useAyarlar";
-import { Users, Grid, List, Filter, X } from "lucide-react";
+import { Users, Grid, List, Filter, X, FileDown } from "lucide-react";
 import { toast } from "sonner";
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
