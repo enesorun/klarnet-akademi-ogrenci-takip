@@ -12,35 +12,9 @@ import Login from "./pages/Login";
 import Layout from "./components/Layout";
 
 function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-
-  useEffect(() => {
-    const authenticated = localStorage.getItem("authenticated");
-    if (authenticated === "true") {
-      setIsAuthenticated(true);
-    }
-  }, []);
-
-  const handleLogin = () => {
-    setIsAuthenticated(true);
-  };
-
   const handleLogout = () => {
-    setIsAuthenticated(false);
-    localStorage.removeItem("authenticated");
+    // Logout functionality (can be used if needed later)
   };
-
-  if (!isAuthenticated) {
-    return (
-      <div className="App">
-        <BrowserRouter>
-          <Routes>
-            <Route path="*" element={<Login onLogin={handleLogin} />} />
-          </Routes>
-        </BrowserRouter>
-      </div>
-    );
-  }
 
   return (
     <div className="App">
