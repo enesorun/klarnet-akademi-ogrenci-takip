@@ -912,29 +912,55 @@ async def get_grup_ogrenci(ogrenci_id: str):
 
 @api_router.put("/grup-dersleri/ogrenciler/{ogrenci_id}", response_model=GrupOgrenci)
 async def update_grup_ogrenci(ogrenci_id: str, ogrenci: GrupOgrenciCreate):
-    # Mevcut öğrenciyi al
+    # Mevcut öğrenciyi kontrol et
     existing = await db.grup_ogrenciler.find_one({"id": ogrenci_id}, {"_id": 0})
     if not existing:
         raise HTTPException(status_code=404, detail="Öğrenci bulunamadı")
     
-    # Yeni öğrenci objesi oluştur
-    updated_ogrenci = GrupOgrenci(**ogrenci.dict())
-    updated_ogrenci.id = ogrenci_id
-    updated_ogrenci.kayit_tarihi = existing["kayit_tarihi"]
-    updated_ogrenci.created_at = existing["created_at"]
+    # Güncelleme dictionary'si oluştur
+    update_data = {
+        "ad_soyad": ogrenci.ad_soyad,
+        "telefon": ogrenci.telefon,
+        "eposta": ogrenci.eposta,
+        "paket_tipi": ogrenci.paket_tipi,
+        "ucret": ogrenci.ucret,
+        "odeme_sekli": ogrenci.odeme_sekli,
+    }
     
-    # Ödenen tutarı koru (güncelleme sırasında değişmez)
-    updated_ogrenci.odenen_tutar = existing.get("odenen_tutar", 0)
+    # İlk ödeme tutarı varsa ve değiştiyse, ödeme kaydı oluştur
+    if ogrenci.ilk_odeme_tutari and ogrenci.ilk_odeme_tutari > 0:
+        # Ödenen tutarı güncelle
+        new_odenen = existing.get("odenen_tutar", 0) + ogrenci.ilk_odeme_tutari
+        update_data["odenen_tutar"] = new_odenen
+        
+        # Ödeme kaydı oluştur
+        odeme = GrupOdeme(
+            grup_ogrenci_id=ogrenci_id,
+            grup_id=ogrenci.grup_id,
+            tutar=ogrenci.ilk_odeme_tutari,
+            tarih=ogrenci.ilk_odeme_tarihi or datetime.now(timezone.utc).isoformat(),
+            aciklama="Güncelleme sırasında eklenen ödeme"
+        )
+        await db.grup_odemeler.insert_one(odeme.dict())
+    else:
+        # Ödenen tutarı koru
+        update_data["odenen_tutar"] = existing.get("odenen_tutar", 0)
     
     # Kalan tutarı hesapla
-    updated_ogrenci.kalan_tutar = updated_ogrenci.ucret - updated_ogrenci.odenen_tutar
+    update_data["kalan_tutar"] = ogrenci.ucret - update_data["odenen_tutar"]
     
+    # Güncelle
     result = await db.grup_ogrenciler.update_one(
         {"id": ogrenci_id},
-        {"$set": updated_ogrenci.dict()}
+        {"$set": update_data}
     )
     
-    return updated_ogrenci
+    if result.matched_count == 0:
+        raise HTTPException(status_code=404, detail="Öğrenci bulunamadı")
+    
+    # Güncellenmiş öğrenciyi dön
+    updated = await db.grup_ogrenciler.find_one({"id": ogrenci_id}, {"_id": 0})
+    return updated
 
 @api_router.delete("/grup-dersleri/ogrenciler/{ogrenci_id}")
 async def delete_grup_ogrenci(ogrenci_id: str):
