@@ -658,6 +658,60 @@ const GrupDetay = () => {
           </form>
         </DialogContent>
       </Dialog>
+
+      {/* Ders Ekle Modal */}
+      <Dialog open={isDersModalOpen} onOpenChange={setIsDersModalOpen}>
+        <DialogContent className="dark:bg-gray-800">
+          <DialogHeader>
+            <DialogTitle className="text-gray-900 dark:text-white">Ders Kaydı Ekle</DialogTitle>
+          </DialogHeader>
+          <form onSubmit={handleCreateDers} className="space-y-4">
+            <div>
+              <Label htmlFor="tarih" className="dark:text-gray-300">Ders Tarihi *</Label>
+              <Input
+                id="tarih"
+                type="date"
+                value={dersForm.tarih}
+                onChange={(e) => setDersForm({ ...dersForm, tarih: e.target.value })}
+                required
+                className="dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+              />
+            </div>
+            <div>
+              <Label htmlFor="konu" className="dark:text-gray-300">İşlenen Konu</Label>
+              <Input
+                id="konu"
+                value={dersForm.konu}
+                onChange={(e) => setDersForm({ ...dersForm, konu: e.target.value })}
+                placeholder="Örn: Majör gamlar, Sol anahtarı"
+                className="dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+              />
+            </div>
+            <div>
+              <Label htmlFor="not_" className="dark:text-gray-300">Not</Label>
+              <Input
+                id="not_"
+                value={dersForm.not_}
+                onChange={(e) => setDersForm({ ...dersForm, not_: e.target.value })}
+                placeholder="Ders hakkında notlar"
+                className="dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+              />
+            </div>
+            <div className="flex justify-end gap-3 pt-4">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setIsDersModalOpen(false)}
+              >
+                İptal
+              </Button>
+              <Button type="submit" className="bg-[#4d5deb] hover:bg-[#3a4ad4]">
+                Kaydet
+              </Button>
+            </div>
+          </form>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
