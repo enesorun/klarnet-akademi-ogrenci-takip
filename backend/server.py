@@ -160,14 +160,16 @@ class Sezon(BaseModel):
     model_config = ConfigDict(extra="ignore")
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     sezon_adi: str
-    baslangic_tarihi: str
-    bitis_tarihi: str
+    baslangic_tarihi: Optional[str] = ""
+    bitis_tarihi: Optional[str] = ""
+    durum: str = "aktif"
     created_at: str = Field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
 
 class SezonCreate(BaseModel):
     sezon_adi: str
-    baslangic_tarihi: str
-    bitis_tarihi: str
+    baslangic_tarihi: Optional[str] = ""
+    bitis_tarihi: Optional[str] = ""
+    durum: str = "aktif"
 
 class Grup(BaseModel):
     model_config = ConfigDict(extra="ignore")
