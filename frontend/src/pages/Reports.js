@@ -32,6 +32,12 @@ const Reports = () => {
   const [aylikGelirData, setAylikGelirData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [grupStats, setGrupStats] = useState(null);
+  
+  // Manuel düzenleme için
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [editingStatName, setEditingStatName] = useState("");
+  const [editingStatLabel, setEditingStatLabel] = useState("");
+  const [editingStatValue, setEditingStatValue] = useState("");
 
   useEffect(() => {
     fetchData();
