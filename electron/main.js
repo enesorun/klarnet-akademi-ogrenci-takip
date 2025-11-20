@@ -2,11 +2,19 @@ const { app, BrowserWindow, Menu } = require('electron');
 const path = require('path');
 const { spawn } = require('child_process');
 const http = require('http');
+const fs = require('fs');
 
 let mainWindow;
 let backendProcess;
 const BACKEND_PORT = 8001;
 const FRONTEND_PORT = 3000;
+
+// Kullanıcı data klasörünü hazırla
+const userDataPath = path.join(app.getPath('userData'), 'data');
+if (!fs.existsSync(userDataPath)) {
+  fs.mkdirSync(userDataPath, { recursive: true });
+  console.log('Data klasörü oluşturuldu:', userDataPath);
+}
 
 // Backend başlat
 function startBackend() {
