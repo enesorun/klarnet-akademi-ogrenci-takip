@@ -1419,9 +1419,10 @@ async def initialize_ayarlar():
         {"kategori": "odeme_sekilleri", "deger": "4 Taksit", "sira": 3, "aktif": True},
     ]
     
+    # SQLite: Varsayılan ayarları ekle
     for ayar_data in varsayilan_ayarlar:
         ayar = AyarItem(**ayar_data)
-        await db.ayarlar.insert_one(ayar.dict())
+        await db.insert("ayarlar", ayar.dict())
     
     return {"message": "Varsayılan ayarlar yüklendi", "count": len(varsayilan_ayarlar)}
 
