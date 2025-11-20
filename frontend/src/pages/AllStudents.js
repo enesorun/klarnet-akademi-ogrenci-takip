@@ -307,12 +307,11 @@ const AllStudents = () => {
                 </SelectTrigger>
                 <SelectContent className="dark:bg-gray-700">
                   <SelectItem value=" ">Tümü</SelectItem>
-                  <SelectItem value="Tavsiye">Tavsiye</SelectItem>
-                  <SelectItem value="Google Arama">Google Arama</SelectItem>
-                  <SelectItem value="Sosyal Medya">Sosyal Medya</SelectItem>
-                  <SelectItem value="Meta Reklam">Meta Reklam</SelectItem>
-                  <SelectItem value="Google Reklam">Google Reklam</SelectItem>
-                  <SelectItem value="Diğer">Diğer</SelectItem>
+                  {referansKaynaklari.map((referans) => (
+                    <SelectItem key={referans.id} value={referans.deger}>
+                      {referans.deger}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </div>
