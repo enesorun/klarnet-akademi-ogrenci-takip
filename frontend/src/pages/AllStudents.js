@@ -586,6 +586,185 @@ const AllStudents = () => {
           </AccordionContent>
         </AccordionItem>
       </Accordion>
+
+      {/* Edit Modal */}
+      <Dialog open={isEditModalOpen} onOpenChange={setIsEditModalOpen}>
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Öğrenci Düzenle</DialogTitle>
+            <DialogDescription>
+              Öğrenci bilgilerini düzenleyin
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="grid gap-4 py-4">
+            <div className="grid gap-2">
+              <Label htmlFor="ad_soyad">Ad Soyad</Label>
+              <Input
+                id="ad_soyad"
+                value={editForm.ad_soyad || ""}
+                onChange={(e) => setEditForm({ ...editForm, ad_soyad: e.target.value })}
+              />
+            </div>
+
+            <div className="grid gap-2">
+              <Label htmlFor="konum">Konum</Label>
+              <Input
+                id="konum"
+                value={editForm.konum || ""}
+                onChange={(e) => setEditForm({ ...editForm, konum: e.target.value })}
+              />
+            </div>
+
+            <div className="grid gap-2">
+              <Label htmlFor="seviye">Seviye</Label>
+              <Select 
+                value={editForm.seviye || ""} 
+                onValueChange={(value) => setEditForm({ ...editForm, seviye: value })}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Seviye seçin" />
+                </SelectTrigger>
+                <SelectContent>
+                  {seviyeler.map((seviye) => (
+                    <SelectItem key={seviye.id} value={seviye.deger}>
+                      {seviye.deger}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="grid gap-2">
+              <Label htmlFor="referans">Referans</Label>
+              <Select 
+                value={editForm.referans || ""} 
+                onValueChange={(value) => setEditForm({ ...editForm, referans: value })}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Referans seçin" />
+                </SelectTrigger>
+                <SelectContent>
+                  {referansKaynaklari.map((referans) => (
+                    <SelectItem key={referans.id} value={referans.deger}>
+                      {referans.deger}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="grid gap-2">
+              <Label htmlFor="ilk_ders_tarihi">İlk Ders Tarihi</Label>
+              <Input
+                id="ilk_ders_tarihi"
+                type="date"
+                value={editForm.ilk_ders_tarihi || ""}
+                onChange={(e) => setEditForm({ ...editForm, ilk_ders_tarihi: e.target.value })}
+              />
+            </div>
+
+            <div className="grid gap-2">
+              <Label htmlFor="genel_durum">Durum</Label>
+              <Select 
+                value={editForm.genel_durum || ""} 
+                onValueChange={(value) => setEditForm({ ...editForm, genel_durum: value })}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Durum seçin" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="aktif">Aktif</SelectItem>
+                  <SelectItem value="ara_verdi">Ara Verdi</SelectItem>
+                  <SelectItem value="eski">Eski</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Özel Alanlar */}
+            {ozelAlanlar.length > 0 && (
+              <div className="space-y-4 pt-4 border-t">
+                <h4 className="font-semibold text-sm">Özel Alanlar</h4>
+                {ozelAlanlar.map((alan) => (
+                  <div key={alan.id} className="grid gap-2">
+                    <Label htmlFor={`ozel_alan_${alan.id}`}>{alan.alan_adi}</Label>
+                    {alan.alan_tipi === "text" && (
+                      <Input
+                        id={`ozel_alan_${alan.id}`}
+                        value={ozelAlanlarData[alan.alan_adi] || ""}
+                        onChange={(e) => setOzelAlanlarData({ 
+                          ...ozelAlanlarData, 
+                          [alan.alan_adi]: e.target.value 
+                        })}
+                      />
+                    )}
+                    {alan.alan_tipi === "number" && (
+                      <Input
+                        id={`ozel_alan_${alan.id}`}
+                        type="number"
+                        value={ozelAlanlarData[alan.alan_adi] || ""}
+                        onChange={(e) => setOzelAlanlarData({ 
+                          ...ozelAlanlarData, 
+                          [alan.alan_adi]: parseFloat(e.target.value) || 0
+                        })}
+                      />
+                    )}
+                    {alan.alan_tipi === "date" && (
+                      <Input
+                        id={`ozel_alan_${alan.id}`}
+                        type="date"
+                        value={ozelAlanlarData[alan.alan_adi] || ""}
+                        onChange={(e) => setOzelAlanlarData({ 
+                          ...ozelAlanlarData, 
+                          [alan.alan_adi]: e.target.value 
+                        })}
+                      />
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsEditModalOpen(false)}>
+              İptal
+            </Button>
+            <Button onClick={handleUpdateStudent}>
+              Güncelle
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Delete Confirmation Modal */}
+      <Dialog open={isDeleteModalOpen} onOpenChange={setIsDeleteModalOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Öğrenci Sil</DialogTitle>
+            <DialogDescription>
+              Bu öğrenciyi silmek istediğinizden emin misiniz? Bu işlem geri alınamaz.
+            </DialogDescription>
+          </DialogHeader>
+          
+          {selectedStudent && (
+            <div className="py-4">
+              <p className="text-sm text-gray-600 dark:text-gray-400">
+                Silinecek öğrenci: <span className="font-semibold">{selectedStudent.ad_soyad}</span>
+              </p>
+            </div>
+          )}
+
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsDeleteModalOpen(false)}>
+              İptal
+            </Button>
+            <Button variant="destructive" onClick={handleDeleteStudent}>
+              Sil
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
