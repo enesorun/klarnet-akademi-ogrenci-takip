@@ -222,6 +222,8 @@ const GrupDetay = () => {
         ilk_odeme_tutari: "",
         ilk_odeme_tarihi: new Date().toISOString().split('T')[0],
       });
+      // Özel alanları yükle
+      setGrupOgrenciOzelAlanlarData(ogrenci.ozel_alanlar || {});
     } else {
       setEditingOgrenci(null);
       const defaultEtap = etaplar.length > 0 ? etaplar[0] : null;
@@ -236,6 +238,8 @@ const GrupDetay = () => {
         ilk_odeme_tutari: "",
         ilk_odeme_tarihi: new Date().toISOString().split('T')[0],
       });
+      // Özel alanları temizle
+      setGrupOgrenciOzelAlanlarData({});
     }
     setIsOgrenciModalOpen(true);
   };
