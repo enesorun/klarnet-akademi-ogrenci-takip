@@ -133,10 +133,14 @@ const Reports = () => {
       )}
 
       {/* Grup Dersleri İstatistikleri */}
-        {grupStats && (
-          <div className="bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-gray-800 dark:to-gray-700 rounded-xl p-6 shadow-sm border border-blue-100 dark:border-gray-600">
-            <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">Grup Dersleri İstatistikleri</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      {grupStats && (
+        <Accordion type="single" collapsible className="w-full">
+          <AccordionItem value="grup-stats" className="bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-gray-800 dark:to-gray-700 rounded-xl shadow-sm border border-blue-100 dark:border-gray-600">
+            <AccordionTrigger className="px-6 py-4 hover:no-underline">
+              <h2 className="text-xl font-bold text-gray-900 dark:text-white">Grup Dersleri İstatistikleri</h2>
+            </AccordionTrigger>
+            <AccordionContent className="px-6 pb-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
               <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm">
                 <div className="flex items-center justify-between mb-3">
                   <div className="p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
