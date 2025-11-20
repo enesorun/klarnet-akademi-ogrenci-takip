@@ -241,6 +241,23 @@ class AyarItemCreate(BaseModel):
     sira: int = 0
     aktif: bool = True
 
+# ==================== GRUP DERS KAYDI MODEL ====================
+
+class GrupDersKaydi(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    grup_id: str
+    tarih: str
+    konu: Optional[str] = ""
+    not_: Optional[str] = ""
+    created_at: str = Field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
+
+class GrupDersKaydiCreate(BaseModel):
+    grup_id: str
+    tarih: str
+    konu: Optional[str] = ""
+    not_: Optional[str] = ""
+
 class AylikGelirRapor(BaseModel):
     ay: str
     donem: str
