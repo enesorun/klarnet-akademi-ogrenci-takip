@@ -59,6 +59,7 @@ const GrupDetay = () => {
   const { ayarlar: etaplar } = useAyarlar("grup_etaplari");
   const { ayarlar: odemeSekilleri } = useAyarlar("odeme_sekilleri");
   const { ayarlar: grupOgrenciDurumlari } = useAyarlar("grup_ogrenci_durumlari");
+  const { ozelAlanlar: grupOgrenciOzelAlanlar } = useOzelAlanlar("grup_ogrenci");
 
   const [ogrenciForm, setOgrenciForm] = useState({
     ad_soyad: "",
