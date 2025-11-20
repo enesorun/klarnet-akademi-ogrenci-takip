@@ -286,6 +286,8 @@ class AylikGelirRapor(BaseModel):
     ay: str
     donem: str
     toplam_gelir: float
+    birebir_gelir: float = 0
+    grup_gelir: float = 0
     onceki_ay_fark: float
     degisim_yuzde: float
 
