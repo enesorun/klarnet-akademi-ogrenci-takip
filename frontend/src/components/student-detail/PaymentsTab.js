@@ -189,14 +189,14 @@ const PaymentsTab = ({ studentId, onUpdate }) => {
 
       {/* Add Payment Modal */}
       <Dialog open={isAddModalOpen} onOpenChange={setIsAddModalOpen}>
-        <DialogContent data-testid="add-payment-modal">
+        <DialogContent data-testid="add-payment-modal" className="bg-white dark:bg-gray-800">
           <DialogHeader>
-            <DialogTitle>Yeni Ödeme Ekle</DialogTitle>
+            <DialogTitle className="text-gray-900 dark:text-white">Yeni Ödeme Ekle</DialogTitle>
           </DialogHeader>
 
           <form onSubmit={handleSubmit} className="space-y-4 mt-4">
             <div>
-              <Label htmlFor="tarih">Ödeme Tarihi *</Label>
+              <Label htmlFor="tarih" className="text-gray-700 dark:text-gray-300">Ödeme Tarihi *</Label>
               <Input
                 id="tarih"
                 type="date"
@@ -204,11 +204,12 @@ const PaymentsTab = ({ studentId, onUpdate }) => {
                 onChange={(e) => setFormData({ ...formData, tarih: e.target.value })}
                 required
                 data-testid="payment-date-input"
+                className="dark:bg-gray-700 dark:border-gray-600 dark:text-white"
               />
             </div>
 
             <div>
-              <Label htmlFor="tutar">Tutar *</Label>
+              <Label htmlFor="tutar" className="text-gray-700 dark:text-gray-300">Tutar *</Label>
               <Input
                 id="tutar"
                 type="number"
@@ -217,11 +218,12 @@ const PaymentsTab = ({ studentId, onUpdate }) => {
                 onChange={(e) => setFormData({ ...formData, tutar: e.target.value })}
                 required
                 data-testid="payment-amount-input"
+                className="dark:bg-gray-700 dark:border-gray-600 dark:text-white"
               />
             </div>
 
             <div>
-              <Label htmlFor="ders_sayisi">Ders Sayısı *</Label>
+              <Label htmlFor="ders_sayisi" className="text-gray-700 dark:text-gray-300">Ders Sayısı *</Label>
               <Input
                 id="ders_sayisi"
                 type="number"
@@ -229,17 +231,19 @@ const PaymentsTab = ({ studentId, onUpdate }) => {
                 onChange={(e) => setFormData({ ...formData, ders_sayisi: parseInt(e.target.value) })}
                 required
                 data-testid="payment-lessons-input"
+                className="dark:bg-gray-700 dark:border-gray-600 dark:text-white"
               />
             </div>
 
             <div>
-              <Label htmlFor="not_">Not</Label>
+              <Label htmlFor="not_" className="text-gray-700 dark:text-gray-300">Not</Label>
               <Textarea
                 id="not_"
                 value={formData.not_}
                 onChange={(e) => setFormData({ ...formData, not_: e.target.value })}
                 rows={2}
                 data-testid="payment-note-input"
+                className="dark:bg-gray-700 dark:border-gray-600 dark:text-white"
               />
             </div>
 
