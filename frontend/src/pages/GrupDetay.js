@@ -435,6 +435,87 @@ const GrupDetay = () => {
           </table>
         </div>
       </div>
+        </TabsContent>
+
+        {/* Dersler Tab */}
+        <TabsContent value="dersler" className="space-y-6">
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700">
+            <div className="p-6 border-b border-gray-100 dark:border-gray-700 flex justify-between items-center">
+              <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
+                Ders Kayıtları ({dersKayitlari.length})
+              </h2>
+              <Button
+                onClick={() => setIsDersModalOpen(true)}
+                className="bg-[#4d5deb] hover:bg-[#3a4ad4]"
+              >
+                <Plus className="w-4 h-4 mr-2" />
+                Ders Ekle
+              </Button>
+            </div>
+
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead className="bg-gray-50 dark:bg-gray-700">
+                  <tr>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">
+                      Tarih
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">
+                      Konu
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">
+                      Not
+                    </th>
+                    <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">
+                      İşlem
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
+                  {dersKayitlari.length === 0 ? (
+                    <tr>
+                      <td
+                        colSpan="4"
+                        className="px-6 py-8 text-center text-gray-500 dark:text-gray-400"
+                      >
+                        Henüz ders kaydı bulunmamaktadır. "Ders Ekle" butonuna tıklayarak ders kaydı
+                        ekleyebilirsiniz.
+                      </td>
+                    </tr>
+                  ) : (
+                    dersKayitlari.map((ders) => (
+                      <tr
+                        key={ders.id}
+                        className="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                      >
+                        <td className="px-6 py-4 text-sm font-medium text-gray-900 dark:text-white">
+                          {formatDate(ders.tarih)}
+                        </td>
+                        <td className="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">
+                          {ders.konu || "-"}
+                        </td>
+                        <td className="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">
+                          {ders.not_ || "-"}
+                        </td>
+                        <td className="px-6 py-4 text-right">
+                          <Button
+                            onClick={() => handleDeleteDers(ders.id)}
+                            variant="outline"
+                            size="sm"
+                            className="text-red-600 hover:text-red-700 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-900/20"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </Button>
+                        </td>
+                      </tr>
+                    ))
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </TabsContent>
+      </Tabs>
 
       {/* Öğrenci Ekle Modal */}
       <Dialog open={isOgrenciModalOpen} onOpenChange={setIsOgrenciModalOpen}>
