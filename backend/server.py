@@ -680,7 +680,9 @@ async def get_aylik_gelir_raporu():
         monthly_data.append({
             "ay": month_name,
             "donem": donem_str,
-            "toplam_gelir": period_total
+            "toplam_gelir": period_total,
+            "birebir_gelir": birebir_total,
+            "grup_gelir": grup_total
         })
         
         current = next_period
@@ -703,6 +705,8 @@ async def get_aylik_gelir_raporu():
             ay=data["ay"],
             donem=data["donem"],
             toplam_gelir=data["toplam_gelir"],
+            birebir_gelir=data["birebir_gelir"],
+            grup_gelir=data["grup_gelir"],
             onceki_ay_fark=onceki_fark,
             degisim_yuzde=degisim_yuzde
         ))
