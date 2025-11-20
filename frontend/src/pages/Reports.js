@@ -134,7 +134,13 @@ const Reports = () => {
         <div>
           <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4" data-testid="general-stats-title">Tüm Zamanların Genel İstatistikleri</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-100 dark:border-gray-700" data-testid="total-students-stat">
+            <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-100 dark:border-gray-700 relative group" data-testid="total-students-stat">
+              <button
+                onClick={() => handleOpenEditModal("toplam_ogrenci", "Toplam Öğrenci", genelStats.toplam_ogrenci)}
+                className="absolute top-3 right-3 p-1.5 rounded-lg bg-gray-100 dark:bg-gray-700 opacity-0 group-hover:opacity-100 transition-opacity hover:bg-blue-100 dark:hover:bg-blue-900/20"
+              >
+                <Edit2 className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+              </button>
               <div className="flex items-center justify-between mb-3">
                 <div className="p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
                   <Users className="w-6 h-6 text-[#4d5deb] dark:text-blue-400" />
@@ -144,7 +150,13 @@ const Reports = () => {
               <div className="text-sm text-gray-600 dark:text-gray-400 mt-1">Toplam Öğrenci</div>
             </div>
 
-            <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-100 dark:border-gray-700" data-testid="total-lessons-stat">
+            <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-100 dark:border-gray-700 relative group" data-testid="total-lessons-stat">
+              <button
+                onClick={() => handleOpenEditModal("toplam_ders", "Toplam Yapılan Ders", genelStats.toplam_yapilan_ders)}
+                className="absolute top-3 right-3 p-1.5 rounded-lg bg-gray-100 dark:bg-gray-700 opacity-0 group-hover:opacity-100 transition-opacity hover:bg-green-100 dark:hover:bg-green-900/20"
+              >
+                <Edit2 className="w-4 h-4 text-green-600 dark:text-green-400" />
+              </button>
               <div className="flex items-center justify-between mb-3">
                 <div className="p-3 bg-green-50 dark:bg-green-900/20 rounded-lg">
                   <Award className="w-6 h-6 text-green-600 dark:text-green-400" />
@@ -154,7 +166,13 @@ const Reports = () => {
               <div className="text-sm text-gray-600 dark:text-gray-400 mt-1">Toplam Yapılan Ders</div>
             </div>
 
-            <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-100 dark:border-gray-700" data-testid="total-revenue-stat">
+            <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-100 dark:border-gray-700 relative group" data-testid="total-revenue-stat">
+              <button
+                onClick={() => handleOpenEditModal("toplam_kazanilan_para", "Toplam Kazanılan Para", genelStats.toplam_kazanilan_para)}
+                className="absolute top-3 right-3 p-1.5 rounded-lg bg-gray-100 dark:bg-gray-700 opacity-0 group-hover:opacity-100 transition-opacity hover:bg-purple-100 dark:hover:bg-purple-900/20"
+              >
+                <Edit2 className="w-4 h-4 text-purple-600 dark:text-purple-400" />
+              </button>
               <div className="flex items-center justify-between mb-3">
                 <div className="p-3 bg-purple-50 dark:bg-purple-900/20 rounded-lg">
                   <DollarSign className="w-6 h-6 text-purple-600 dark:text-purple-400" />
