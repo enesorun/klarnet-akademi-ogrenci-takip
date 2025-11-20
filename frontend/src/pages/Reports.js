@@ -177,6 +177,12 @@ const Reports = () => {
                     <tr key={index} className="border-b border-gray-100 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700">
                       <td className="py-3 px-4 text-sm font-medium text-gray-900 dark:text-white">{item.ay}</td>
                       <td className="py-3 px-4 text-sm text-gray-600 dark:text-gray-400">{item.donem}</td>
+                      <td className="py-3 px-4 text-sm text-blue-600 dark:text-blue-400 text-right">
+                        {formatCurrency(item.birebir_gelir || 0)}
+                      </td>
+                      <td className="py-3 px-4 text-sm text-green-600 dark:text-green-400 text-right">
+                        {formatCurrency(item.grup_gelir || 0)}
+                      </td>
                       <td className="py-3 px-4 text-sm font-semibold text-gray-900 dark:text-white text-right">
                         {formatCurrency(item.toplam_gelir)}
                       </td>
