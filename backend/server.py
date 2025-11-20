@@ -363,9 +363,21 @@ async def get_students(status: Optional[str] = None):
 
 @api_router.get("/students/{student_id}", response_model=Student)
 async def get_student(student_id: str):
-    student = await db.students.find_one({"id": student_id}, {"_id": 0})
+    # SQLite: ID ile öğrenci getir
+    student = await db.find_one("students", where={"id": student_id})
     if not student:
         raise HTTPException(status_code=404, detail="Öğrenci bulunamadı")
+    
+    # JSON string olan ozel_alanlar'ı dict'e çevir
+    import json
+    if student.get("ozel_alanlar") and isinstance(student["ozel_alanlar"], str):
+        try:
+            student["ozel_alanlar"] = json.loads(student["ozel_alanlar"])
+        except:
+            student["ozel_alanlar"] = {}
+    elif not student.get("ozel_alanlar"):
+        student["ozel_alanlar"] = {}
+    
     return student
 
 @api_router.post("/students", response_model=Student)
