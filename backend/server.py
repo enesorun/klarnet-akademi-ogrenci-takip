@@ -1526,6 +1526,47 @@ async def delete_grup_ders_kaydi(kayit_id: str):
     
     return {"message": "Ders kaydı silindi"}
 
+# ==================== GRUP ÖDEMELERİ ENDPOINTS ====================
+
+@api_router.post("/grup-dersleri/odemeler", response_model=GrupOdeme)
+async def create_grup_odeme(odeme: GrupOdemeCreate):
+    """Grup öğrencisi için ödeme ekle"""
+    # Tarih yoksa şimdiyi kullan
+    if not odeme.tarih:
+        odeme.tarih = datetime.now(timezone.utc).isoformat()
+    
+    new_odeme = GrupOdeme(**odeme.dict())
+    await db.grup_odemeler.insert_one(new_odeme.dict())
+    
+    # Öğrencinin odenen_tutar'ını güncelle
+    await db.grup_ogrenciler.update_one(
+        {"id": odeme.grup_ogrenci_id},
+        {"$inc": {"odenen_tutar": odeme.tutar}}
+    )
+    
+    # Kalan tutarı hesapla ve güncelle
+    ogrenci = await db.grup_ogrenciler.find_one({"id": odeme.grup_ogrenci_id}, {"_id": 0})
+    if ogrenci:
+        kalan = ogrenci["ucret"] - (ogrenci.get("odenen_tutar", 0) + odeme.tutar)
+        await db.grup_ogrenciler.update_one(
+            {"id": odeme.grup_ogrenci_id},
+            {"$set": {"kalan_tutar": kalan}}
+        )
+    
+    return new_odeme
+
+@api_router.get("/grup-dersleri/odemeler")
+async def get_grup_odemeler(grup_id: Optional[str] = None, grup_ogrenci_id: Optional[str] = None):
+    """Grup ödemelerini listele"""
+    query = {}
+    if grup_id:
+        query["grup_id"] = grup_id
+    if grup_ogrenci_id:
+        query["grup_ogrenci_id"] = grup_ogrenci_id
+    
+    odemeler = await db.grup_odemeler.find(query, {"_id": 0}).sort("tarih", -1).to_list(10000)
+    return odemeler
+
 # Include the router in the main app
 app.include_router(api_router)
 
