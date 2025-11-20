@@ -582,16 +582,30 @@ async def get_dashboard_stats():
     aylik_gelir = 0
     
     for payment in birebir_payments:
-        payment_date = datetime.fromisoformat(payment["tarih"].replace("Z", "+00:00"))
-        if period_start <= payment_date <= now:
-            aylik_gelir += payment["tutar"]
+        try:
+            payment_date_str = payment["tarih"].replace("Z", "+00:00")
+            payment_date = datetime.fromisoformat(payment_date_str)
+            # Eğer timezone bilgisi yoksa UTC olarak kabul et
+            if payment_date.tzinfo is None:
+                payment_date = payment_date.replace(tzinfo=timezone.utc)
+            if period_start <= payment_date <= now:
+                aylik_gelir += payment["tutar"]
+        except Exception:
+            continue
     
     # Grup ödemelerini ekle
     grup_payments = await db.grup_ogrenci_odemeler.find({}, {"_id": 0}).to_list(10000)
     for payment in grup_payments:
-        payment_date = datetime.fromisoformat(payment["odeme_tarihi"].replace("Z", "+00:00"))
-        if period_start <= payment_date <= now:
-            aylik_gelir += payment["tutar"]
+        try:
+            payment_date_str = payment["odeme_tarihi"].replace("Z", "+00:00")
+            payment_date = datetime.fromisoformat(payment_date_str)
+            # Eğer timezone bilgisi yoksa UTC olarak kabul et
+            if payment_date.tzinfo is None:
+                payment_date = payment_date.replace(tzinfo=timezone.utc)
+            if period_start <= payment_date <= now:
+                aylik_gelir += payment["tutar"]
+        except Exception:
+            continue
     
     return DashboardStats(
         aktif_ogrenci_sayisi=aktif_count,
