@@ -173,6 +173,9 @@ const GrupDetay = () => {
           sezon_id: grup.sezon_id,
           grup_id: grupId,
           ucret: parseFloat(ogrenciForm.ucret),
+          ilk_odeme_tutari: ogrenciForm.ilk_odeme_tutari 
+            ? parseFloat(ogrenciForm.ilk_odeme_tutari) 
+            : 0,
           ozel_alanlar: grupOgrenciOzelAlanlarData,
         });
         toast.success("Öğrenci güncellendi!");
