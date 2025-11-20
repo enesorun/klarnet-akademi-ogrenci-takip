@@ -589,17 +589,33 @@ const GrupDetay = () => {
                 <Label htmlFor="paket_tipi" className="dark:text-gray-300">Paket Tipi *</Label>
                 <Select
                   value={ogrenciForm.paket_tipi}
-                  onValueChange={(value) =>
-                    setOgrenciForm({ ...ogrenciForm, paket_tipi: value })
-                  }
+                  onValueChange={(value) => {
+                    const selectedEtap = etaplar.find(e => e.deger === value);
+                    setOgrenciForm({ 
+                      ...ogrenciForm, 
+                      paket_tipi: value,
+                      ucret: selectedEtap?.varsayilan_ucret || ogrenciForm.ucret
+                    });
+                  }}
                 >
                   <SelectTrigger className="dark:bg-gray-700 dark:border-gray-600 dark:text-white">
-                    <SelectValue />
+                    <SelectValue placeholder="Paket seçin" />
                   </SelectTrigger>
                   <SelectContent className="dark:bg-gray-700 dark:border-gray-600">
-                    <SelectItem value="1. Etap" className="dark:text-white dark:focus:bg-gray-600">1. Etap</SelectItem>
-                    <SelectItem value="2. Etap" className="dark:text-white dark:focus:bg-gray-600">2. Etap</SelectItem>
-                    <SelectItem value="Tam Paket" className="dark:text-white dark:focus:bg-gray-600">Tam Paket</SelectItem>
+                    {etaplar.map((etap) => (
+                      <SelectItem 
+                        key={etap.id} 
+                        value={etap.deger}
+                        className="dark:text-white dark:focus:bg-gray-600"
+                      >
+                        {etap.deger}
+                        {etap.varsayilan_ucret && (
+                          <span className="text-gray-500 ml-2">
+                            ({new Intl.NumberFormat("tr-TR").format(etap.varsayilan_ucret)}₺)
+                          </span>
+                        )}
+                      </SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
               </div>
