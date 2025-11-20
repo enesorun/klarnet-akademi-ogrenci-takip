@@ -62,6 +62,7 @@ const AddStudentModal = ({ isOpen, onClose, onSuccess }) => {
         ilk_ders_tarihi: formData.ilk_ders_tarihi,
         referans: formData.referans,
         notlar: formData.notlar,
+        ozel_alanlar: ozelAlanlarData,
       });
 
       // Tarife oluştur
