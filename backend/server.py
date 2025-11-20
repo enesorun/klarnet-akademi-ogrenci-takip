@@ -1041,41 +1041,98 @@ async def delete_sezon(sezon_id: str):
 # Grup endpoints
 @api_router.get("/grup-dersleri/gruplar", response_model=List[Grup])
 async def get_gruplar(sezon_id: Optional[str] = None):
-    query = {}
+    # SQLite: Filtre ile veya filtresiz grupları getir
+    import json
     if sezon_id:
-        query["sezon_id"] = sezon_id
-    gruplar = await db.gruplar.find(query, {"_id": 0}).to_list(1000)
+        gruplar = await db.find_all("gruplar", where={"sezon_id": sezon_id}, order_by="created_at DESC")
+    else:
+        gruplar = await db.find_all("gruplar", order_by="created_at DESC")
+    
+    # JSON string olan ozel_alanlar'ı dict'e çevir
+    for grup in gruplar:
+        if grup.get("ozel_alanlar") and isinstance(grup["ozel_alanlar"], str):
+            try:
+                grup["ozel_alanlar"] = json.loads(grup["ozel_alanlar"])
+            except:
+                grup["ozel_alanlar"] = {}
+        elif not grup.get("ozel_alanlar"):
+            grup["ozel_alanlar"] = {}
+    
     return gruplar
 
 @api_router.post("/grup-dersleri/gruplar", response_model=Grup)
 async def create_grup(grup: GrupCreate):
+    import json
     new_grup = Grup(**grup.dict())
-    await db.gruplar.insert_one(new_grup.dict())
+    grup_dict = new_grup.dict()
+    
+    # SQLite: ozel_alanlar dict ise JSON string'e çevir
+    if isinstance(grup_dict.get("ozel_alanlar"), dict):
+        grup_dict["ozel_alanlar"] = json.dumps(grup_dict["ozel_alanlar"], ensure_ascii=False)
+    elif grup_dict.get("ozel_alanlar") is None:
+        grup_dict["ozel_alanlar"] = "{}"
+    
+    # SQLite: Insert
+    await db.insert("gruplar", grup_dict)
     return new_grup
 
 @api_router.get("/grup-dersleri/gruplar/{grup_id}", response_model=Grup)
 async def get_grup(grup_id: str):
-    grup = await db.gruplar.find_one({"id": grup_id}, {"_id": 0})
+    import json
+    # SQLite: ID ile grup getir
+    grup = await db.find_one("gruplar", where={"id": grup_id})
     if not grup:
         raise HTTPException(status_code=404, detail="Grup bulunamadı")
+    
+    # JSON string olan ozel_alanlar'ı dict'e çevir
+    if grup.get("ozel_alanlar") and isinstance(grup["ozel_alanlar"], str):
+        try:
+            grup["ozel_alanlar"] = json.loads(grup["ozel_alanlar"])
+        except:
+            grup["ozel_alanlar"] = {}
+    elif not grup.get("ozel_alanlar"):
+        grup["ozel_alanlar"] = {}
+    
     return grup
 
 @api_router.put("/grup-dersleri/gruplar/{grup_id}", response_model=Grup)
 async def update_grup(grup_id: str, grup: GrupCreate):
-    result = await db.gruplar.update_one(
-        {"id": grup_id},
-        {"$set": grup.dict()}
-    )
-    if result.matched_count == 0:
+    import json
+    # SQLite: Önce grubu kontrol et
+    existing = await db.find_one("gruplar", where={"id": grup_id})
+    if not existing:
         raise HTTPException(status_code=404, detail="Grup bulunamadı")
-    updated_grup = await db.gruplar.find_one({"id": grup_id}, {"_id": 0})
+    
+    update_data = grup.dict()
+    
+    # SQLite: ozel_alanlar dict ise JSON string'e çevir
+    if isinstance(update_data.get("ozel_alanlar"), dict):
+        update_data["ozel_alanlar"] = json.dumps(update_data["ozel_alanlar"], ensure_ascii=False)
+    
+    # SQLite: Update
+    await db.update("gruplar", update_data, "id", grup_id)
+    
+    # Güncellenmiş grubu getir
+    updated_grup = await db.find_one("gruplar", where={"id": grup_id})
+    
+    # JSON string olan ozel_alanlar'ı dict'e çevir
+    if updated_grup.get("ozel_alanlar") and isinstance(updated_grup["ozel_alanlar"], str):
+        try:
+            updated_grup["ozel_alanlar"] = json.loads(updated_grup["ozel_alanlar"])
+        except:
+            updated_grup["ozel_alanlar"] = {}
+    
     return updated_grup
 
 @api_router.delete("/grup-dersleri/gruplar/{grup_id}")
 async def delete_grup(grup_id: str):
-    result = await db.gruplar.delete_one({"id": grup_id})
-    if result.deleted_count == 0:
+    # SQLite: Önce grubu kontrol et
+    existing = await db.find_one("gruplar", where={"id": grup_id})
+    if not existing:
         raise HTTPException(status_code=404, detail="Grup bulunamadı")
+    
+    # SQLite: CASCADE ON DELETE ile ilişkili veriler silinecek
+    await db.delete("gruplar", "id", grup_id)
     return {"message": "Grup silindi"}
 
 # Grup öğrenci endpoints
