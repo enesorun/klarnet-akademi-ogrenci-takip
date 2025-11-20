@@ -1043,10 +1043,20 @@ async def update_grup_ogrenci(ogrenci_id: str, ogrenci: GrupOgrenciCreate):
 
 @api_router.delete("/grup-dersleri/ogrenciler/{ogrenci_id}")
 async def delete_grup_ogrenci(ogrenci_id: str):
-    result = await db.grup_ogrenciler.delete_one({"id": ogrenci_id})
-    if result.deleted_count == 0:
+    """Grup öğrencisini ve tüm ilişkili verileri sil (Cascade Delete)"""
+    # Önce öğrencinin var olduğunu kontrol et
+    ogrenci = await db.grup_ogrenciler.find_one({"id": ogrenci_id})
+    if not ogrenci:
         raise HTTPException(status_code=404, detail="Öğrenci bulunamadı")
-    return {"message": "Öğrenci silindi"}
+    
+    # Tüm ilişkili verileri sil
+    await db.grup_ogrenciler.delete_one({"id": ogrenci_id})
+    await db.grup_ogrenci_odemeler.delete_many({"ogrenci_id": ogrenci_id})
+    
+    return {
+        "message": "Grup öğrencisi ve tüm ödemeleri silindi",
+        "ogrenci_id": ogrenci_id
+    }
 
 # Grup dersleri dashboard
 @api_router.get("/grup-dersleri/dashboard/{sezon_id}", response_model=GrupDashboardStats)
