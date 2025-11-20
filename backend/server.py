@@ -537,7 +537,8 @@ async def delete_payment(payment_id: str):
 
 @api_router.get("/lessons/{student_id}", response_model=List[Lesson])
 async def get_lessons(student_id: str):
-    lessons = await db.lessons.find({"ogrenci_id": student_id}, {"_id": 0}).sort("tarih", -1).to_list(1000)
+    # SQLite: Öğrencinin derslerini getir
+    lessons = await db.find_all("dersler", where={"ogrenci_id": student_id}, order_by="tarih DESC")
     return lessons
 
 @api_router.post("/lessons", response_model=Lesson)
