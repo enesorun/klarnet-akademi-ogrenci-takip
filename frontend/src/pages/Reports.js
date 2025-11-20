@@ -440,6 +440,43 @@ const Reports = () => {
           </div>
         </div>
       </div>
+
+      {/* İstatistik Düzenleme Modal */}
+      <Dialog open={isEditModalOpen} onOpenChange={setIsEditModalOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>İstatistik Düzenle</DialogTitle>
+            <DialogDescription>
+              {editingStatLabel} için manuel değer girin. Bu değer, yeni veriler eklendiğinde otomatik olarak güncellenen başlangıç noktası olarak kullanılacaktır.
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="py-4">
+            <Label htmlFor="stat-value">{editingStatLabel}</Label>
+            <Input
+              id="stat-value"
+              type="number"
+              step="0.01"
+              value={editingStatValue}
+              onChange={(e) => setEditingStatValue(e.target.value)}
+              className="mt-2"
+              placeholder="Örn: 1000"
+            />
+            <p className="text-xs text-gray-500 mt-2">
+              Sistem bu değerin üzerine yeni eklenen verileri ekleyerek toplam hesaplayacak.
+            </p>
+          </div>
+
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsEditModalOpen(false)}>
+              İptal
+            </Button>
+            <Button onClick={handleSaveStatEdit}>
+              Kaydet
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
