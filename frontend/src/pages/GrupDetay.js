@@ -642,12 +642,18 @@ const GrupDetay = () => {
                   }
                 >
                   <SelectTrigger className="dark:bg-gray-700 dark:border-gray-600 dark:text-white">
-                    <SelectValue />
+                    <SelectValue placeholder="Ödeme şekli seçin" />
                   </SelectTrigger>
                   <SelectContent className="dark:bg-gray-700 dark:border-gray-600">
-                    <SelectItem value="Peşin" className="dark:text-white dark:focus:bg-gray-600">Peşin</SelectItem>
-                    <SelectItem value="2 Taksit" className="dark:text-white dark:focus:bg-gray-600">2 Taksit</SelectItem>
-                    <SelectItem value="4 Taksit" className="dark:text-white dark:focus:bg-gray-600">4 Taksit</SelectItem>
+                    {odemeSekilleri.map((sekil) => (
+                      <SelectItem 
+                        key={sekil.id} 
+                        value={sekil.deger}
+                        className="dark:text-white dark:focus:bg-gray-600"
+                      >
+                        {sekil.deger}
+                      </SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
               </div>
