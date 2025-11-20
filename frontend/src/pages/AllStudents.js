@@ -139,6 +139,12 @@ const AllStudents = () => {
     });
   };
 
+  const applyFiltersAndSort = async (students) => {
+    const filtered = applyFilters(students);
+    const sorted = await sortByTariff(filtered);
+    return sorted;
+  };
+
   const clearFilters = () => {
     setFilters({
       konum: "",
