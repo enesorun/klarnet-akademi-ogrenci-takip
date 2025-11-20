@@ -1142,15 +1142,31 @@ async def get_grup_ogrenciler(
     grup_id: Optional[str] = None,
     durum: Optional[str] = None
 ):
-    query = {}
+    # SQLite: Dinamik sorgu oluştur
+    import json
+    where_clause = {}
     if sezon_id:
-        query["sezon_id"] = sezon_id
+        where_clause["sezon_id"] = sezon_id
     if grup_id:
-        query["grup_id"] = grup_id
+        where_clause["grup_id"] = grup_id
     if durum:
-        query["durum"] = durum
+        where_clause["durum"] = durum
     
-    ogrenciler = await db.grup_ogrenciler.find(query, {"_id": 0}).to_list(1000)
+    if where_clause:
+        ogrenciler = await db.find_all("grup_ogrenciler", where=where_clause, order_by="created_at DESC")
+    else:
+        ogrenciler = await db.find_all("grup_ogrenciler", order_by="created_at DESC")
+    
+    # JSON string olan ozel_alanlar'ı dict'e çevir
+    for ogrenci in ogrenciler:
+        if ogrenci.get("ozel_alanlar") and isinstance(ogrenci["ozel_alanlar"], str):
+            try:
+                ogrenci["ozel_alanlar"] = json.loads(ogrenci["ozel_alanlar"])
+            except:
+                ogrenci["ozel_alanlar"] = {}
+        elif not ogrenci.get("ozel_alanlar"):
+            ogrenci["ozel_alanlar"] = {}
+    
     return ogrenciler
 
 @api_router.post("/grup-dersleri/ogrenciler", response_model=GrupOgrenci)
