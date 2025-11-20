@@ -921,8 +921,8 @@ async def get_aylik_gelir_raporu():
 
 @api_router.get("/reports/genel", response_model=GenelIstatistik)
 async def get_genel_istatistik():
-    # Baseline değerlerini al
-    baselines = await db.istatistik_baseline.find({}, {"_id": 0}).to_list(1000)
+    # SQLite: Baseline değerlerini al
+    baselines = await db.find_all("istatistik_baseline")
     baseline_dict = {b["istatistik_adi"]: b["manuel_deger"] for b in baselines}
     
     # Manuel baseline varsa kullan, yoksa 0'dan başla
@@ -930,24 +930,22 @@ async def get_genel_istatistik():
     baseline_ders = baseline_dict.get("toplam_ders", 0)
     baseline_kazanc = baseline_dict.get("toplam_kazanilan_para", 0)
     
-    # Gerçek verileri topla
-    students = await db.students.find({}, {"_id": 0}).to_list(1000)
-    gercek_ogrenci = len(students)
+    # SQLite: Gerçek verileri topla
+    gercek_ogrenci = await db.count("students")
     
-    # Tüm dersler (birebir)
-    all_lessons = await db.lessons.find({}, {"_id": 0}).to_list(10000)
-    gercek_ders = len(all_lessons)
+    # SQLite: Tüm dersler (birebir)
+    gercek_ders = await db.count("dersler")
     
-    # Grup dersleri ekle
-    grup_ders_kayitlari = await db.grup_ders_kayitlari.find({}, {"_id": 0}).to_list(10000)
-    gercek_ders += len(grup_ders_kayitlari)
+    # SQLite: Grup dersleri ekle
+    grup_ders_count = await db.count("grup_ders_kayitlari")
+    gercek_ders += grup_ders_count
     
-    # Tüm ödemeler (birebir)
-    all_payments = await db.payments.find({}, {"_id": 0}).to_list(10000)
+    # SQLite: Tüm ödemeler (birebir)
+    all_payments = await db.find_all("odemeler")
     gercek_kazanc = sum(p["tutar"] for p in all_payments)
     
-    # Grup öğrenci ödemeleri ekle
-    grup_odemeler = await db.grup_ogrenci_odemeler.find({}, {"_id": 0}).to_list(10000)
+    # SQLite: Grup öğrenci ödemeleri ekle
+    grup_odemeler = await db.find_all("grup_ogrenci_odemeler")
     gercek_kazanc += sum(p["tutar"] for p in grup_odemeler)
     
     # Toplam = baseline + gerçek veriler
