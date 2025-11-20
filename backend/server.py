@@ -1297,12 +1297,12 @@ async def delete_grup_ogrenci(ogrenci_id: str):
 # Grup dersleri dashboard
 @api_router.get("/grup-dersleri/dashboard/{sezon_id}", response_model=GrupDashboardStats)
 async def get_grup_dashboard_stats(sezon_id: str):
-    # Sezona ait grupları al
-    gruplar = await db.gruplar.find({"sezon_id": sezon_id}, {"_id": 0}).to_list(1000)
+    # SQLite: Sezona ait grupları al
+    gruplar = await db.find_all("gruplar", where={"sezon_id": sezon_id})
     toplam_grup_sayisi = len(gruplar)
     
-    # Sezona ait öğrencileri al
-    ogrenciler = await db.grup_ogrenciler.find({"sezon_id": sezon_id}, {"_id": 0}).to_list(1000)
+    # SQLite: Sezona ait öğrencileri al
+    ogrenciler = await db.find_all("grup_ogrenciler", where={"sezon_id": sezon_id})
     toplam_ogrenci_sayisi = len(ogrenciler)
     
     # Gelir hesaplama
