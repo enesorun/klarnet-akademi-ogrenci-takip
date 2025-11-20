@@ -90,6 +90,7 @@ class Database:
                 sure INTEGER DEFAULT 50,
                 islenen_konu TEXT,
                 odev_not TEXT,
+                onemli INTEGER DEFAULT 0,
                 not_ TEXT,
                 created_at TEXT DEFAULT CURRENT_TIMESTAMP,
                 FOREIGN KEY (ogrenci_id) REFERENCES students(id) ON DELETE CASCADE
