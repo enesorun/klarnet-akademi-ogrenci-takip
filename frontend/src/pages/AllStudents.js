@@ -14,9 +14,20 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import StudentCard from "@/components/StudentCard";
 import { useAyarlar } from "@/hooks/useAyarlar";
-import { Users, Grid, List, Filter, X, FileDown } from "lucide-react";
+import { useOzelAlanlar } from "@/hooks/useOzelAlanlar";
+import { Users, Grid, List, Filter, X, FileDown, Edit, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
