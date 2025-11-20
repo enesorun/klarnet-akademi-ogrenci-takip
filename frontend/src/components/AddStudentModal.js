@@ -297,6 +297,56 @@ const AddStudentModal = ({ isOpen, onClose, onSuccess }) => {
             </div>
           </div>
 
+          {/* Özel Bilgiler Bölümü */}
+          {ozelAlanlar.length > 0 && (
+            <div className="border-t border-gray-200 dark:border-gray-700 pt-4 mt-4">
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+                Özel Bilgiler
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {ozelAlanlar.map((alan) => (
+                  <div key={alan.id}>
+                    <Label htmlFor={`ozel_${alan.id}`} className="text-gray-700 dark:text-gray-300">
+                      {alan.alan_adi}
+                    </Label>
+                    {alan.alan_tipi === "text" && (
+                      <Input
+                        id={`ozel_${alan.id}`}
+                        value={ozelAlanlarData[alan.id] || ""}
+                        onChange={(e) =>
+                          setOzelAlanlarData({ ...ozelAlanlarData, [alan.id]: e.target.value })
+                        }
+                        className="dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                      />
+                    )}
+                    {alan.alan_tipi === "number" && (
+                      <Input
+                        id={`ozel_${alan.id}`}
+                        type="number"
+                        value={ozelAlanlarData[alan.id] || ""}
+                        onChange={(e) =>
+                          setOzelAlanlarData({ ...ozelAlanlarData, [alan.id]: e.target.value })
+                        }
+                        className="dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                      />
+                    )}
+                    {alan.alan_tipi === "date" && (
+                      <Input
+                        id={`ozel_${alan.id}`}
+                        type="date"
+                        value={ozelAlanlarData[alan.id] || ""}
+                        onChange={(e) =>
+                          setOzelAlanlarData({ ...ozelAlanlarData, [alan.id]: e.target.value })
+                        }
+                        className="dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                      />
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
           <div className="flex justify-end space-x-3 pt-4">
             <Button
               type="button"
