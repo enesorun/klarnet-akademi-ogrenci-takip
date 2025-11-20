@@ -205,6 +205,7 @@ class GrupOgrenci(BaseModel):
     ilk_odeme_tarihi: Optional[str] = ""
     kayit_tarihi: str = Field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
     durum: str = "aktif"  # aktif, ayrildi, beklemede
+    ozel_alanlar: Optional[dict] = {}
     created_at: str = Field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
 
 class GrupOgrenciCreate(BaseModel):
