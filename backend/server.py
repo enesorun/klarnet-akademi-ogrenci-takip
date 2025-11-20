@@ -1214,8 +1214,9 @@ async def get_grup_ogrenci(ogrenci_id: str):
 
 @api_router.put("/grup-dersleri/ogrenciler/{ogrenci_id}", response_model=GrupOgrenci)
 async def update_grup_ogrenci(ogrenci_id: str, ogrenci: GrupOgrenciCreate):
-    # Mevcut öğrenciyi kontrol et
-    existing = await db.grup_ogrenciler.find_one({"id": ogrenci_id}, {"_id": 0})
+    import json
+    # SQLite: Mevcut öğrenciyi kontrol et
+    existing = await db.find_one("grup_ogrenciler", where={"id": ogrenci_id})
     if not existing:
         raise HTTPException(status_code=404, detail="Öğrenci bulunamadı")
     
@@ -1227,8 +1228,16 @@ async def update_grup_ogrenci(ogrenci_id: str, ogrenci: GrupOgrenciCreate):
         "paket_tipi": ogrenci.paket_tipi,
         "ucret": ogrenci.ucret,
         "odeme_sekli": ogrenci.odeme_sekli,
-        "ozel_alanlar": ogrenci.ozel_alanlar or existing.get("ozel_alanlar", {}),
     }
+    
+    # ozel_alanlar işleme
+    ozel_alanlar = ogrenci.ozel_alanlar or existing.get("ozel_alanlar", {})
+    if isinstance(ozel_alanlar, str):
+        try:
+            ozel_alanlar = json.loads(ozel_alanlar)
+        except:
+            ozel_alanlar = {}
+    update_data["ozel_alanlar"] = json.dumps(ozel_alanlar, ensure_ascii=False) if isinstance(ozel_alanlar, dict) else "{}"
     
     # İlk ödeme tutarı varsa ve değiştiyse, ödeme kaydı oluştur
     if ogrenci.ilk_odeme_tutari and ogrenci.ilk_odeme_tutari > 0:
@@ -1236,7 +1245,7 @@ async def update_grup_ogrenci(ogrenci_id: str, ogrenci: GrupOgrenciCreate):
         new_odenen = existing.get("odenen_tutar", 0) + ogrenci.ilk_odeme_tutari
         update_data["odenen_tutar"] = new_odenen
         
-        # Ödeme kaydı oluştur
+        # SQLite: Ödeme kaydı oluştur
         odeme = GrupOdeme(
             grup_ogrenci_id=ogrenci_id,
             grup_id=ogrenci.grup_id,
@@ -1244,7 +1253,7 @@ async def update_grup_ogrenci(ogrenci_id: str, ogrenci: GrupOgrenciCreate):
             tarih=ogrenci.ilk_odeme_tarihi or datetime.now(timezone.utc).isoformat(),
             aciklama="Güncelleme sırasında eklenen ödeme"
         )
-        await db.grup_odemeler.insert_one(odeme.dict())
+        await db.insert("grup_ogrenci_odemeler", odeme.dict())
     else:
         # Ödenen tutarı koru
         update_data["odenen_tutar"] = existing.get("odenen_tutar", 0)
@@ -1252,17 +1261,19 @@ async def update_grup_ogrenci(ogrenci_id: str, ogrenci: GrupOgrenciCreate):
     # Kalan tutarı hesapla
     update_data["kalan_tutar"] = ogrenci.ucret - update_data["odenen_tutar"]
     
-    # Güncelle
-    result = await db.grup_ogrenciler.update_one(
-        {"id": ogrenci_id},
-        {"$set": update_data}
-    )
-    
-    if result.matched_count == 0:
-        raise HTTPException(status_code=404, detail="Öğrenci bulunamadı")
+    # SQLite: Güncelle
+    await db.update("grup_ogrenciler", update_data, "id", ogrenci_id)
     
     # Güncellenmiş öğrenciyi dön
-    updated = await db.grup_ogrenciler.find_one({"id": ogrenci_id}, {"_id": 0})
+    updated = await db.find_one("grup_ogrenciler", where={"id": ogrenci_id})
+    
+    # JSON string olan ozel_alanlar'ı dict'e çevir
+    if updated.get("ozel_alanlar") and isinstance(updated["ozel_alanlar"], str):
+        try:
+            updated["ozel_alanlar"] = json.loads(updated["ozel_alanlar"])
+        except:
+            updated["ozel_alanlar"] = {}
+    
     return updated
 
 @api_router.delete("/grup-dersleri/ogrenciler/{ogrenci_id}")
