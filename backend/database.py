@@ -175,10 +175,11 @@ class Database:
         await self._db.execute("""
             CREATE TABLE IF NOT EXISTS grup_ogrenci_odemeler (
                 id TEXT PRIMARY KEY,
-                ogrenci_id TEXT NOT NULL,
+                grup_ogrenci_id TEXT NOT NULL,
+                grup_id TEXT,
                 tutar REAL NOT NULL,
-                odeme_tarihi TEXT NOT NULL,
-                not_ TEXT,
+                tarih TEXT NOT NULL,
+                aciklama TEXT,
                 created_at TEXT DEFAULT CURRENT_TIMESTAMP,
                 FOREIGN KEY (ogrenci_id) REFERENCES grup_ogrenciler(id) ON DELETE CASCADE
             )
