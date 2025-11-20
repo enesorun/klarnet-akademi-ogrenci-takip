@@ -153,6 +153,40 @@ const GrupDetay = () => {
     }
   };
 
+  const handleCreateDers = async (e) => {
+    e.preventDefault();
+    try {
+      await axios.post(`${API}/grup-dersleri/ders-kayitlari`, {
+        ...dersForm,
+        grup_id: grupId,
+      });
+      toast.success("Ders kaydı eklendi!");
+      setIsDersModalOpen(false);
+      setDersForm({
+        tarih: new Date().toISOString().split('T')[0],
+        konu: "",
+        not_: "",
+      });
+      fetchDersKayitlari();
+      fetchGrupDetay(); // Ders sayısını güncellemek için
+    } catch (error) {
+      toast.error("Ders kaydı eklenirken hata oluştu");
+    }
+  };
+
+  const handleDeleteDers = async (kayitId) => {
+    if (!window.confirm("Bu ders kaydını silmek istediğinizden emin misiniz?")) return;
+    
+    try {
+      await axios.delete(`${API}/grup-dersleri/ders-kayitlari/${kayitId}`);
+      toast.success("Ders kaydı silindi!");
+      fetchDersKayitlari();
+      fetchGrupDetay();
+    } catch (error) {
+      toast.error("Ders kaydı silinirken hata oluştu");
+    }
+  };
+
   const formatCurrency = (amount) => {
     return new Intl.NumberFormat("tr-TR", {
       style: "decimal",
