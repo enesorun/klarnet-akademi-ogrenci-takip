@@ -63,6 +63,11 @@ const AllStudents = () => {
     tarifeSiralama: "",
   });
 
+  // Filtered & sorted students
+  const [filteredAktif, setFilteredAktif] = useState([]);
+  const [filteredAraVerdi, setFilteredAraVerdi] = useState([]);
+  const [filteredEski, setFilteredEski] = useState([]);
+
   useEffect(() => {
     fetchStudents();
   }, []);
