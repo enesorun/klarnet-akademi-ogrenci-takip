@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { useAyarlar } from "@/hooks/useAyarlar";
+import { useOzelAlanlar } from "@/hooks/useOzelAlanlar";
 import axios from "axios";
 import { toast } from "sonner";
 
@@ -27,6 +28,7 @@ const AddStudentModal = ({ isOpen, onClose, onSuccess }) => {
   // Dinamik ayarları yükle
   const { ayarlar: seviyeler } = useAyarlar("seviyeler");
   const { ayarlar: referansKaynaklari } = useAyarlar("referans_kaynaklari");
+  const { ozelAlanlar } = useOzelAlanlar("ogrenci");
 
   const [formData, setFormData] = useState({
     ad_soyad: "",
