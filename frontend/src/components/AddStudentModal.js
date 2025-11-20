@@ -218,12 +218,15 @@ const AddStudentModal = ({ isOpen, onClose, onSuccess }) => {
                   <SelectValue placeholder="Referans seçiniz" />
                 </SelectTrigger>
                 <SelectContent className="dark:bg-gray-700 dark:border-gray-600">
-                  <SelectItem value="Tavsiye" className="dark:text-white dark:focus:bg-gray-600">Tavsiye</SelectItem>
-                  <SelectItem value="Google Arama" className="dark:text-white dark:focus:bg-gray-600">Google Arama</SelectItem>
-                  <SelectItem value="Sosyal Medya" className="dark:text-white dark:focus:bg-gray-600">Sosyal Medya</SelectItem>
-                  <SelectItem value="Meta Reklam" className="dark:text-white dark:focus:bg-gray-600">Meta Reklam</SelectItem>
-                  <SelectItem value="Google Reklam" className="dark:text-white dark:focus:bg-gray-600">Google Reklam</SelectItem>
-                  <SelectItem value="Diğer" className="dark:text-white dark:focus:bg-gray-600">Diğer</SelectItem>
+                  {referansKaynaklari.map((referans) => (
+                    <SelectItem 
+                      key={referans.id} 
+                      value={referans.deger} 
+                      className="dark:text-white dark:focus:bg-gray-600"
+                    >
+                      {referans.deger}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </div>
