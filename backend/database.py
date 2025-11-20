@@ -205,6 +205,7 @@ class Database:
                 model_tipi TEXT NOT NULL,
                 alan_adi TEXT NOT NULL,
                 alan_tipi TEXT NOT NULL,
+                sira INTEGER DEFAULT 0,
                 aktif INTEGER DEFAULT 1,
                 created_at TEXT DEFAULT CURRENT_TIMESTAMP
             )
