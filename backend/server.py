@@ -568,9 +568,13 @@ async def update_lesson(lesson_id: str, lesson_update: LessonCreate):
 
 @api_router.delete("/lessons/{lesson_id}")
 async def delete_lesson(lesson_id: str):
-    result = await db.lessons.delete_one({"id": lesson_id})
-    if result.deleted_count == 0:
+    # SQLite: Önce dersi kontrol et
+    existing = await db.find_one("dersler", where={"id": lesson_id})
+    if not existing:
         raise HTTPException(status_code=404, detail="Ders bulunamadı")
+    
+    # SQLite: Delete
+    await db.delete("dersler", "id", lesson_id)
     return {"message": "Ders silindi"}
 
 # ==================== DASHBOARD ENDPOINTS ====================
