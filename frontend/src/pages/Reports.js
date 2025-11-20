@@ -36,7 +36,11 @@ const Reports = () => {
       ]);
       setReferansData(referansRes.data);
       setGenelStats(genelRes.data);
-      setAylikGelirData(aylikGelirRes.data);
+      
+      // Aylık gelir verisini tersine çevir (en yeni en üstte)
+      const sortedAylikGelir = aylikGelirRes.data.reverse();
+      setAylikGelirData(sortedAylikGelir);
+      
       setGrupStats(grupRes.data);
     } catch (error) {
       toast.error("Raporlar yüklenirken hata oluştu");
