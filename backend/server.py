@@ -994,6 +994,56 @@ async def initialize_ayarlar():
     
     return {"message": "Varsayılan ayarlar yüklendi", "count": len(varsayilan_ayarlar)}
 
+# ==================== GRUP DERS KAYDI ENDPOINTS ====================
+
+@api_router.get("/grup-dersleri/ders-kayitlari", response_model=List[GrupDersKaydi])
+async def get_grup_ders_kayitlari(grup_id: str):
+    kayitlar = await db.grup_ders_kayitlari.find({"grup_id": grup_id}, {"_id": 0}).sort("tarih", -1).to_list(1000)
+    return kayitlar
+
+@api_router.post("/grup-dersleri/ders-kayitlari", response_model=GrupDersKaydi)
+async def create_grup_ders_kaydi(kayit: GrupDersKaydiCreate):
+    new_kayit = GrupDersKaydi(**kayit.dict())
+    await db.grup_ders_kayitlari.insert_one(new_kayit.dict())
+    
+    # Grubun yapilan_ders_sayisi'ni artır
+    await db.gruplar.update_one(
+        {"id": kayit.grup_id},
+        {"$inc": {"yapilan_ders_sayisi": 1}}
+    )
+    
+    return new_kayit
+
+@api_router.put("/grup-dersleri/ders-kayitlari/{kayit_id}", response_model=GrupDersKaydi])
+async def update_grup_ders_kaydi(kayit_id: str, kayit: GrupDersKaydiCreate):
+    result = await db.grup_ders_kayitlari.update_one(
+        {"id": kayit_id},
+        {"$set": kayit.dict()}
+    )
+    if result.matched_count == 0:
+        raise HTTPException(status_code=404, detail="Ders kaydı bulunamadı")
+    
+    updated_kayit = await db.grup_ders_kayitlari.find_one({"id": kayit_id}, {"_id": 0})
+    return updated_kayit
+
+@api_router.delete("/grup-dersleri/ders-kayitlari/{kayit_id}")
+async def delete_grup_ders_kaydi(kayit_id: str):
+    # Önce kaydı al (grup_id'yi bilmek için)
+    kayit = await db.grup_ders_kayitlari.find_one({"id": kayit_id}, {"_id": 0})
+    if not kayit:
+        raise HTTPException(status_code=404, detail="Ders kaydı bulunamadı")
+    
+    # Kaydı sil
+    await db.grup_ders_kayitlari.delete_one({"id": kayit_id})
+    
+    # Grubun yapilan_ders_sayisi'ni azalt
+    await db.gruplar.update_one(
+        {"id": kayit["grup_id"]},
+        {"$inc": {"yapilan_ders_sayisi": -1}}
+    )
+    
+    return {"message": "Ders kaydı silindi"}
+
 # Include the router in the main app
 app.include_router(api_router)
 
