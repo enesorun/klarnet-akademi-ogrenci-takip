@@ -47,11 +47,18 @@ const GrupDersleri = () => {
 
   const [grupForm, setGrupForm] = useState({
     grup_adi: "",
-    kur_etap: "1. Etap",
+    kur_etap: "",
     gun_saat: "",
     max_kapasite: 10,
     toplam_ders_sayisi: 16,
   });
+
+  // Etaplar yüklenince default değeri set et
+  useEffect(() => {
+    if (etaplar.length > 0 && !grupForm.kur_etap) {
+      setGrupForm(prev => ({ ...prev, kur_etap: etaplar[0].deger }));
+    }
+  }, [etaplar]);
 
   useEffect(() => {
     fetchSezonlar();
