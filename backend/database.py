@@ -26,6 +26,8 @@ class Database:
     async def connect(self):
         """Veritabanı bağlantısını oluştur"""
         self._db = await aiosqlite.connect(self.db_path)
+        # FOREIGN KEY constraints'i etkinleştir (CASCADE DELETE için gerekli)
+        await self._db.execute("PRAGMA foreign_keys = ON")
         self._db.row_factory = aiosqlite.Row
         await self.create_tables()
     
