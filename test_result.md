@@ -586,3 +586,10 @@
 **Test Ortamı:** Emergent Kubernetes Container
 **Test Durumu:** KISMEN BAŞARILI - ADDSTUDENTMODAL DÜZELTİLDİ, ALLSTUDENTS SORUNU DEVAM EDİYOR ⚠️
 
+---
+
+## Agent Communication Update
+
+**Agent:** testing  
+**Message:** DINAMIK DROPDOWN FINAL DOĞRULAMA TAMAMLANDI - Kategori düzeltmesi kısmen başarılı. AddStudentModal'da dropdown kategorileri artık doğru çalışıyor: 'Test Referans' doğru dropdown'da görünüyor, 'Test Seviye' seviye dropdown'ında var. ANCAK AllStudents sayfasındaki filtre dropdown'ları hala yanlış veri gösteriyor: Seviye filtresi referans verilerini, Referans filtresi tarife sıralama seçeneklerini gösteriyor. AllStudents.js'de filter dropdown mapping'i düzeltilmeli.
+
