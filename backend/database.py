@@ -5,12 +5,18 @@ from datetime import datetime, timezone
 import json
 import uuid
 
-# Göreli yol kullan - uygulama nerede çalışırsa çalışsın
-BASE_DIR = Path(__file__).parent.parent  # /app dizini
-DB_PATH = BASE_DIR / "data" / "ogrenciler.db"
+# DB_PATH environment variable'dan al, yoksa default
+if os.environ.get('DB_PATH'):
+    DB_PATH = Path(os.environ.get('DB_PATH'))
+else:
+    # Göreli yol kullan - uygulama nerede çalışırsa çalışsın
+    BASE_DIR = Path(__file__).parent.parent  # /app dizini
+    DB_PATH = BASE_DIR / "data" / "ogrenciler.db"
 
 # Data klasörünü oluştur
 DB_PATH.parent.mkdir(parents=True, exist_ok=True)
+
+print(f"📂 Database path: {DB_PATH}")
 
 class Database:
     def __init__(self):
