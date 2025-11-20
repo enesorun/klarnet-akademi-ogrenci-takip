@@ -300,6 +300,11 @@ const Ayarlar = () => {
             </div>
           </TabsContent>
         ))}
+
+        {/* Özel Alanlar Tab */}
+        <TabsContent value="ozel_alanlar">
+          <OzelAlanlar />
+        </TabsContent>
       </Tabs>
 
       {/* Add/Edit Modal */}
