@@ -699,19 +699,19 @@ async def get_dashboard_stats():
 async def get_grup_istatistikleri():
     """Grup dersleri için genel istatistikler - baseline destekli"""
     try:
-        # Baseline değerlerini al
-        baselines = await db.istatistik_baseline.find({}, {"_id": 0}).to_list(1000)
+        # SQLite: Baseline değerlerini al
+        baselines = await db.find_all("istatistik_baseline")
         baseline_dict = {b["istatistik_adi"]: b["manuel_deger"] for b in baselines}
         
         baseline_grup_ogrenci = baseline_dict.get("grup_toplam_ogrenci", 0)
         baseline_grup_ders = baseline_dict.get("grup_toplam_ders", 0)
         baseline_grup_gelir = baseline_dict.get("grup_toplam_gelir", 0)
         
-        # Gerçek verileri topla
-        gercek_grup_ogrencisi = await db.grup_ogrenciler.count_documents({})
-        gercek_grup_dersi = await db.grup_ders_kayitlari.count_documents({})
+        # SQLite: Gerçek verileri topla
+        gercek_grup_ogrencisi = await db.count("grup_ogrenciler")
+        gercek_grup_dersi = await db.count("grup_ders_kayitlari")
         
-        grup_odemeler = await db.grup_ogrenci_odemeler.find({}, {"_id": 0}).to_list(10000)
+        grup_odemeler = await db.find_all("grup_ogrenci_odemeler")
         gercek_grup_geliri = sum(odeme.get("tutar", 0) for odeme in grup_odemeler)
         
         # Toplam = baseline + gerçek
