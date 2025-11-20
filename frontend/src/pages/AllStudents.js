@@ -15,6 +15,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import StudentCard from "@/components/StudentCard";
+import { useAyarlar } from "@/hooks/useAyarlar";
 import { Users, Grid, List, Filter, X } from "lucide-react";
 import { toast } from "sonner";
 
