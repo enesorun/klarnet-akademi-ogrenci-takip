@@ -134,6 +134,7 @@ class LessonCreate(BaseModel):
 class DashboardStats(BaseModel):
     aktif_ogrenci_sayisi: int
     potansiyel_aylik_gelir: float
+    aylik_gelir: float = 0.0
     odeme_yaklasan: dict
     odeme_bekleyen: dict
 
