@@ -37,6 +37,8 @@ const AllStudents = () => {
   // Dinamik ayarları yükle
   const { ayarlar: seviyeler } = useAyarlar("seviyeler");
   const { ayarlar: referansKaynaklari } = useAyarlar("referans_kaynaklari");
+  const { ayarlar: etaplar } = useAyarlar("etaplar");
+  const ozelAlanlar = useOzelAlanlar("ogrenci");
 
   const [aktifStudents, setAktifStudents] = useState([]);
   const [araVerdiStudents, setAraVerdiStudents] = useState([]);
@@ -44,6 +46,13 @@ const AllStudents = () => {
   const [loading, setLoading] = useState(true);
   const [viewMode, setViewMode] = useState("card"); // card or list
   const [showFilters, setShowFilters] = useState(false);
+  
+  // Düzenle/Sil modal
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [selectedStudent, setSelectedStudent] = useState(null);
+  const [editForm, setEditForm] = useState({});
+  const [ozelAlanlarData, setOzelAlanlarData] = useState({});
   
   // Filtreler
   const [filters, setFilters] = useState({
