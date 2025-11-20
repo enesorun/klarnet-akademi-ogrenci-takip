@@ -100,56 +100,58 @@ const EditProfileModal = ({ isOpen, onClose, student, currentTariff, onSuccess }
         </DialogHeader>
 
         <Tabs defaultValue="profile" className="mt-4">
-          <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="profile">Profil Bilgileri</TabsTrigger>
-            <TabsTrigger value="tariff">Tarife Güncelle</TabsTrigger>
+          <TabsList className="grid w-full grid-cols-2 bg-gray-100 dark:bg-gray-700">
+            <TabsTrigger value="profile" className="dark:text-gray-300 data-[state=active]:dark:bg-gray-600 data-[state=active]:dark:text-white">Profil Bilgileri</TabsTrigger>
+            <TabsTrigger value="tariff" className="dark:text-gray-300 data-[state=active]:dark:bg-gray-600 data-[state=active]:dark:text-white">Tarife Güncelle</TabsTrigger>
           </TabsList>
 
           <TabsContent value="profile">
             <form onSubmit={handleProfileSubmit} className="space-y-4 mt-4">
               <div className="grid grid-cols-2 gap-4">
                 <div className="col-span-2">
-                  <Label htmlFor="ad_soyad">Ad Soyad *</Label>
+                  <Label htmlFor="ad_soyad" className="text-gray-700 dark:text-gray-300">Ad Soyad *</Label>
                   <Input
                     id="ad_soyad"
                     value={profileData.ad_soyad || ""}
                     onChange={(e) => setProfileData({ ...profileData, ad_soyad: e.target.value })}
                     required
                     data-testid="edit-name-input"
+                    className="dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                   />
                 </div>
 
                 <div>
-                  <Label htmlFor="konum">Konum *</Label>
+                  <Label htmlFor="konum" className="text-gray-700 dark:text-gray-300">Konum *</Label>
                   <Input
                     id="konum"
                     value={profileData.konum || ""}
                     onChange={(e) => setProfileData({ ...profileData, konum: e.target.value })}
                     required
                     data-testid="edit-location-input"
+                    className="dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                   />
                 </div>
 
                 <div>
-                  <Label htmlFor="seviye">Seviye *</Label>
+                  <Label htmlFor="seviye" className="text-gray-700 dark:text-gray-300">Seviye *</Label>
                   <Select
                     value={profileData.seviye || ""}
                     onValueChange={(value) => setProfileData({ ...profileData, seviye: value })}
                   >
-                    <SelectTrigger data-testid="edit-level-select">
+                    <SelectTrigger data-testid="edit-level-select" className="dark:bg-gray-700 dark:border-gray-600 dark:text-white">
                       <SelectValue />
                     </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="Başlangıç">Başlangıç</SelectItem>
-                      <SelectItem value="Orta">Orta</SelectItem>
-                      <SelectItem value="İleri">İleri</SelectItem>
-                      <SelectItem value="Uzman">Uzman</SelectItem>
+                    <SelectContent className="dark:bg-gray-700 dark:border-gray-600">
+                      <SelectItem value="Başlangıç" className="dark:text-white dark:focus:bg-gray-600">Başlangıç</SelectItem>
+                      <SelectItem value="Orta" className="dark:text-white dark:focus:bg-gray-600">Orta</SelectItem>
+                      <SelectItem value="İleri" className="dark:text-white dark:focus:bg-gray-600">İleri</SelectItem>
+                      <SelectItem value="Uzman" className="dark:text-white dark:focus:bg-gray-600">Uzman</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
 
                 <div>
-                  <Label htmlFor="email">E-mail *</Label>
+                  <Label htmlFor="email" className="text-gray-700 dark:text-gray-300">E-mail *</Label>
                   <Input
                     id="email"
                     type="email"
@@ -157,11 +159,12 @@ const EditProfileModal = ({ isOpen, onClose, student, currentTariff, onSuccess }
                     onChange={(e) => setProfileData({ ...profileData, email: e.target.value })}
                     required
                     data-testid="edit-email-input"
+                    className="dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                   />
                 </div>
 
                 <div>
-                  <Label htmlFor="yas">Yaş *</Label>
+                  <Label htmlFor="yas" className="text-gray-700 dark:text-gray-300">Yaş *</Label>
                   <Input
                     id="yas"
                     type="number"
@@ -169,48 +172,51 @@ const EditProfileModal = ({ isOpen, onClose, student, currentTariff, onSuccess }
                     onChange={(e) => setProfileData({ ...profileData, yas: parseInt(e.target.value) })}
                     required
                     data-testid="edit-age-input"
+                    className="dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                   />
                 </div>
 
                 <div>
-                  <Label htmlFor="meslek">Meslek *</Label>
+                  <Label htmlFor="meslek" className="text-gray-700 dark:text-gray-300">Meslek *</Label>
                   <Input
                     id="meslek"
                     value={profileData.meslek || ""}
                     onChange={(e) => setProfileData({ ...profileData, meslek: e.target.value })}
                     required
                     data-testid="edit-occupation-input"
+                    className="dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                   />
                 </div>
 
                 <div>
-                  <Label htmlFor="referans">Referans *</Label>
+                  <Label htmlFor="referans" className="text-gray-700 dark:text-gray-300">Referans *</Label>
                   <Select
                     value={profileData.referans || ""}
                     onValueChange={(value) => setProfileData({ ...profileData, referans: value })}
                   >
-                    <SelectTrigger data-testid="edit-reference-select">
+                    <SelectTrigger data-testid="edit-reference-select" className="dark:bg-gray-700 dark:border-gray-600 dark:text-white">
                       <SelectValue />
                     </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="Tavsiye">Tavsiye</SelectItem>
-                      <SelectItem value="Google Arama">Google Arama</SelectItem>
-                      <SelectItem value="Sosyal Medya">Sosyal Medya</SelectItem>
-                      <SelectItem value="Meta Reklam">Meta Reklam</SelectItem>
-                      <SelectItem value="Google Reklam">Google Reklam</SelectItem>
-                      <SelectItem value="Diğer">Diğer</SelectItem>
+                    <SelectContent className="dark:bg-gray-700 dark:border-gray-600">
+                      <SelectItem value="Tavsiye" className="dark:text-white dark:focus:bg-gray-600">Tavsiye</SelectItem>
+                      <SelectItem value="Google Arama" className="dark:text-white dark:focus:bg-gray-600">Google Arama</SelectItem>
+                      <SelectItem value="Sosyal Medya" className="dark:text-white dark:focus:bg-gray-600">Sosyal Medya</SelectItem>
+                      <SelectItem value="Meta Reklam" className="dark:text-white dark:focus:bg-gray-600">Meta Reklam</SelectItem>
+                      <SelectItem value="Google Reklam" className="dark:text-white dark:focus:bg-gray-600">Google Reklam</SelectItem>
+                      <SelectItem value="Diğer" className="dark:text-white dark:focus:bg-gray-600">Diğer</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
 
                 <div className="col-span-2">
-                  <Label htmlFor="notlar">Genel Notlar</Label>
+                  <Label htmlFor="notlar" className="text-gray-700 dark:text-gray-300">Genel Notlar</Label>
                   <Textarea
                     id="notlar"
                     value={profileData.notlar || ""}
                     onChange={(e) => setProfileData({ ...profileData, notlar: e.target.value })}
                     rows={3}
                     data-testid="edit-notes-input"
+                    className="dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                   />
                 </div>
               </div>
