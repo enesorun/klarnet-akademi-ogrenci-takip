@@ -357,13 +357,23 @@ const GrupDetay = () => {
             {sezon?.sezon_adi || "Sezon bilgisi yok"}
           </p>
         </div>
-        <Button
-          onClick={() => handleOpenOgrenciModal()}
-          className="bg-[#4d5deb] hover:bg-[#3a4ad4]"
-        >
-          <Plus className="w-4 h-4 mr-2" />
-          Öğrenci Ekle
-        </Button>
+        <div className="flex gap-3">
+          <Button
+            onClick={() => handleOpenOgrenciModal()}
+            className="bg-[#4d5deb] hover:bg-[#3a4ad4]"
+          >
+            <Plus className="w-4 h-4 mr-2" />
+            Öğrenci Ekle
+          </Button>
+          <Button
+            onClick={handleExportCSV}
+            variant="outline"
+            className="border-green-500 text-green-600 hover:bg-green-50 dark:border-green-600 dark:text-green-400 dark:hover:bg-green-900/20"
+          >
+            <FileDown className="w-4 h-4 mr-2" />
+            CSV İndir
+          </Button>
+        </div>
       </div>
 
       {/* Grup Bilgileri */}
