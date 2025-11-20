@@ -1995,9 +1995,13 @@ async def create_or_update_baseline(baseline: IstatistikBaselineCreate):
 @api_router.delete("/istatistik-baseline/{istatistik_adi}")
 async def delete_baseline(istatistik_adi: str):
     """Baseline değerini sil (otomatik hesaplamaya geri dön)"""
-    result = await db.istatistik_baseline.delete_one({"istatistik_adi": istatistik_adi})
-    if result.deleted_count == 0:
+    # SQLite: Baseline'ı kontrol et
+    existing = await db.find_one("istatistik_baseline", where={"istatistik_adi": istatistik_adi})
+    if not existing:
         raise HTTPException(status_code=404, detail="Baseline bulunamadı")
+    
+    # SQLite: Sil
+    await db.execute("DELETE FROM istatistik_baseline WHERE istatistik_adi = ?", (istatistik_adi,))
     return {"message": "Baseline silindi, otomatik hesaplama devrede"}
 
 app.include_router(api_router)
