@@ -612,6 +612,7 @@ async def get_dashboard_stats():
         aktif_ogrenci_sayisi=aktif_count,
         potansiyel_aylik_gelir=potansiyel_gelir,
         aylik_gelir=aylik_gelir,
+        baslangic_gunu=baslangic_gunu,
         odeme_yaklasan={
             "count": len(odeme_yaklasan_list),
             "tutar": odeme_yaklasan_tutar
