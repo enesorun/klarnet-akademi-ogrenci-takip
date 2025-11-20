@@ -655,12 +655,62 @@ const GrupDersleri = () => {
                 İptal
               </Button>
               <Button type="submit" className="bg-[#4d5deb] hover:bg-[#3a4ad4]">
-                Oluştur
+                {editingGrup ? "Güncelle" : "Oluştur"}
               </Button>
             </div>
           </form>
         </DialogContent>
       </Dialog>
+
+      {/* Sezon Silme Onay */}
+      <AlertDialog open={!!deleteSezonId} onOpenChange={() => setDeleteSezonId(null)}>
+        <AlertDialogContent className="dark:bg-gray-800">
+          <AlertDialogHeader>
+            <AlertDialogTitle className="text-gray-900 dark:text-white">
+              Sezonu silmek istediğinize emin misiniz?
+            </AlertDialogTitle>
+            <AlertDialogDescription className="text-gray-600 dark:text-gray-400">
+              Bu işlem geri alınamaz. Sezona ait tüm gruplar ve öğrenciler de silinecektir.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel className="dark:bg-gray-700 dark:text-white">
+              İptal
+            </AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleDeleteSezon}
+              className="bg-red-600 hover:bg-red-700 text-white"
+            >
+              Sil
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      {/* Grup Silme Onay */}
+      <AlertDialog open={!!deleteGrupId} onOpenChange={() => setDeleteGrupId(null)}>
+        <AlertDialogContent className="dark:bg-gray-800">
+          <AlertDialogHeader>
+            <AlertDialogTitle className="text-gray-900 dark:text-white">
+              Grubu silmek istediğinize emin misiniz?
+            </AlertDialogTitle>
+            <AlertDialogDescription className="text-gray-600 dark:text-gray-400">
+              Bu işlem geri alınamaz. Gruba ait tüm öğrenciler ve ders kayıtları da silinecektir.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel className="dark:bg-gray-700 dark:text-white">
+              İptal
+            </AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleDeleteGrup}
+              className="bg-red-600 hover:bg-red-700 text-white"
+            >
+              Sil
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };
