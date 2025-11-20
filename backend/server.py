@@ -599,14 +599,23 @@ async def get_aylik_rapor():
 @api_router.get("/reports/aylik-gelir", response_model=List[AylikGelirRapor])
 async def get_aylik_gelir_raporu():
     """
-    Aylık gelir raporu - 15'ten 15'e hesaplama
-    Örn: 15 Ekim - 15 Kasım = Kasım geliri
+    Aylık gelir raporu - Ayarlanabilir başlangıç günü ile hesaplama
+    Birebir ve Grup gelirlerini ayrı gösterir
     """
     from datetime import datetime, timedelta
     from dateutil.relativedelta import relativedelta
     
-    # Tüm ödemeleri al
-    all_payments = await db.payments.find({}, {"_id": 0}).to_list(10000)
+    # Gelir raporu ayarlarını al
+    ayarlar = await db.gelir_raporu_ayarlari.find_one({}, {"_id": 0})
+    baslangic_gunu = ayarlar.get("baslangic_gunu", 15) if ayarlar else 15
+    
+    # Tüm ödemeleri al (Birebir - payments)
+    birebir_payments = await db.payments.find({}, {"_id": 0}).to_list(10000)
+    
+    # Grup ödemelerini al (grup_ogrenci_odeme tablosundan alınacak - şimdilik boş)
+    grup_payments = []  # TODO: Grup ödeme sistemi eklenince buraya eklenecek
+    
+    all_payments = birebir_payments + grup_payments
     
     if not all_payments:
         return []
