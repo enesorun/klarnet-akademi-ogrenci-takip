@@ -297,6 +297,16 @@ const GrupDersleri = () => {
           <Plus className="w-4 h-4 mr-2" />
           Yeni Sezon
         </Button>
+        {selectedSezon && (
+          <Button
+            onClick={() => setDeleteSezonId(selectedSezon)}
+            variant="outline"
+            className="mt-6 text-red-600 hover:text-red-700 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-900/20 border-red-300 dark:border-red-700"
+          >
+            <Trash2 className="w-4 h-4 mr-2" />
+            Sezonu Sil
+          </Button>
+        )}
       </div>
 
       {selectedSezon && stats && (
