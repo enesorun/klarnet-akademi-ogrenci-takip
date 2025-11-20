@@ -62,6 +62,7 @@ class StudentCreate(BaseModel):
     referans: str
     genel_durum: str = "aktif"
     notlar: str = ""
+    ozel_alanlar: Optional[dict] = {}
 
 class StudentUpdate(BaseModel):
     ad_soyad: Optional[str] = None
