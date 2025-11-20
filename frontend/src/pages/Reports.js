@@ -165,6 +165,8 @@ const Reports = () => {
                   <tr className="border-b border-gray-200 dark:border-gray-700">
                     <th className="text-left py-3 px-4 text-sm font-semibold text-gray-700 dark:text-gray-300">Ay</th>
                     <th className="text-left py-3 px-4 text-sm font-semibold text-gray-700 dark:text-gray-300">Dönem</th>
+                    <th className="text-right py-3 px-4 text-sm font-semibold text-gray-700 dark:text-gray-300">Birebir</th>
+                    <th className="text-right py-3 px-4 text-sm font-semibold text-gray-700 dark:text-gray-300">Grup</th>
                     <th className="text-right py-3 px-4 text-sm font-semibold text-gray-700 dark:text-gray-300">Toplam Gelir</th>
                     <th className="text-right py-3 px-4 text-sm font-semibold text-gray-700 dark:text-gray-300">Önceki Aya Fark</th>
                     <th className="text-right py-3 px-4 text-sm font-semibold text-gray-700 dark:text-gray-300">Değişim</th>
