@@ -636,7 +636,9 @@ const GrupDetay = () => {
       <Dialog open={isOgrenciModalOpen} onOpenChange={setIsOgrenciModalOpen}>
         <DialogContent className="max-w-2xl dark:bg-gray-800">
           <DialogHeader>
-            <DialogTitle className="text-gray-900 dark:text-white">Grup Öğrencisi Ekle</DialogTitle>
+            <DialogTitle className="text-gray-900 dark:text-white">
+              {editingOgrenci ? "Grup Öğrencisi Düzenle" : "Grup Öğrencisi Ekle"}
+            </DialogTitle>
           </DialogHeader>
           <form onSubmit={handleCreateOgrenci} className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
