@@ -228,6 +228,24 @@ class GrupDashboardStats(BaseModel):
     odeme_tamamlanan: int
     taksitte_olan: int
 
+# Grup Ödemesi Model
+class GrupOdeme(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    grup_ogrenci_id: str
+    grup_id: str
+    tutar: float
+    tarih: str = Field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
+    aciklama: str = ""
+    created_at: str = Field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
+
+class GrupOdemeCreate(BaseModel):
+    grup_ogrenci_id: str
+    grup_id: str
+    tutar: float
+    tarih: Optional[str] = None
+    aciklama: str = ""
+
 # ==================== AYARLAR (SETTINGS) MODELS ====================
 
 class AyarItem(BaseModel):
