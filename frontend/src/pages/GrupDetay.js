@@ -48,6 +48,8 @@ const GrupDetay = () => {
   const [isDersModalOpen, setIsDersModalOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("ogrenciler"); // "ogrenciler" veya "dersler"
+  const [editingOgrenci, setEditingOgrenci] = useState(null);
+  const [deleteOgrenciId, setDeleteOgrenciId] = useState(null);
   
   const [durumFilter, setDurumFilter] = useState("hepsi");
   const [odemeFilter, setOdemeFilter] = useState("hepsi");
