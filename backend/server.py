@@ -382,9 +382,16 @@ async def get_student(student_id: str):
 
 @api_router.post("/students", response_model=Student)
 async def create_student(student: StudentCreate):
+    import json
     student_obj = Student(**student.model_dump())
     doc = student_obj.model_dump()
-    await db.students.insert_one(doc)
+    
+    # SQLite: ozel_alanlar dict ise JSON string'e çevir
+    if doc.get("ozel_alanlar") and isinstance(doc["ozel_alanlar"], dict):
+        doc["ozel_alanlar"] = json.dumps(doc["ozel_alanlar"], ensure_ascii=False)
+    
+    # SQLite: Insert
+    await db.insert("students", doc)
     
     # Frontend'den tarife gönderilmezse, otomatik oluşturulmaz
     # Frontend manuel tarife ekleyecek
