@@ -24,10 +24,14 @@ const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
 
 const AddStudentModal = ({ isOpen, onClose, onSuccess }) => {
+  // Dinamik ayarları yükle
+  const { ayarlar: seviyeler } = useAyarlar("seviyeler");
+  const { ayarlar: referansKaynaklari } = useAyarlar("referans_kaynaklari");
+
   const [formData, setFormData] = useState({
     ad_soyad: "",
     konum: "",
-    seviye: "Başlangıç",
+    seviye: "",
     email: "",
     yas: "",
     meslek: "",
