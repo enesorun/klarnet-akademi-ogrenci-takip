@@ -821,7 +821,7 @@ async def get_aylik_gelir_raporu():
     # SQLite: Grup ödemelerini al  
     grup_payments_raw = await db.find_all("grup_ogrenci_odemeler")
     # Format'ı birebir ödemelerle aynı yap (tutar ve tarih alanları)
-    grup_payments = [{"tutar": p["tutar"], "tarih": p["odeme_tarihi"]} for p in grup_payments_raw]
+    grup_payments = [{"tutar": p["tutar"], "tarih": p["tarih"]} for p in grup_payments_raw]
     
     all_payments = birebir_payments + grup_payments
     
