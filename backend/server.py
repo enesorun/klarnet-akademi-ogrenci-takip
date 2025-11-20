@@ -48,6 +48,7 @@ class Student(BaseModel):
     referans: str
     genel_durum: str = "aktif"  # aktif, ara_verdi, eski
     notlar: str = ""
+    ozel_alanlar: Optional[dict] = {}
     created_at: str = Field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
 
 class StudentCreate(BaseModel):
