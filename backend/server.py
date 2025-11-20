@@ -1287,7 +1287,7 @@ async def delete_grup_ogrenci(ogrenci_id: str):
     
     # SQLite: CASCADE ON DELETE ile ilişkili ödemeler silinecek
     await db.delete("grup_ogrenciler", "id", ogrenci_id)
-    await db.execute("DELETE FROM grup_ogrenci_odemeler WHERE ogrenci_id = ?", (ogrenci_id,))
+    await db.execute("DELETE FROM grup_ogrenci_odemeler WHERE grup_ogrenci_id = ?", (ogrenci_id,))
     
     return {
         "message": "Grup öğrencisi ve tüm ödemeleri silindi",
