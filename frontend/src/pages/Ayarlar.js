@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import OzelAlanlar from "@/components/OzelAlanlar";
 import GelirRaporuAyarlari from "@/components/GelirRaporuAyarlari";
+import VeriYonetimi from "@/components/VeriYonetimi";
 import {
   Dialog,
   DialogContent,
