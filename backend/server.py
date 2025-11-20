@@ -246,6 +246,20 @@ class GrupOdemeCreate(BaseModel):
     tarih: Optional[str] = None
     aciklama: str = ""
 
+# ==================== İSTATİSTİK BASELINE MODELS ====================
+
+class IstatistikBaseline(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    istatistik_adi: str  # "toplam_ogrenci", "toplam_ders", "toplam_gelir", vs
+    manuel_deger: float
+    guncelleme_tarihi: str = Field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
+    created_at: str = Field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
+
+class IstatistikBaselineCreate(BaseModel):
+    istatistik_adi: str
+    manuel_deger: float
+
 # ==================== AYARLAR (SETTINGS) MODELS ====================
 
 class AyarItem(BaseModel):
