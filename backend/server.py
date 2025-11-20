@@ -1218,6 +1218,120 @@ async def list_backups():
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Liste hatası: {str(e)}")
 
+# ==================== EXPORT/IMPORT SİSTEMİ ====================
+
+@api_router.get("/export/data")
+async def export_data():
+    """Tüm veriyi tek JSON dosyası olarak export et"""
+    from fastapi.responses import StreamingResponse
+    import json
+    import io
+    from datetime import datetime
+    
+    try:
+        # Yedeklenecek koleksiyonlar
+        collections = [
+            "ogrenciler",
+            "payments",
+            "tariffs",
+            "ayarlar",
+            "grup_sezonlar",
+            "gruplar",
+            "grup_ogrenciler",
+            "grup_ders_kayitlari",
+            "ozel_alanlar",
+            "gelir_raporu_ayarlari"
+        ]
+        
+        export_data = {
+            "export_date": datetime.now().isoformat(),
+            "version": "1.0",
+            "collections": {}
+        }
+        
+        # Her koleksiyonu topla
+        for collection_name in collections:
+            collection = db[collection_name]
+            documents = await collection.find({}, {"_id": 0}).to_list(100000)
+            export_data["collections"][collection_name] = documents
+        
+        # JSON string'e çevir
+        json_str = json.dumps(export_data, ensure_ascii=False, indent=2)
+        json_bytes = json_str.encode('utf-8')
+        
+        # Stream olarak dön
+        return StreamingResponse(
+            io.BytesIO(json_bytes),
+            media_type="application/json",
+            headers={
+                "Content-Disposition": f"attachment; filename=klarnet_akademi_export_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
+            }
+        )
+    
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Export hatası: {str(e)}")
+
+@api_router.post("/import/data")
+async def import_data(file: UploadFile):
+    """JSON dosyasını import et (deduplication ile)"""
+    import json
+    
+    try:
+        # Dosyayı oku
+        contents = await file.read()
+        data = json.loads(contents.decode('utf-8'))
+        
+        # Versiyon kontrolü
+        if "collections" not in data:
+            raise HTTPException(status_code=400, detail="Geçersiz dosya formatı")
+        
+        collections_data = data["collections"]
+        
+        stats = {
+            "total_imported": 0,
+            "total_skipped": 0,
+            "collections": {}
+        }
+        
+        # Her koleksiyonu import et
+        for collection_name, documents in collections_data.items():
+            collection = db[collection_name]
+            
+            imported = 0
+            skipped = 0
+            
+            for doc in documents:
+                if "id" in doc:
+                    # ID var - deduplication yap
+                    existing = await collection.find_one({"id": doc["id"]}, {"_id": 0})
+                    
+                    if existing:
+                        skipped += 1
+                    else:
+                        await collection.insert_one(doc)
+                        imported += 1
+                else:
+                    # ID yok - direkt ekle
+                    await collection.insert_one(doc)
+                    imported += 1
+            
+            stats["collections"][collection_name] = {
+                "imported": imported,
+                "skipped": skipped
+            }
+            stats["total_imported"] += imported
+            stats["total_skipped"] += skipped
+        
+        return {
+            "message": "Import başarıyla tamamlandı",
+            "stats": stats
+        }
+    
+    except json.JSONDecodeError:
+        raise HTTPException(status_code=400, detail="Geçersiz JSON dosyası")
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Import hatası: {str(e)}")
+
 # ==================== GRUP DERS KAYDI ENDPOINTS ====================
 
 @api_router.get("/grup-dersleri/ders-kayitlari", response_model=List[GrupDersKaydi])
