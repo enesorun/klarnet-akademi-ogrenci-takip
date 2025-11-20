@@ -1372,8 +1372,8 @@ async def delete_ayar(ayar_id: str):
 # Varsayılan ayarları yükle
 @api_router.post("/ayarlar/initialize")
 async def initialize_ayarlar():
-    # Kontrol et, varsa tekrar yükleme
-    existing = await db.ayarlar.count_documents({})
+    # SQLite: Kontrol et, varsa tekrar yükleme
+    existing = await db.count("ayarlar")
     if existing > 0:
         return {"message": "Ayarlar zaten mevcut", "count": existing}
     
