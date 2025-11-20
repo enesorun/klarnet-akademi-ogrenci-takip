@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { ArrowLeft, Plus, Filter, BookOpen, Users, Trash2, Pencil } from "lucide-react";
 import { useAyarlar } from "@/hooks/useAyarlar";
+import { useOzelAlanlar } from "@/hooks/useOzelAlanlar";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
