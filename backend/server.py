@@ -554,15 +554,16 @@ async def create_lesson(lesson: LessonCreate):
 async def update_lesson(lesson_id: str, lesson_update: LessonCreate):
     update_data = lesson_update.model_dump()
     
-    result = await db.lessons.update_one(
-        {"id": lesson_id},
-        {"$set": update_data}
-    )
-    
-    if result.matched_count == 0:
+    # SQLite: Önce dersi kontrol et
+    existing = await db.find_one("dersler", where={"id": lesson_id})
+    if not existing:
         raise HTTPException(status_code=404, detail="Ders bulunamadı")
     
-    updated_lesson = await db.lessons.find_one({"id": lesson_id}, {"_id": 0})
+    # SQLite: Update
+    await db.update("dersler", update_data, "id", lesson_id)
+    
+    # Güncellenmiş dersi getir
+    updated_lesson = await db.find_one("dersler", where={"id": lesson_id})
     return updated_lesson
 
 @api_router.delete("/lessons/{lesson_id}")
