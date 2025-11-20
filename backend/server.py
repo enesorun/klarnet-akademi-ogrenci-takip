@@ -1483,20 +1483,27 @@ async def delete_ozel_alan(alan_id: str):
 
 @api_router.get("/gelir-raporu-ayarlari")
 async def get_gelir_raporu_ayarlari():
-    ayar = await db.gelir_raporu_ayarlari.find_one({}, {"_id": 0})
+    # SQLite: Gelir raporu ayarını getir
+    ayar = await db.fetch_one("SELECT * FROM ayarlar WHERE kategori = ? LIMIT 1", ("gelir_raporu_baslangic",))
     if not ayar:
         # Varsayılan ayarları dön
         return {"baslangic_gunu": 15}
-    return ayar
+    return {"baslangic_gunu": int(ayar["deger"])}
 
 @api_router.post("/gelir-raporu-ayarlari")
 async def update_gelir_raporu_ayarlari(baslangic_gunu: int):
     if baslangic_gunu < 1 or baslangic_gunu > 28:
         raise HTTPException(status_code=400, detail="Başlangıç günü 1-28 arası olmalıdır")
     
-    # Mevcut ayarı güncelle veya yeni oluştur
-    await db.gelir_raporu_ayarlari.delete_many({})
-    await db.gelir_raporu_ayarlari.insert_one({"baslangic_gunu": baslangic_gunu})
+    # SQLite: Mevcut ayarı güncelle veya yeni oluştur
+    existing = await db.fetch_one("SELECT * FROM ayarlar WHERE kategori = ? LIMIT 1", ("gelir_raporu_baslangic",))
+    
+    if existing:
+        await db.execute("UPDATE ayarlar SET deger = ? WHERE kategori = ?", (str(baslangic_gunu), "gelir_raporu_baslangic"))
+    else:
+        await db.execute("INSERT INTO ayarlar (id, kategori, deger, sira) VALUES (?, ?, ?, ?)", 
+                        (str(uuid.uuid4()), "gelir_raporu_baslangic", str(baslangic_gunu), 999))
+    
     return {"message": "Ayar kaydedildi", "baslangic_gunu": baslangic_gunu}
 
 # ==================== YEDEKLEME SİSTEMİ ====================
