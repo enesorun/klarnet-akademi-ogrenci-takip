@@ -324,6 +324,11 @@ const Ayarlar = () => {
         <TabsContent value="gelir_raporu">
           <GelirRaporuAyarlari />
         </TabsContent>
+
+        {/* Veri Yönetimi Tab */}
+        <TabsContent value="veri_yonetimi">
+          <VeriYonetimi />
+        </TabsContent>
       </Tabs>
 
       {/* Add/Edit Modal */}
