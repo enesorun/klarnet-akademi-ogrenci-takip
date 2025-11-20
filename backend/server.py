@@ -454,7 +454,8 @@ async def delete_student(student_id: str):
 
 @api_router.get("/tariffs/{student_id}", response_model=List[Tariff])
 async def get_tariffs(student_id: str):
-    tariffs = await db.tariffs.find({"ogrenci_id": student_id}, {"_id": 0}).sort("created_at", -1).to_list(100)
+    # SQLite: Öğrencinin tarifelerini getir
+    tariffs = await db.find_all("tarifeler", where={"ogrenci_id": student_id}, order_by="created_at DESC")
     return tariffs
 
 @api_router.post("/tariffs", response_model=Tariff)
