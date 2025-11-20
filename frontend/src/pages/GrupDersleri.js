@@ -552,7 +552,9 @@ const GrupDersleri = () => {
       <Dialog open={isGrupModalOpen} onOpenChange={setIsGrupModalOpen}>
         <DialogContent className="dark:bg-gray-800">
           <DialogHeader>
-            <DialogTitle className="text-gray-900 dark:text-white">Yeni Grup Oluştur</DialogTitle>
+            <DialogTitle className="text-gray-900 dark:text-white">
+              {editingGrup ? "Grup Düzenle" : "Yeni Grup Oluştur"}
+            </DialogTitle>
           </DialogHeader>
           <form onSubmit={handleCreateGrup} className="space-y-4">
             <div>
