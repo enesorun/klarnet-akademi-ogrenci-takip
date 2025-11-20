@@ -633,9 +633,9 @@ async def get_dashboard_stats():
     from datetime import datetime, timezone
     from dateutil.relativedelta import relativedelta
     
-    # Gelir raporu ayarlarından başlangıç gününü al
-    gelir_ayarlari = await db.gelir_raporu_ayarlari.find_one({}, {"_id": 0})
-    baslangic_gunu = gelir_ayarlari.get("baslangic_gunu", 15) if gelir_ayarlari else 15
+    # SQLite: Gelir raporu ayarlarından başlangıç gününü al
+    gelir_ayarlari = await db.fetch_one("SELECT * FROM ayarlar WHERE kategori = ? LIMIT 1", ("gelir_raporu_baslangic",))
+    baslangic_gunu = int(gelir_ayarlari["deger"]) if gelir_ayarlari else 15
     
     now = datetime.now(timezone.utc)
     
