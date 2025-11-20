@@ -142,18 +142,21 @@ const StudentCard = ({ student, onUpdate, onEdit, onDelete }) => {
         </div>
       </div>
 
-      {/* Monthly Payment - Simplified and Prominent */}
+      {/* Monthly Payment - Modern Badge Style */}
       {calculations.tariff && (
         <div 
-          className="text-center py-3 border-t border-gray-100 dark:border-gray-700 cursor-pointer"
+          className="mt-3 cursor-pointer"
           onClick={() => navigate(`/students/${student.id}`)}
         >
-          <div className="text-3xl font-bold text-blue-600 dark:text-blue-400">
-            {new Intl.NumberFormat('tr-TR', {
-              style: 'decimal',
-              minimumFractionDigits: 0,
-              maximumFractionDigits: 0,
-            }).format(calculations.tariff.ucret)}₺
+          <div className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-blue-500 to-blue-600 dark:from-blue-600 dark:to-blue-700 rounded-lg shadow-sm">
+            <span className="text-sm font-medium text-white mr-2">Aylık</span>
+            <span className="text-lg font-bold text-white">
+              {new Intl.NumberFormat('tr-TR', {
+                style: 'decimal',
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0,
+              }).format(calculations.tariff.ucret)}₺
+            </span>
           </div>
         </div>
       )}
