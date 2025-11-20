@@ -84,7 +84,7 @@ const Reports = () => {
       {genelStats && (
         <div>
           <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4" data-testid="general-stats-title">Tüm Zamanların Genel İstatistikleri</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-100 dark:border-gray-700" data-testid="total-students-stat">
               <div className="flex items-center justify-between mb-3">
                 <div className="p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
@@ -123,16 +123,6 @@ const Reports = () => {
               </div>
               <div className="text-2xl font-bold text-gray-900 dark:text-white">{formatCurrency(genelStats.ortalama_ders_ucreti)}</div>
               <div className="text-sm text-gray-600 dark:text-gray-400 mt-1">Ortalama Ders Ücreti</div>
-            </div>
-
-            <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-100 dark:border-gray-700">
-              <div className="flex items-center justify-between mb-3">
-                <div className="p-3 bg-pink-50 dark:bg-pink-900/20 rounded-lg">
-                  <Calendar className="w-6 h-6 text-pink-600 dark:text-pink-400" />
-                </div>
-              </div>
-              <div className="text-3xl font-bold text-gray-900 dark:text-white">{genelStats.toplam_aktif_ogrenci || 0}</div>
-              <div className="text-sm text-gray-600 dark:text-gray-400 mt-1">Aktif Öğrenci</div>
             </div>
           </div>
         </div>
