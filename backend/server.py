@@ -546,6 +546,32 @@ async def get_dashboard_stats():
 
 # ==================== REPORT ENDPOINTS ====================
 
+@api_router.get("/reports/grup-istatistik")
+async def get_grup_istatistikleri():
+    """Grup dersleri için genel istatistikler"""
+    try:
+        # Toplam grup öğrencisi
+        toplam_grup_ogrencisi = await db.grup_ogrenciler.count_documents({})
+        
+        # Toplam yapılan grup dersi
+        toplam_grup_dersi = await db.grup_ders_kayitlari.count_documents({})
+        
+        # Toplam grup dersi geliri
+        grup_odemeler = await db.grup_odemeler.find({}, {"_id": 0}).to_list(10000)
+        toplam_grup_geliri = sum(odeme.get("tutar", 0) for odeme in grup_odemeler)
+        
+        # Ortalama ders saati ücreti (toplam gelir / toplam ders)
+        ortalama_ders_ucreti = toplam_grup_geliri / toplam_grup_dersi if toplam_grup_dersi > 0 else 0
+        
+        return {
+            "toplam_grup_ogrencisi": toplam_grup_ogrencisi,
+            "toplam_yapilan_grup_dersi": toplam_grup_dersi,
+            "toplam_grup_geliri": round(toplam_grup_geliri, 2),
+            "ortalama_ders_ucreti": round(ortalama_ders_ucreti, 2)
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"İstatistik hatası: {str(e)}")
+
 @api_router.get("/reports/referans", response_model=List[ReferansRapor])
 async def get_referans_raporu():
     students = await db.students.find({}, {"_id": 0}).to_list(1000)
