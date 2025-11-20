@@ -187,7 +187,7 @@ const Ayarlar = () => {
 
       {/* Tabs */}
       <Tabs value={selectedKategori} onValueChange={setSelectedKategori}>
-        <TabsList className="grid grid-cols-4 lg:grid-cols-10 gap-2 h-auto bg-white dark:bg-gray-800 p-2 rounded-lg border border-gray-200 dark:border-gray-700">
+        <TabsList className="flex flex-wrap gap-2 h-auto bg-white dark:bg-gray-800 p-2 rounded-lg border border-gray-200 dark:border-gray-700">
           {KATEGORILER.map((kategori) => (
             <TabsTrigger
               key={kategori.key}
