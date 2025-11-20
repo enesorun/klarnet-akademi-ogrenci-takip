@@ -51,6 +51,12 @@ const GrupDetay = () => {
     ilk_odeme_tarihi: new Date().toISOString().split('T')[0],
   });
 
+  const [dersForm, setDersForm] = useState({
+    tarih: new Date().toISOString().split('T')[0],
+    konu: "",
+    not_: "",
+  });
+
   useEffect(() => {
     fetchGrupDetay();
     fetchOgrenciler();
