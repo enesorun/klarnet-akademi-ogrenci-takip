@@ -136,12 +136,23 @@ const GrupDersleri = () => {
   const handleCreateGrup = async (e) => {
     e.preventDefault();
     try {
-      await axios.post(`${API}/grup-dersleri/gruplar`, {
-        ...grupForm,
-        sezon_id: selectedSezon,
-      });
-      toast.success("Grup oluşturuldu!");
+      if (editingGrup) {
+        // Düzenleme modu
+        await axios.put(`${API}/grup-dersleri/gruplar/${editingGrup.id}`, {
+          ...grupForm,
+          sezon_id: selectedSezon,
+        });
+        toast.success("Grup güncellendi!");
+      } else {
+        // Yeni oluşturma
+        await axios.post(`${API}/grup-dersleri/gruplar`, {
+          ...grupForm,
+          sezon_id: selectedSezon,
+        });
+        toast.success("Grup oluşturuldu!");
+      }
       setIsGrupModalOpen(false);
+      setEditingGrup(null);
       setGrupForm({
         grup_adi: "",
         kur_etap: "1. Etap",
@@ -152,7 +163,59 @@ const GrupDersleri = () => {
       fetchGruplar();
       fetchStats();
     } catch (error) {
-      toast.error("Grup oluşturulurken hata oluştu");
+      toast.error(editingGrup ? "Grup güncellenirken hata oluştu" : "Grup oluşturulurken hata oluştu");
+    }
+  };
+
+  const handleOpenGrupModal = (grup = null) => {
+    if (grup) {
+      setEditingGrup(grup);
+      setGrupForm({
+        grup_adi: grup.grup_adi,
+        kur_etap: grup.kur_etap,
+        gun_saat: grup.gun_saat,
+        max_kapasite: grup.max_kapasite,
+        toplam_ders_sayisi: grup.toplam_ders_sayisi,
+      });
+    } else {
+      setEditingGrup(null);
+      setGrupForm({
+        grup_adi: "",
+        kur_etap: etaplar.length > 0 ? etaplar[0].deger : "1. Etap",
+        gun_saat: "",
+        max_kapasite: 10,
+        toplam_ders_sayisi: 16,
+      });
+    }
+    setIsGrupModalOpen(true);
+  };
+
+  const handleDeleteSezon = async () => {
+    if (!deleteSezonId) return;
+    try {
+      await axios.delete(`${API}/grup-dersleri/sezonlar/${deleteSezonId}`);
+      toast.success("Sezon silindi!");
+      setDeleteSezonId(null);
+      fetchSezonlar();
+      // Eğer silinen sezon seçiliyse, ilk sezonu seç
+      if (selectedSezon === deleteSezonId) {
+        setSelectedSezon("");
+      }
+    } catch (error) {
+      toast.error("Sezon silinirken hata oluştu");
+    }
+  };
+
+  const handleDeleteGrup = async () => {
+    if (!deleteGrupId) return;
+    try {
+      await axios.delete(`${API}/grup-dersleri/gruplar/${deleteGrupId}`);
+      toast.success("Grup silindi!");
+      setDeleteGrupId(null);
+      fetchGruplar();
+      fetchStats();
+    } catch (error) {
+      toast.error("Grup silinirken hata oluştu");
     }
   };
 
