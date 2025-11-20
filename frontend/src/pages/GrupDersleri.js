@@ -144,6 +144,7 @@ const GrupDersleri = () => {
         await axios.put(`${API}/grup-dersleri/gruplar/${editingGrup.id}`, {
           ...grupForm,
           sezon_id: selectedSezon,
+          ozel_alanlar: grupOzelAlanlarData,
         });
         toast.success("Grup güncellendi!");
       } else {
@@ -151,11 +152,13 @@ const GrupDersleri = () => {
         await axios.post(`${API}/grup-dersleri/gruplar`, {
           ...grupForm,
           sezon_id: selectedSezon,
+          ozel_alanlar: grupOzelAlanlarData,
         });
         toast.success("Grup oluşturuldu!");
       }
       setIsGrupModalOpen(false);
       setEditingGrup(null);
+      setGrupOzelAlanlarData({});
       setGrupForm({
         grup_adi: "",
         kur_etap: "1. Etap",
