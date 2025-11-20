@@ -1953,7 +1953,7 @@ async def get_grup_odemeler(grup_id: Optional[str] = None, grup_ogrenci_id: Opti
     if where_clause:
         odemeler = await db.find_all("grup_ogrenci_odemeler", where=where_clause, order_by="tarih DESC")
     else:
-        odemeler = await db.find_all("grup_ogrenci_odemeler", order_by="odeme_tarihi DESC")
+        odemeler = await db.find_all("grup_ogrenci_odemeler", order_by="tarih DESC")
     return odemeler
 
 # Include the router in the main app
