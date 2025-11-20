@@ -273,6 +273,35 @@ const GrupDetay = () => {
     }
   };
 
+  const handleExportCSV = async () => {
+    try {
+      toast.info("CSV dosyası indiriliyor...");
+      
+      const response = await axios.get(`${API}/export/grup-ogrenciler/csv?grup_id=${grupId}`, {
+        responseType: 'blob'
+      });
+      
+      // Blob oluştur ve indir
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      
+      const contentDisposition = response.headers['content-disposition'];
+      const filename = contentDisposition 
+        ? contentDisposition.split('filename=')[1].replace(/"/g, '')
+        : `grup_ogrenciler_${new Date().getTime()}.csv`;
+      
+      link.setAttribute('download', filename);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      
+      toast.success("CSV dosyası indirildi!");
+    } catch (error) {
+      toast.error("CSV export sırasında hata oluştu");
+    }
+  };
+
   const handleDeleteDers = async (kayitId) => {
     if (!window.confirm("Bu ders kaydını silmek istediğinizden emin misiniz?")) return;
     
