@@ -22,14 +22,16 @@ const Reports = () => {
 
   const fetchData = async () => {
     try {
-      const [referansRes, genelRes, aylikGelirRes] = await Promise.all([
+      const [referansRes, genelRes, aylikGelirRes, grupRes] = await Promise.all([
         axios.get(`${API}/reports/referans`),
         axios.get(`${API}/reports/genel`),
         axios.get(`${API}/reports/aylik-gelir`),
+        axios.get(`${API}/reports/grup-istatistik`),
       ]);
       setReferansData(referansRes.data);
       setGenelStats(genelRes.data);
       setAylikGelirData(aylikGelirRes.data);
+      setGrupStats(grupRes.data);
     } catch (error) {
       toast.error("Raporlar yüklenirken hata oluştu");
     } finally {
