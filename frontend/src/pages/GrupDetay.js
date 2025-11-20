@@ -42,6 +42,11 @@ const GrupDetay = () => {
   const [durumFilter, setDurumFilter] = useState("hepsi");
   const [odemeFilter, setOdemeFilter] = useState("hepsi");
 
+  // Dinamik ayarlar
+  const { ayarlar: etaplar } = useAyarlar("grup_etaplari");
+  const { ayarlar: odemeSekilleri } = useAyarlar("odeme_sekilleri");
+  const { ayarlar: grupOgrenciDurumlari } = useAyarlar("grup_ogrenci_durumlari");
+
   const [ogrenciForm, setOgrenciForm] = useState({
     ad_soyad: "",
     telefon: "",
