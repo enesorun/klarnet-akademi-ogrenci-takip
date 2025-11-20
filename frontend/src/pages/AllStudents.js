@@ -72,6 +72,16 @@ const AllStudents = () => {
     fetchStudents();
   }, []);
 
+  useEffect(() => {
+    // Filtreler değiştiğinde öğrencileri filtrele ve sırala
+    const processStudents = async () => {
+      setFilteredAktif(await applyFiltersAndSort(aktifStudents));
+      setFilteredAraVerdi(await applyFiltersAndSort(araVerdiStudents));
+      setFilteredEski(await applyFiltersAndSort(eskiStudents));
+    };
+    processStudents();
+  }, [aktifStudents, araVerdiStudents, eskiStudents, filters]);
+
   const fetchStudents = async () => {
     try {
       const [aktif, araVerdi, eski] = await Promise.all([
