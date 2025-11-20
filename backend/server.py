@@ -1430,44 +1430,53 @@ async def initialize_ayarlar():
 
 @api_router.get("/ozel-alanlar", response_model=List[OzelAlan])
 async def get_ozel_alanlar(model_tipi: Optional[str] = None, aktif: Optional[bool] = None):
-    query = {}
+    # SQLite: Dinamik filtre
+    where_clause = {}
     if model_tipi:
-        query["model_tipi"] = model_tipi
+        where_clause["model_tipi"] = model_tipi
     if aktif is not None:
-        query["aktif"] = aktif
+        where_clause["aktif"] = 1 if aktif else 0
     
-    ozel_alanlar = await db.ozel_alanlar.find(query, {"_id": 0}).sort("sira", 1).to_list(1000)
+    if where_clause:
+        ozel_alanlar = await db.find_all("ozel_alanlar_config", where=where_clause, order_by="sira ASC")
+    else:
+        ozel_alanlar = await db.find_all("ozel_alanlar_config", order_by="sira ASC")
     return ozel_alanlar
 
 @api_router.post("/ozel-alanlar", response_model=OzelAlan)
 async def create_ozel_alan(alan: OzelAlanCreate):
-    # Aynı model_tipi için maksimum sıra numarasını bul
-    existing_alanlar = await db.ozel_alanlar.find(
-        {"model_tipi": alan.model_tipi}, 
-        {"_id": 0}
-    ).to_list(1000)
+    # SQLite: Aynı model_tipi için maksimum sıra numarasını bul
+    existing_alanlar = await db.find_all("ozel_alanlar_config", where={"model_tipi": alan.model_tipi})
     max_sira = max([a.get("sira", 0) for a in existing_alanlar], default=0)
     
     new_alan = OzelAlan(**alan.dict(), sira=max_sira + 1)
-    await db.ozel_alanlar.insert_one(new_alan.dict())
+    # SQLite: Insert
+    await db.insert("ozel_alanlar_config", new_alan.dict())
     return new_alan
 
 @api_router.put("/ozel-alanlar/{alan_id}", response_model=OzelAlan)
 async def update_ozel_alan(alan_id: str, alan: OzelAlanCreate):
-    result = await db.ozel_alanlar.update_one(
-        {"id": alan_id},
-        {"$set": alan.dict()}
-    )
-    if result.matched_count == 0:
+    # SQLite: Önce özel alanı kontrol et
+    existing = await db.find_one("ozel_alanlar_config", where={"id": alan_id})
+    if not existing:
         raise HTTPException(status_code=404, detail="Özel alan bulunamadı")
-    updated_alan = await db.ozel_alanlar.find_one({"id": alan_id}, {"_id": 0})
+    
+    # SQLite: Update
+    await db.update("ozel_alanlar_config", alan.dict(), "id", alan_id)
+    
+    # Güncellenmiş alanı getir
+    updated_alan = await db.find_one("ozel_alanlar_config", where={"id": alan_id})
     return updated_alan
 
 @api_router.delete("/ozel-alanlar/{alan_id}")
 async def delete_ozel_alan(alan_id: str):
-    result = await db.ozel_alanlar.delete_one({"id": alan_id})
-    if result.deleted_count == 0:
+    # SQLite: Önce özel alanı kontrol et
+    existing = await db.find_one("ozel_alanlar_config", where={"id": alan_id})
+    if not existing:
         raise HTTPException(status_code=404, detail="Özel alan bulunamadı")
+    
+    # SQLite: Delete
+    await db.delete("ozel_alanlar_config", "id", alan_id)
     return {"message": "Özel alan silindi"}
 
 # ==================== GELİR RAPORU AYARLARI ====================
