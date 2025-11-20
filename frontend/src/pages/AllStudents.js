@@ -251,23 +251,49 @@ const AllStudents = () => {
               <th className="px-4 py-3 text-left text-xs font-medium text-gray-700 dark:text-gray-300 uppercase">Referans</th>
               <th className="px-4 py-3 text-left text-xs font-medium text-gray-700 dark:text-gray-300 uppercase">İlk Ders</th>
               <th className="px-4 py-3 text-left text-xs font-medium text-gray-700 dark:text-gray-300 uppercase">Durum</th>
+              <th className="px-4 py-3 text-left text-xs font-medium text-gray-700 dark:text-gray-300 uppercase">İşlemler</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
             {students.map((student) => (
               <tr 
                 key={student.id} 
-                onClick={() => window.location.href = `/students/${student.id}`}
-                className="hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer transition-colors"
+                className="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
               >
-                <td className="px-4 py-3 text-sm font-medium text-gray-900 dark:text-white">{student.ad_soyad}</td>
-                <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">{student.konum}</td>
-                <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">{student.seviye}</td>
-                <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">{student.referans}</td>
-                <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">
+                <td 
+                  className="px-4 py-3 text-sm font-medium text-gray-900 dark:text-white cursor-pointer"
+                  onClick={() => window.location.href = `/students/${student.id}`}
+                >
+                  {student.ad_soyad}
+                </td>
+                <td 
+                  className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400 cursor-pointer"
+                  onClick={() => window.location.href = `/students/${student.id}`}
+                >
+                  {student.konum}
+                </td>
+                <td 
+                  className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400 cursor-pointer"
+                  onClick={() => window.location.href = `/students/${student.id}`}
+                >
+                  {student.seviye}
+                </td>
+                <td 
+                  className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400 cursor-pointer"
+                  onClick={() => window.location.href = `/students/${student.id}`}
+                >
+                  {student.referans}
+                </td>
+                <td 
+                  className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400 cursor-pointer"
+                  onClick={() => window.location.href = `/students/${student.id}`}
+                >
                   {new Date(student.ilk_ders_tarihi).toLocaleDateString('tr-TR')}
                 </td>
-                <td className="px-4 py-3 text-sm">
+                <td 
+                  className="px-4 py-3 text-sm cursor-pointer"
+                  onClick={() => window.location.href = `/students/${student.id}`}
+                >
                   <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
                     student.genel_durum === 'aktif' ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400' :
                     student.genel_durum === 'ara_verdi' ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400' :
@@ -275,6 +301,26 @@ const AllStudents = () => {
                   }`}>
                     {student.genel_durum === 'aktif' ? 'Aktif' : student.genel_durum === 'ara_verdi' ? 'Ara Verdi' : 'Eski'}
                   </span>
+                </td>
+                <td className="px-4 py-3 text-sm">
+                  <div className="flex items-center space-x-2">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={(e) => handleOpenEditModal(student, e)}
+                      className="hover:bg-blue-50 dark:hover:bg-blue-900/20"
+                    >
+                      <Edit className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={(e) => handleOpenDeleteModal(student, e)}
+                      className="hover:bg-red-50 dark:hover:bg-red-900/20"
+                    >
+                      <Trash2 className="w-4 h-4 text-red-600 dark:text-red-400" />
+                    </Button>
+                  </div>
                 </td>
               </tr>
             ))}
