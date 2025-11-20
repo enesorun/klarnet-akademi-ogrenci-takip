@@ -1062,6 +1062,26 @@ async def delete_ozel_alan(alan_id: str):
         raise HTTPException(status_code=404, detail="Özel alan bulunamadı")
     return {"message": "Özel alan silindi"}
 
+# ==================== GELİR RAPORU AYARLARI ====================
+
+@api_router.get("/gelir-raporu-ayarlari")
+async def get_gelir_raporu_ayarlari():
+    ayar = await db.gelir_raporu_ayarlari.find_one({}, {"_id": 0})
+    if not ayar:
+        # Varsayılan ayarları dön
+        return {"baslangic_gunu": 15}
+    return ayar
+
+@api_router.post("/gelir-raporu-ayarlari")
+async def update_gelir_raporu_ayarlari(baslangic_gunu: int):
+    if baslangic_gunu < 1 or baslangic_gunu > 28:
+        raise HTTPException(status_code=400, detail="Başlangıç günü 1-28 arası olmalıdır")
+    
+    # Mevcut ayarı güncelle veya yeni oluştur
+    await db.gelir_raporu_ayarlari.delete_many({})
+    await db.gelir_raporu_ayarlari.insert_one({"baslangic_gunu": baslangic_gunu})
+    return {"message": "Ayar kaydedildi", "baslangic_gunu": baslangic_gunu}
+
 # ==================== GRUP DERS KAYDI ENDPOINTS ====================
 
 @api_router.get("/grup-dersleri/ders-kayitlari", response_model=List[GrupDersKaydi])
