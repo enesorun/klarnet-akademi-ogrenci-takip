@@ -373,7 +373,7 @@ const GrupDersleri = () => {
             <div className="p-6 border-b border-gray-100 dark:border-gray-700 flex justify-between items-center">
               <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Gruplar</h2>
               <Button
-                onClick={() => setIsGrupModalOpen(true)}
+                onClick={() => handleOpenGrupModal()}
                 className="bg-[#4d5deb] hover:bg-[#3a4ad4]"
               >
                 <Plus className="w-4 h-4 mr-2" />
