@@ -1801,13 +1801,11 @@ async def export_grup_ogrenciler_csv(grup_id: Optional[str] = None):
     from datetime import datetime
     
     try:
-        # Query oluştur
-        query = {}
+        # SQLite: Grup öğrencilerini al
         if grup_id:
-            query["grup_id"] = grup_id
-        
-        # Grup öğrencilerini al
-        grup_ogrenciler = await db.grup_ogrenciler.find(query, {"_id": 0}).to_list(10000)
+            grup_ogrenciler = await db.find_all("grup_ogrenciler", where={"grup_id": grup_id})
+        else:
+            grup_ogrenciler = await db.find_all("grup_ogrenciler")
         
         if not grup_ogrenciler:
             raise HTTPException(status_code=404, detail="Grup öğrencisi bulunamadı")
