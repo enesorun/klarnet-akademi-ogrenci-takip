@@ -545,7 +545,9 @@ async def get_lessons(student_id: str):
 async def create_lesson(lesson: LessonCreate):
     lesson_obj = Lesson(**lesson.model_dump())
     doc = lesson_obj.model_dump()
-    await db.lessons.insert_one(doc)
+    
+    # SQLite: Insert
+    await db.insert("dersler", doc)
     return lesson_obj
 
 @api_router.put("/lessons/{lesson_id}", response_model=Lesson)
