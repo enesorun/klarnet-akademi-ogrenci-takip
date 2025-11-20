@@ -66,6 +66,34 @@ const Reports = () => {
     }
   };
 
+  const handleOpenEditModal = (statName, statLabel, currentValue) => {
+    setEditingStatName(statName);
+    setEditingStatLabel(statLabel);
+    setEditingStatValue(currentValue.toString());
+    setIsEditModalOpen(true);
+  };
+
+  const handleSaveStatEdit = async () => {
+    try {
+      const numValue = parseFloat(editingStatValue);
+      if (isNaN(numValue)) {
+        toast.error("Lütfen geçerli bir sayı girin");
+        return;
+      }
+
+      await axios.post(`${API}/istatistik-baseline`, {
+        istatistik_adi: editingStatName,
+        manuel_deger: numValue
+      });
+
+      toast.success("İstatistik güncellendi!");
+      setIsEditModalOpen(false);
+      fetchData(); // Verileri yeniden yükle
+    } catch (error) {
+      toast.error("Güncelleme sırasında hata oluştu");
+    }
+  };
+
   const formatCurrency = (amount) => {
     return new Intl.NumberFormat('tr-TR', {
       style: 'decimal',
