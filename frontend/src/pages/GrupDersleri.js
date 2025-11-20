@@ -449,14 +449,32 @@ const GrupDersleri = () => {
                           </span>
                         </td>
                         <td className="px-6 py-4">
-                          <Button
-                            onClick={() => navigate(`/grup-dersleri/${grup.id}`)}
-                            variant="outline"
-                            size="sm"
-                            className="dark:border-gray-600 dark:text-white dark:hover:bg-gray-700"
-                          >
-                            Detay
-                          </Button>
+                          <div className="flex items-center gap-2">
+                            <Button
+                              onClick={() => navigate(`/grup-dersleri/${grup.id}`)}
+                              variant="outline"
+                              size="sm"
+                              className="dark:border-gray-600 dark:text-white dark:hover:bg-gray-700"
+                            >
+                              Detay
+                            </Button>
+                            <Button
+                              onClick={() => handleOpenGrupModal(grup)}
+                              variant="outline"
+                              size="sm"
+                              className="dark:border-gray-600 dark:text-white dark:hover:bg-gray-700"
+                            >
+                              <Pencil className="w-3 h-3" />
+                            </Button>
+                            <Button
+                              onClick={() => setDeleteGrupId(grup.id)}
+                              variant="outline"
+                              size="sm"
+                              className="text-red-600 hover:text-red-700 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-900/20 border-red-300 dark:border-red-700"
+                            >
+                              <Trash2 className="w-3 h-3" />
+                            </Button>
+                          </div>
                         </td>
                       </tr>
                     ))
