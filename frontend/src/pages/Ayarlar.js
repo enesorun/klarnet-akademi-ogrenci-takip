@@ -4,6 +4,7 @@ import { Settings, Plus, Pencil, Trash2, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import OzelAlanlar from "@/components/OzelAlanlar";
+import GelirRaporuAyarlari from "@/components/GelirRaporuAyarlari";
 import {
   Dialog,
   DialogContent,
