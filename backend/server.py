@@ -501,7 +501,9 @@ async def get_payments(student_id: str):
 async def create_payment(payment: PaymentCreate):
     payment_obj = Payment(**payment.model_dump())
     doc = payment_obj.model_dump()
-    await db.payments.insert_one(doc)
+    
+    # SQLite: Insert
+    await db.insert("odemeler", doc)
     return payment_obj
 
 @api_router.put("/payments/{payment_id}", response_model=Payment)
