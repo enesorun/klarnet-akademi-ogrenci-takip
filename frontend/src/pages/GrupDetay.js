@@ -460,13 +460,16 @@ const GrupDetay = () => {
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">
                   Durum
                 </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">
+                  İşlemler
+                </th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
               {filteredOgrenciler.length === 0 ? (
                 <tr>
                   <td
-                    colSpan="9"
+                    colSpan="10"
                     className="px-6 py-8 text-center text-gray-500 dark:text-gray-400"
                   >
                     Öğrenci bulunmamaktadır. "Öğrenci Ekle" butonuna tıklayarak öğrenci
