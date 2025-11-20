@@ -1922,21 +1922,22 @@ async def create_grup_odeme(odeme: GrupOdemeCreate):
         odeme.tarih = datetime.now(timezone.utc).isoformat()
     
     new_odeme = GrupOdeme(**odeme.dict())
-    await db.grup_odemeler.insert_one(new_odeme.dict())
+    # SQLite: Insert
+    await db.insert("grup_ogrenci_odemeler", new_odeme.dict())
     
-    # Öğrencinin odenen_tutar'ını güncelle
-    await db.grup_ogrenciler.update_one(
-        {"id": odeme.grup_ogrenci_id},
-        {"$inc": {"odenen_tutar": odeme.tutar}}
+    # SQLite: Öğrencinin odenen_tutar'ını güncelle
+    await db.execute(
+        "UPDATE grup_ogrenciler SET odenen_tutar = odenen_tutar + ? WHERE id = ?",
+        (odeme.tutar, odeme.grup_ogrenci_id)
     )
     
-    # Kalan tutarı hesapla ve güncelle
-    ogrenci = await db.grup_ogrenciler.find_one({"id": odeme.grup_ogrenci_id}, {"_id": 0})
+    # SQLite: Kalan tutarı hesapla ve güncelle
+    ogrenci = await db.find_one("grup_ogrenciler", where={"id": odeme.grup_ogrenci_id})
     if ogrenci:
         kalan = ogrenci["ucret"] - (ogrenci.get("odenen_tutar", 0) + odeme.tutar)
-        await db.grup_ogrenciler.update_one(
-            {"id": odeme.grup_ogrenci_id},
-            {"$set": {"kalan_tutar": kalan}}
+        await db.execute(
+            "UPDATE grup_ogrenciler SET kalan_tutar = ? WHERE id = ?",
+            (kalan, odeme.grup_ogrenci_id)
         )
     
     return new_odeme
@@ -1944,13 +1945,17 @@ async def create_grup_odeme(odeme: GrupOdemeCreate):
 @api_router.get("/grup-dersleri/odemeler")
 async def get_grup_odemeler(grup_id: Optional[str] = None, grup_ogrenci_id: Optional[str] = None):
     """Grup ödemelerini listele"""
-    query = {}
+    # SQLite: Dinamik filtre
+    where_clause = {}
     if grup_id:
-        query["grup_id"] = grup_id
+        where_clause["grup_id"] = grup_id
     if grup_ogrenci_id:
-        query["grup_ogrenci_id"] = grup_ogrenci_id
+        where_clause["ogrenci_id"] = grup_ogrenci_id
     
-    odemeler = await db.grup_odemeler.find(query, {"_id": 0}).sort("tarih", -1).to_list(10000)
+    if where_clause:
+        odemeler = await db.find_all("grup_ogrenci_odemeler", where=where_clause, order_by="odeme_tarihi DESC")
+    else:
+        odemeler = await db.find_all("grup_ogrenci_odemeler", order_by="odeme_tarihi DESC")
     return odemeler
 
 # Include the router in the main app
