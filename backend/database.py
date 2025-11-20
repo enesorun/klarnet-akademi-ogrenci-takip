@@ -87,7 +87,9 @@ class Database:
                 id TEXT PRIMARY KEY,
                 ogrenci_id TEXT NOT NULL,
                 tarih TEXT NOT NULL,
-                sure INTEGER NOT NULL,
+                sure INTEGER DEFAULT 50,
+                islenen_konu TEXT,
+                odev_not TEXT,
                 not_ TEXT,
                 created_at TEXT DEFAULT CURRENT_TIMESTAMP,
                 FOREIGN KEY (ogrenci_id) REFERENCES students(id) ON DELETE CASCADE
