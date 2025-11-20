@@ -405,15 +405,27 @@ async def update_student(student_id: str, student_update: StudentUpdate):
     if not update_data:
         raise HTTPException(status_code=400, detail="Güncellenecek veri bulunamadı")
     
-    result = await db.students.update_one(
-        {"id": student_id},
-        {"$set": update_data}
-    )
-    
-    if result.matched_count == 0:
+    # SQLite: Önce öğrencinin var olduğunu kontrol et
+    existing = await db.find_one("students", where={"id": student_id})
+    if not existing:
         raise HTTPException(status_code=404, detail="Öğrenci bulunamadı")
     
-    updated_student = await db.students.find_one({"id": student_id}, {"_id": 0})
+    # SQLite: Update
+    await db.update("students", update_data, "id", student_id)
+    
+    # Güncellenmiş öğrenciyi getir
+    updated_student = await db.find_one("students", where={"id": student_id})
+    
+    # JSON string olan ozel_alanlar'ı dict'e çevir
+    import json
+    if updated_student.get("ozel_alanlar") and isinstance(updated_student["ozel_alanlar"], str):
+        try:
+            updated_student["ozel_alanlar"] = json.loads(updated_student["ozel_alanlar"])
+        except:
+            updated_student["ozel_alanlar"] = {}
+    elif not updated_student.get("ozel_alanlar"):
+        updated_student["ozel_alanlar"] = {}
+    
     return updated_student
 
 @api_router.delete("/students/{student_id}")
