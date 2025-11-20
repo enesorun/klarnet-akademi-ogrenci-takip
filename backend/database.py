@@ -73,6 +73,7 @@ class Database:
                 tarife_id TEXT,
                 tutar REAL NOT NULL,
                 tarih TEXT NOT NULL,
+                ders_sayisi INTEGER DEFAULT 4,
                 not_ TEXT,
                 created_at TEXT DEFAULT CURRENT_TIMESTAMP,
                 FOREIGN KEY (ogrenci_id) REFERENCES students(id) ON DELETE CASCADE,
