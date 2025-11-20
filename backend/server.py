@@ -460,15 +460,17 @@ async def get_tariffs(student_id: str):
 
 @api_router.post("/tariffs", response_model=Tariff)
 async def create_tariff(tariff: TariffCreate):
-    # Eski tarifeyi kapat
-    await db.tariffs.update_many(
-        {"ogrenci_id": tariff.ogrenci_id, "bitis_tarihi": None},
-        {"$set": {"bitis_tarihi": tariff.baslangic_tarihi}}
+    # SQLite: Eski tarifeleri kapat (bitis_tarihi NULL olanları güncelle)
+    await db.execute(
+        "UPDATE tarifeler SET bitis_tarihi = ? WHERE ogrenci_id = ? AND bitis_tarihi IS NULL",
+        (tariff.baslangic_tarihi, tariff.ogrenci_id)
     )
     
     tariff_obj = Tariff(**tariff.model_dump())
     doc = tariff_obj.model_dump()
-    await db.tariffs.insert_one(doc)
+    
+    # SQLite: Insert
+    await db.insert("tarifeler", doc)
     return tariff_obj
 
 @api_router.put("/tariffs/{tariff_id}", response_model=Tariff)
