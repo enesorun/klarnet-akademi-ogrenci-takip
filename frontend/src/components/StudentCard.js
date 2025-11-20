@@ -57,13 +57,47 @@ const StudentCard = ({ student, onUpdate, onEdit, onDelete }) => {
 
   return (
     <div
-      onClick={() => navigate(`/students/${student.id}`)}
-      className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-100 dark:border-gray-700 hover:shadow-md dark:hover:shadow-xl transition-all duration-300 cursor-pointer transform hover:scale-[1.02] card-hover animate-scale-in"
+      className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-100 dark:border-gray-700 hover:shadow-md dark:hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02] card-hover animate-scale-in relative"
       data-testid={`student-card-${student.id}`}
     >
+      {/* Edit & Delete Buttons */}
+      {(onEdit || onDelete) && (
+        <div className="absolute top-4 right-4 flex items-center space-x-2 z-10">
+          {onEdit && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={(e) => {
+                e.stopPropagation();
+                onEdit(student, e);
+              }}
+              className="hover:bg-blue-50 dark:hover:bg-blue-900/20 p-2"
+            >
+              <Edit className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+            </Button>
+          )}
+          {onDelete && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={(e) => {
+                e.stopPropagation();
+                onDelete(student, e);
+              }}
+              className="hover:bg-red-50 dark:hover:bg-red-900/20 p-2"
+            >
+              <Trash2 className="w-4 h-4 text-red-600 dark:text-red-400" />
+            </Button>
+          )}
+        </div>
+      )}
+
       {/* Header */}
-      <div className="flex justify-between items-start mb-4">
-        <div>
+      <div 
+        className="flex justify-between items-start mb-4 cursor-pointer"
+        onClick={() => navigate(`/students/${student.id}`)}
+      >
+        <div className="pr-20">
           <h3 className="text-lg font-bold text-gray-900 dark:text-white" data-testid="student-name">{student.ad_soyad}</h3>
           <div className="flex items-center space-x-3 mt-2">
             <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
