@@ -1195,9 +1195,21 @@ async def create_grup_ogrenci(ogrenci: GrupOgrenciCreate):
 
 @api_router.get("/grup-dersleri/ogrenciler/{ogrenci_id}", response_model=GrupOgrenci)
 async def get_grup_ogrenci(ogrenci_id: str):
-    ogrenci = await db.grup_ogrenciler.find_one({"id": ogrenci_id}, {"_id": 0})
+    import json
+    # SQLite: ID ile grup öğrencisi getir
+    ogrenci = await db.find_one("grup_ogrenciler", where={"id": ogrenci_id})
     if not ogrenci:
         raise HTTPException(status_code=404, detail="Öğrenci bulunamadı")
+    
+    # JSON string olan ozel_alanlar'ı dict'e çevir
+    if ogrenci.get("ozel_alanlar") and isinstance(ogrenci["ozel_alanlar"], str):
+        try:
+            ogrenci["ozel_alanlar"] = json.loads(ogrenci["ozel_alanlar"])
+        except:
+            ogrenci["ozel_alanlar"] = {}
+    elif not ogrenci.get("ozel_alanlar"):
+        ogrenci["ozel_alanlar"] = {}
+    
     return ogrenci
 
 @api_router.put("/grup-dersleri/ogrenciler/{ogrenci_id}", response_model=GrupOgrenci)
