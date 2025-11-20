@@ -244,14 +244,14 @@ const EditProfileModal = ({ isOpen, onClose, student, currentTariff, onSuccess }
 
           <TabsContent value="tariff">
             <form onSubmit={handleTariffSubmit} className="space-y-4 mt-4">
-              <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-4">
-                <p className="text-sm text-yellow-800">
+              <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-700 rounded-lg p-4 mb-4">
+                <p className="text-sm text-yellow-800 dark:text-yellow-300">
                   Tarife güncellendiğinde eski tarife otomatik olarak kapatılır ve yeni tarife bugünden itibaren geçerli olur.
                 </p>
               </div>
 
               <div>
-                <Label htmlFor="ucret">Üret (4 derslik paket) *</Label>
+                <Label htmlFor="ucret" className="text-gray-700 dark:text-gray-300">Üret (4 derslik paket) *</Label>
                 <Input
                   id="ucret"
                   type="number"
@@ -260,11 +260,12 @@ const EditProfileModal = ({ isOpen, onClose, student, currentTariff, onSuccess }
                   onChange={(e) => setTariffData({ ...tariffData, ucret: e.target.value })}
                   required
                   data-testid="tariff-price-input"
+                  className="dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                 />
               </div>
 
               <div>
-                <Label htmlFor="aylik_ders_sayisi">Aylık Ders Sayısı *</Label>
+                <Label htmlFor="aylik_ders_sayisi" className="text-gray-700 dark:text-gray-300">Aylık Ders Sayısı *</Label>
                 <Input
                   id="aylik_ders_sayisi"
                   type="number"
@@ -272,11 +273,12 @@ const EditProfileModal = ({ isOpen, onClose, student, currentTariff, onSuccess }
                   onChange={(e) => setTariffData({ ...tariffData, aylik_ders_sayisi: e.target.value })}
                   required
                   data-testid="tariff-lessons-input"
+                  className="dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                 />
               </div>
 
               <div>
-                <Label htmlFor="not_">Not</Label>
+                <Label htmlFor="not_" className="text-gray-700 dark:text-gray-300">Not</Label>
                 <Textarea
                   id="not_"
                   value={tariffData.not_}
@@ -284,6 +286,7 @@ const EditProfileModal = ({ isOpen, onClose, student, currentTariff, onSuccess }
                   rows={2}
                   placeholder="Örn: Yaz tatili indirimi"
                   data-testid="tariff-note-input"
+                  className="dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder-gray-400"
                 />
               </div>
 
