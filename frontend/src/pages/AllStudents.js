@@ -576,7 +576,7 @@ const AllStudents = () => {
             {filteredAraVerdi.length === 0 ? (
               <p className="text-center text-gray-500 py-8">Ara veren öğrenci bulunamadı</p>
             ) : (
-              renderStudentList(filteredAraVerdi))
+              renderStudentList(filteredAraVerdi)
             )}
           </AccordionContent>
         </AccordionItem>
