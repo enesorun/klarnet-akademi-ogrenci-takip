@@ -1637,6 +1637,62 @@ async def get_grup_odemeler(grup_id: Optional[str] = None, grup_ogrenci_id: Opti
     return odemeler
 
 # Include the router in the main app
+# ==================== İSTATİSTİK BASELINE ENDPOINTS ====================
+
+@api_router.get("/istatistik-baseline")
+async def get_all_baselines():
+    """Tüm baseline değerlerini getir"""
+    baselines = await db.istatistik_baseline.find({}, {"_id": 0}).to_list(1000)
+    # Dict formatına çevir (frontend için kolaylık)
+    baseline_dict = {b["istatistik_adi"]: b["manuel_deger"] for b in baselines}
+    return baseline_dict
+
+@api_router.get("/istatistik-baseline/{istatistik_adi}")
+async def get_baseline(istatistik_adi: str):
+    """Belirli bir istatistik için baseline değerini getir"""
+    baseline = await db.istatistik_baseline.find_one(
+        {"istatistik_adi": istatistik_adi}, 
+        {"_id": 0}
+    )
+    if not baseline:
+        return {"manuel_deger": None}
+    return baseline
+
+@api_router.post("/istatistik-baseline")
+async def create_or_update_baseline(baseline: IstatistikBaselineCreate):
+    """Yeni baseline oluştur veya mevcut olanı güncelle"""
+    # Önce mevcut olanı kontrol et
+    existing = await db.istatistik_baseline.find_one(
+        {"istatistik_adi": baseline.istatistik_adi}
+    )
+    
+    if existing:
+        # Güncelle
+        await db.istatistik_baseline.update_one(
+            {"istatistik_adi": baseline.istatistik_adi},
+            {"$set": {
+                "manuel_deger": baseline.manuel_deger,
+                "guncelleme_tarihi": datetime.now(timezone.utc).isoformat()
+            }}
+        )
+        return {"message": "Baseline güncellendi", "istatistik_adi": baseline.istatistik_adi}
+    else:
+        # Yeni oluştur
+        baseline_obj = IstatistikBaseline(
+            istatistik_adi=baseline.istatistik_adi,
+            manuel_deger=baseline.manuel_deger
+        )
+        await db.istatistik_baseline.insert_one(baseline_obj.model_dump())
+        return {"message": "Baseline oluşturuldu", "istatistik_adi": baseline.istatistik_adi}
+
+@api_router.delete("/istatistik-baseline/{istatistik_adi}")
+async def delete_baseline(istatistik_adi: str):
+    """Baseline değerini sil (otomatik hesaplamaya geri dön)"""
+    result = await db.istatistik_baseline.delete_one({"istatistik_adi": istatistik_adi})
+    if result.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="Baseline bulunamadı")
+    return {"message": "Baseline silindi, otomatik hesaplama devrede"}
+
 app.include_router(api_router)
 
 app.add_middleware(
