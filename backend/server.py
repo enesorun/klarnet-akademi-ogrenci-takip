@@ -627,29 +627,38 @@ async def get_aylik_gelir_raporu():
     first_payment_date = datetime.fromisoformat(sorted_payments[0]["tarih"].replace("Z", "+00:00"))
     last_payment_date = datetime.fromisoformat(sorted_payments[-1]["tarih"].replace("Z", "+00:00"))
     
-    # İlk ödemenin 15'inden başla
-    if first_payment_date.day >= 15:
-        start_date = datetime(first_payment_date.year, first_payment_date.month, 15)
+    # İlk ödemenin başlangıç gününden başla
+    if first_payment_date.day >= baslangic_gunu:
+        start_date = datetime(first_payment_date.year, first_payment_date.month, baslangic_gunu)
     else:
         prev_month = first_payment_date - relativedelta(months=1)
-        start_date = datetime(prev_month.year, prev_month.month, 15)
+        start_date = datetime(prev_month.year, prev_month.month, baslangic_gunu)
     
     # Son ödemenin ayına kadar git
     end_date = datetime.now()
     
-    # Aylık dönemleri oluştur (15'ten 15'e)
+    # Aylık dönemleri oluştur
     monthly_data = []
     current = start_date
     
     while current <= end_date:
         next_period = current + relativedelta(months=1)
         
-        # Bu dönemdeki ödemeleri topla
-        period_total = 0
-        for payment in all_payments:
+        # Bu dönemdeki ödemeleri topla (Birebir vs Grup ayrımı)
+        birebir_total = 0
+        grup_total = 0
+        
+        for payment in birebir_payments:
             payment_date = datetime.fromisoformat(payment["tarih"].replace("Z", "+00:00"))
             if current <= payment_date < next_period:
-                period_total += payment["tutar"]
+                birebir_total += payment["tutar"]
+        
+        for payment in grup_payments:
+            payment_date = datetime.fromisoformat(payment["tarih"].replace("Z", "+00:00"))
+            if current <= payment_date < next_period:
+                grup_total += payment["tutar"]
+        
+        period_total = birebir_total + grup_total
         
         # Ay adını belirle (dönem bitiş ayı)
         month_name = next_period.strftime("%B %Y")
