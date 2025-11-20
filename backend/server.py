@@ -386,9 +386,11 @@ async def create_student(student: StudentCreate):
     student_obj = Student(**student.model_dump())
     doc = student_obj.model_dump()
     
-    # SQLite: ozel_alanlar dict ise JSON string'e çevir
-    if doc.get("ozel_alanlar") and isinstance(doc["ozel_alanlar"], dict):
+    # SQLite: ozel_alanlar dict ise JSON string'e çevir (boş dict dahil)
+    if isinstance(doc.get("ozel_alanlar"), dict):
         doc["ozel_alanlar"] = json.dumps(doc["ozel_alanlar"], ensure_ascii=False)
+    elif doc.get("ozel_alanlar") is None:
+        doc["ozel_alanlar"] = "{}"
     
     # SQLite: Insert
     await db.insert("students", doc)
