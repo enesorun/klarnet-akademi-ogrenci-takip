@@ -180,6 +180,54 @@ const AllStudents = () => {
     }
   };
 
+  const handleOpenEditModal = (student, e) => {
+    e?.stopPropagation(); // Prevent navigation
+    setSelectedStudent(student);
+    setEditForm({
+      ad_soyad: student.ad_soyad,
+      konum: student.konum,
+      seviye: student.seviye,
+      referans: student.referans,
+      ilk_ders_tarihi: student.ilk_ders_tarihi,
+      genel_durum: student.genel_durum,
+    });
+    setOzelAlanlarData(student.ozel_alanlar || {});
+    setIsEditModalOpen(true);
+  };
+
+  const handleUpdateStudent = async () => {
+    try {
+      const updateData = {
+        ...editForm,
+        ozel_alanlar: ozelAlanlarData,
+      };
+      
+      await axios.put(`${API}/students/${selectedStudent.id}`, updateData);
+      toast.success("Öğrenci güncellendi!");
+      setIsEditModalOpen(false);
+      fetchStudents();
+    } catch (error) {
+      toast.error("Güncelleme sırasında hata oluştu");
+    }
+  };
+
+  const handleOpenDeleteModal = (student, e) => {
+    e?.stopPropagation(); // Prevent navigation
+    setSelectedStudent(student);
+    setIsDeleteModalOpen(true);
+  };
+
+  const handleDeleteStudent = async () => {
+    try {
+      await axios.delete(`${API}/students/${selectedStudent.id}`);
+      toast.success("Öğrenci silindi!");
+      setIsDeleteModalOpen(false);
+      fetchStudents();
+    } catch (error) {
+      toast.error("Silme sırasında hata oluştu");
+    }
+  };
+
   const renderStudentList = (students) => {
     if (viewMode === "card") {
       return (
