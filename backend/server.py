@@ -786,8 +786,8 @@ async def get_referans_raporu():
 
 @api_router.get("/reports/aylik", response_model=List[AylikRapor])
 async def get_aylik_rapor():
-    # Basitleştirilmiş versiyon - gerçek implementasyon durum değişikliği timeline'ına göre yapılmalı
-    students = await db.students.find({}, {"_id": 0}).to_list(1000)
+    # SQLite: Basitleştirilmiş versiyon - gerçek implementasyon durum değişikliği timeline'ına göre yapılmalı
+    students = await db.find_all("students")
     
     # Şimdilik sadece toplam sayı
     aktif = len([s for s in students if s["genel_durum"] == "aktif"])
