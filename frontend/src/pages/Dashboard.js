@@ -122,8 +122,8 @@ const Dashboard = () => {
             <div className="text-sm text-gray-600 dark:text-gray-400 mt-1">Aktif Öğrenci</div>
           </div>
 
-          {/* Stat 2 - Potansiyel Aylık Gelir (Gizlenebilir) */}
-          <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-100 dark:border-gray-700 card-hover stagger-item" data-testid="stat-potential-income">
+          {/* Stat 2 - Aylık Gelir (Gizlenebilir) */}
+          <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-100 dark:border-gray-700 card-hover stagger-item" data-testid="stat-monthly-income">
             <div className="flex items-center justify-between mb-4">
               <div className="p-3 bg-green-50 dark:bg-green-900/20 rounded-lg">
                 <TrendingUp className="w-6 h-6 text-green-600 dark:text-green-400" />
@@ -141,9 +141,24 @@ const Dashboard = () => {
               </button>
             </div>
             <div className="text-3xl font-bold text-gray-900 dark:text-white">
-              {showIncome ? formatCurrency(stats.potansiyel_aylik_gelir) : '****'}
+              {showIncome ? formatCurrency(stats.aylik_gelir || 0) : '****'}
+            </div>
+            <div className="text-sm text-gray-600 dark:text-gray-400 mt-1">Aylık Gelir</div>
+            <div className="text-xs text-gray-500 dark:text-gray-500 mt-1">Ayın 15'inden bugüne</div>
+          </div>
+
+          {/* Stat 2.5 - Potansiyel Aylık Gelir */}
+          <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-100 dark:border-gray-700 card-hover stagger-item" data-testid="stat-potential-income">
+            <div className="flex items-center justify-between mb-4">
+              <div className="p-3 bg-purple-50 dark:bg-purple-900/20 rounded-lg">
+                <TrendingUp className="w-6 h-6 text-purple-600 dark:text-purple-400" />
+              </div>
+            </div>
+            <div className="text-3xl font-bold text-gray-900 dark:text-white">
+              {formatCurrency(stats.potansiyel_aylik_gelir)}
             </div>
             <div className="text-sm text-gray-600 dark:text-gray-400 mt-1">Potansiyel Aylık Gelir</div>
+            <div className="text-xs text-gray-500 dark:text-gray-500 mt-1">Tüm aktif tarifeler</div>
           </div>
 
           {/* Stat 3 */}
