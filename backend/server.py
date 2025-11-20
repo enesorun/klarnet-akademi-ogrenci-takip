@@ -562,19 +562,29 @@ async def get_dashboard_stats():
 
 @api_router.get("/reports/grup-istatistik")
 async def get_grup_istatistikleri():
-    """Grup dersleri için genel istatistikler"""
+    """Grup dersleri için genel istatistikler - baseline destekli"""
     try:
-        # Toplam grup öğrencisi
-        toplam_grup_ogrencisi = await db.grup_ogrenciler.count_documents({})
+        # Baseline değerlerini al
+        baselines = await db.istatistik_baseline.find({}, {"_id": 0}).to_list(1000)
+        baseline_dict = {b["istatistik_adi"]: b["manuel_deger"] for b in baselines}
         
-        # Toplam yapılan grup dersi
-        toplam_grup_dersi = await db.grup_ders_kayitlari.count_documents({})
+        baseline_grup_ogrenci = baseline_dict.get("grup_toplam_ogrenci", 0)
+        baseline_grup_ders = baseline_dict.get("grup_toplam_ders", 0)
+        baseline_grup_gelir = baseline_dict.get("grup_toplam_gelir", 0)
         
-        # Toplam grup dersi geliri
-        grup_odemeler = await db.grup_odemeler.find({}, {"_id": 0}).to_list(10000)
-        toplam_grup_geliri = sum(odeme.get("tutar", 0) for odeme in grup_odemeler)
+        # Gerçek verileri topla
+        gercek_grup_ogrencisi = await db.grup_ogrenciler.count_documents({})
+        gercek_grup_dersi = await db.grup_ders_kayitlari.count_documents({})
         
-        # Ortalama ders saati ücreti (toplam gelir / toplam ders)
+        grup_odemeler = await db.grup_ogrenci_odemeler.find({}, {"_id": 0}).to_list(10000)
+        gercek_grup_geliri = sum(odeme.get("tutar", 0) for odeme in grup_odemeler)
+        
+        # Toplam = baseline + gerçek
+        toplam_grup_ogrencisi = int(baseline_grup_ogrenci + gercek_grup_ogrencisi)
+        toplam_grup_dersi = int(baseline_grup_ders + gercek_grup_dersi)
+        toplam_grup_geliri = baseline_grup_gelir + gercek_grup_geliri
+        
+        # Ortalama ders saati ücreti
         ortalama_ders_ucreti = toplam_grup_geliri / toplam_grup_dersi if toplam_grup_dersi > 0 else 0
         
         return {
