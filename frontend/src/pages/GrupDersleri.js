@@ -151,6 +151,26 @@ const GrupDersleri = () => {
     }).format(amount) + "₺";
   };
 
+  const getDurumLabel = (durum) => {
+    const labels = {
+      'aktif': 'Aktif',
+      'planlanan': 'Planlanan',
+      'tamamlandi': 'Tamamlandı',
+      'iptal': 'İptal',
+    };
+    return labels[durum] || durum;
+  };
+
+  const getDurumColor = (durum) => {
+    const colors = {
+      'aktif': 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300',
+      'planlanan': 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300',
+      'tamamlandi': 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300',
+      'iptal': 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300',
+    };
+    return colors[durum] || 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300';
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center h-96">
