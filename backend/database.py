@@ -181,7 +181,7 @@ class Database:
                 tarih TEXT NOT NULL,
                 aciklama TEXT,
                 created_at TEXT DEFAULT CURRENT_TIMESTAMP,
-                FOREIGN KEY (ogrenci_id) REFERENCES grup_ogrenciler(id) ON DELETE CASCADE
+                FOREIGN KEY (grup_ogrenci_id) REFERENCES grup_ogrenciler(id) ON DELETE CASCADE
             )
         """)
         
