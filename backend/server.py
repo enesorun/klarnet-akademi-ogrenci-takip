@@ -342,11 +342,23 @@ async def login(request: LoginRequest):
 
 @api_router.get("/students", response_model=List[Student])
 async def get_students(status: Optional[str] = None):
-    query = {}
+    # SQLite: Filtre ile veya filtresiz tüm öğrencileri getir
     if status:
-        query["genel_durum"] = status
+        students = await db.find_all("students", where={"genel_durum": status}, order_by="created_at DESC")
+    else:
+        students = await db.find_all("students", order_by="created_at DESC")
     
-    students = await db.students.find(query, {"_id": 0}).to_list(1000)
+    # JSON string olan ozel_alanlar'ı dict'e çevir
+    import json
+    for student in students:
+        if student.get("ozel_alanlar") and isinstance(student["ozel_alanlar"], str):
+            try:
+                student["ozel_alanlar"] = json.loads(student["ozel_alanlar"])
+            except:
+                student["ozel_alanlar"] = {}
+        elif not student.get("ozel_alanlar"):
+            student["ozel_alanlar"] = {}
+    
     return students
 
 @api_router.get("/students/{student_id}", response_model=Student)
