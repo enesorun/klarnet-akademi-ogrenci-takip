@@ -524,9 +524,13 @@ async def update_payment(payment_id: str, payment_update: PaymentCreate):
 
 @api_router.delete("/payments/{payment_id}")
 async def delete_payment(payment_id: str):
-    result = await db.payments.delete_one({"id": payment_id})
-    if result.deleted_count == 0:
+    # SQLite: Önce ödemeyi kontrol et
+    existing = await db.find_one("odemeler", where={"id": payment_id})
+    if not existing:
         raise HTTPException(status_code=404, detail="Ödeme bulunamadı")
+    
+    # SQLite: Delete
+    await db.delete("odemeler", "id", payment_id)
     return {"message": "Ödeme silindi"}
 
 # ==================== LESSON ENDPOINTS ====================
