@@ -186,6 +186,7 @@ class GrupCreate(BaseModel):
     gun_saat: str
     max_kapasite: int
     toplam_ders_sayisi: int = 16
+    ozel_alanlar: Optional[dict] = {}
 
 class GrupOgrenci(BaseModel):
     model_config = ConfigDict(extra="ignore")
