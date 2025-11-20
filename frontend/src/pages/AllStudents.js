@@ -289,10 +289,11 @@ const AllStudents = () => {
                 </SelectTrigger>
                 <SelectContent className="dark:bg-gray-700">
                   <SelectItem value=" ">Tümü</SelectItem>
-                  <SelectItem value="Başlangıç">Başlangıç</SelectItem>
-                  <SelectItem value="Orta">Orta</SelectItem>
-                  <SelectItem value="İleri">İleri</SelectItem>
-                  <SelectItem value="Uzman">Uzman</SelectItem>
+                  {seviyeler.map((seviye) => (
+                    <SelectItem key={seviye.id} value={seviye.deger}>
+                      {seviye.deger}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </div>
