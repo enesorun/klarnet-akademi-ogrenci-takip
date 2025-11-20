@@ -387,10 +387,22 @@ async def update_student(student_id: str, student_update: StudentUpdate):
 
 @api_router.delete("/students/{student_id}")
 async def delete_student(student_id: str):
-    result = await db.students.delete_one({"id": student_id})
-    if result.deleted_count == 0:
+    """Öğrenciyi ve tüm ilişkili verileri sil (Cascade Delete)"""
+    # Önce öğrencinin var olduğunu kontrol et
+    student = await db.students.find_one({"id": student_id})
+    if not student:
         raise HTTPException(status_code=404, detail="Öğrenci bulunamadı")
-    return {"message": "Öğrenci silindi"}
+    
+    # Tüm ilişkili verileri sil
+    await db.students.delete_one({"id": student_id})
+    await db.tariffs.delete_many({"ogrenci_id": student_id})
+    await db.payments.delete_many({"ogrenci_id": student_id})
+    await db.lessons.delete_many({"ogrenci_id": student_id})
+    
+    return {
+        "message": "Öğrenci ve tüm ilişkili veriler silindi",
+        "student_id": student_id
+    }
 
 # ==================== TARIFF ENDPOINTS ====================
 
