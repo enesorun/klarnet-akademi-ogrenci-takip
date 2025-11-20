@@ -1955,7 +1955,8 @@ async def get_grup_odemeler(grup_id: Optional[str] = None, grup_ogrenci_id: Opti
 @api_router.get("/istatistik-baseline")
 async def get_all_baselines():
     """Tüm baseline değerlerini getir"""
-    baselines = await db.istatistik_baseline.find({}, {"_id": 0}).to_list(1000)
+    # SQLite: Tüm baseline'ları getir
+    baselines = await db.find_all("istatistik_baseline")
     # Dict formatına çevir (frontend için kolaylık)
     baseline_dict = {b["istatistik_adi"]: b["manuel_deger"] for b in baselines}
     return baseline_dict
@@ -1963,10 +1964,8 @@ async def get_all_baselines():
 @api_router.get("/istatistik-baseline/{istatistik_adi}")
 async def get_baseline(istatistik_adi: str):
     """Belirli bir istatistik için baseline değerini getir"""
-    baseline = await db.istatistik_baseline.find_one(
-        {"istatistik_adi": istatistik_adi}, 
-        {"_id": 0}
-    )
+    # SQLite: Belirli baseline'ı getir
+    baseline = await db.find_one("istatistik_baseline", where={"istatistik_adi": istatistik_adi})
     if not baseline:
         return {"manuel_deger": None}
     return baseline
@@ -1974,28 +1973,23 @@ async def get_baseline(istatistik_adi: str):
 @api_router.post("/istatistik-baseline")
 async def create_or_update_baseline(baseline: IstatistikBaselineCreate):
     """Yeni baseline oluştur veya mevcut olanı güncelle"""
-    # Önce mevcut olanı kontrol et
-    existing = await db.istatistik_baseline.find_one(
-        {"istatistik_adi": baseline.istatistik_adi}
-    )
+    # SQLite: Önce mevcut olanı kontrol et
+    existing = await db.find_one("istatistik_baseline", where={"istatistik_adi": baseline.istatistik_adi})
     
     if existing:
-        # Güncelle
-        await db.istatistik_baseline.update_one(
-            {"istatistik_adi": baseline.istatistik_adi},
-            {"$set": {
-                "manuel_deger": baseline.manuel_deger,
-                "guncelleme_tarihi": datetime.now(timezone.utc).isoformat()
-            }}
+        # SQLite: Güncelle
+        await db.execute(
+            "UPDATE istatistik_baseline SET manuel_deger = ?, guncelleme_tarihi = ? WHERE istatistik_adi = ?",
+            (baseline.manuel_deger, datetime.now(timezone.utc).isoformat(), baseline.istatistik_adi)
         )
         return {"message": "Baseline güncellendi", "istatistik_adi": baseline.istatistik_adi}
     else:
-        # Yeni oluştur
+        # SQLite: Yeni oluştur
         baseline_obj = IstatistikBaseline(
             istatistik_adi=baseline.istatistik_adi,
             manuel_deger=baseline.manuel_deger
         )
-        await db.istatistik_baseline.insert_one(baseline_obj.model_dump())
+        await db.insert("istatistik_baseline", baseline_obj.model_dump())
         return {"message": "Baseline oluşturuldu", "istatistik_adi": baseline.istatistik_adi}
 
 @api_router.delete("/istatistik-baseline/{istatistik_adi}")
