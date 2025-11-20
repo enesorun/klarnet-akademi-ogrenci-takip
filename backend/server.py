@@ -557,9 +557,45 @@ async def get_dashboard_stats():
     odeme_yaklasan_tutar = sum(item["tariff"]["ucret"] for item in odeme_yaklasan_list)
     odeme_bekleyen_tutar = sum(item["tariff"]["ucret"] for item in odeme_bekleyen_list)
     
+    # Aylık Gelir Hesapla (Ayın 15'inden bugüne kadar ödemeler)
+    from datetime import datetime, timezone
+    from dateutil.relativedelta import relativedelta
+    
+    # Gelir raporu ayarlarından başlangıç gününü al
+    gelir_ayarlari = await db.gelir_raporu_ayarlari.find_one({}, {"_id": 0})
+    baslangic_gunu = gelir_ayarlari.get("baslangic_gunu", 15) if gelir_ayarlari else 15
+    
+    now = datetime.now(timezone.utc)
+    
+    # Bu ayın başlangıç gününü belirle
+    if now.day >= baslangic_gunu:
+        # Ayın 15'inden bugüne
+        period_start = datetime(now.year, now.month, baslangic_gunu, tzinfo=timezone.utc)
+    else:
+        # Geçen ayın 15'inden bugüne
+        prev_month = now - relativedelta(months=1)
+        period_start = datetime(prev_month.year, prev_month.month, baslangic_gunu, tzinfo=timezone.utc)
+    
+    # Bu dönemdeki ödemeleri topla (Birebir)
+    birebir_payments = await db.payments.find({}, {"_id": 0}).to_list(10000)
+    aylik_gelir = 0
+    
+    for payment in birebir_payments:
+        payment_date = datetime.fromisoformat(payment["tarih"].replace("Z", "+00:00"))
+        if period_start <= payment_date <= now:
+            aylik_gelir += payment["tutar"]
+    
+    # Grup ödemelerini ekle
+    grup_payments = await db.grup_ogrenci_odemeler.find({}, {"_id": 0}).to_list(10000)
+    for payment in grup_payments:
+        payment_date = datetime.fromisoformat(payment["odeme_tarihi"].replace("Z", "+00:00"))
+        if period_start <= payment_date <= now:
+            aylik_gelir += payment["tutar"]
+    
     return DashboardStats(
         aktif_ogrenci_sayisi=aktif_count,
         potansiyel_aylik_gelir=potansiyel_gelir,
+        aylik_gelir=aylik_gelir,
         odeme_yaklasan={
             "count": len(odeme_yaklasan_list),
             "tutar": odeme_yaklasan_tutar
