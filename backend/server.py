@@ -493,7 +493,8 @@ async def update_tariff(tariff_id: str, tariff_update: TariffCreate):
 
 @api_router.get("/payments/{student_id}", response_model=List[Payment])
 async def get_payments(student_id: str):
-    payments = await db.payments.find({"ogrenci_id": student_id}, {"_id": 0}).sort("tarih", -1).to_list(100)
+    # SQLite: Öğrencinin ödemelerini getir
+    payments = await db.find_all("odemeler", where={"ogrenci_id": student_id}, order_by="tarih DESC")
     return payments
 
 @api_router.post("/payments", response_model=Payment)
