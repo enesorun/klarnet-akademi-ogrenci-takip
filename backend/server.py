@@ -1106,6 +1106,118 @@ async def update_gelir_raporu_ayarlari(baslangic_gunu: int):
     await db.gelir_raporu_ayarlari.insert_one({"baslangic_gunu": baslangic_gunu})
     return {"message": "Ayar kaydedildi", "baslangic_gunu": baslangic_gunu}
 
+# ==================== YEDEKLEME SİSTEMİ ====================
+
+@api_router.post("/backup/create")
+async def create_backup():
+    """Tüm veritabanını JSON formatında yedekle ve YYYY-MM klasörüne kaydet"""
+    import os
+    import json
+    from datetime import datetime
+    
+    try:
+        # Şu anki tarih
+        now = datetime.now()
+        year_month = now.strftime("%Y-%m")
+        timestamp = now.strftime("%Y%m%d_%H%M%S")
+        
+        # Yedekleme klasörü oluştur
+        backup_dir = f"/app/data/backup/{year_month}"
+        os.makedirs(backup_dir, exist_ok=True)
+        
+        # Yedeklenecek koleksiyonlar
+        collections = [
+            "ogrenciler",
+            "payments",
+            "tariffs",
+            "ayarlar",
+            "grup_sezonlar",
+            "gruplar",
+            "grup_ogrenciler",
+            "grup_ders_kayitlari",
+            "ozel_alanlar",
+            "gelir_raporu_ayarlari"
+        ]
+        
+        backup_data = {}
+        total_documents = 0
+        
+        # Her koleksiyonu topla
+        for collection_name in collections:
+            collection = db[collection_name]
+            documents = await collection.find({}, {"_id": 0}).to_list(100000)
+            backup_data[collection_name] = documents
+            total_documents += len(documents)
+        
+        # JSON dosyası olarak kaydet
+        backup_filename = f"yedek_{timestamp}.json"
+        backup_path = os.path.join(backup_dir, backup_filename)
+        
+        with open(backup_path, 'w', encoding='utf-8') as f:
+            json.dump(backup_data, f, ensure_ascii=False, indent=2)
+        
+        # Dosya boyutunu hesapla
+        file_size = os.path.getsize(backup_path)
+        file_size_mb = file_size / (1024 * 1024)
+        
+        return {
+            "message": "Yedekleme başarıyla tamamlandı",
+            "filename": backup_filename,
+            "path": backup_path,
+            "size_mb": round(file_size_mb, 2),
+            "total_documents": total_documents,
+            "collections": len(collections),
+            "timestamp": now.isoformat()
+        }
+    
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Yedekleme hatası: {str(e)}")
+
+@api_router.get("/backup/list")
+async def list_backups():
+    """Mevcut yedekleri listele"""
+    import os
+    import json
+    from datetime import datetime
+    
+    try:
+        backup_base = "/app/data/backup"
+        
+        if not os.path.exists(backup_base):
+            return {"backups": []}
+        
+        backups = []
+        
+        # Tüm YYYY-MM klasörlerini tara
+        for year_month in sorted(os.listdir(backup_base), reverse=True):
+            month_dir = os.path.join(backup_base, year_month)
+            
+            if not os.path.isdir(month_dir):
+                continue
+            
+            # Klasördeki tüm yedek dosyalarını listele
+            for filename in sorted(os.listdir(month_dir), reverse=True):
+                if filename.endswith('.json'):
+                    filepath = os.path.join(month_dir, filename)
+                    file_size = os.path.getsize(filepath)
+                    file_size_mb = file_size / (1024 * 1024)
+                    
+                    # Dosya tarih bilgisini al
+                    mtime = os.path.getmtime(filepath)
+                    created_at = datetime.fromtimestamp(mtime).isoformat()
+                    
+                    backups.append({
+                        "filename": filename,
+                        "year_month": year_month,
+                        "size_mb": round(file_size_mb, 2),
+                        "created_at": created_at
+                    })
+        
+        return {"backups": backups, "count": len(backups)}
+    
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Liste hatası: {str(e)}")
+
 # ==================== GRUP DERS KAYDI ENDPOINTS ====================
 
 @api_router.get("/grup-dersleri/ders-kayitlari", response_model=List[GrupDersKaydi])
