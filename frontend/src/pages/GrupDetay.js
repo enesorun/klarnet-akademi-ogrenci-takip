@@ -71,6 +71,7 @@ const GrupDetay = () => {
     ilk_odeme_tutari: "",
     ilk_odeme_tarihi: new Date().toISOString().split('T')[0],
   });
+  const [grupOgrenciOzelAlanlarData, setGrupOgrenciOzelAlanlarData] = useState({});
 
   // Etaplar ve ödeme şekilleri yüklenince default değerleri set et
   useEffect(() => {
