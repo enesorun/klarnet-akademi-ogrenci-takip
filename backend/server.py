@@ -176,6 +176,7 @@ class Grup(BaseModel):
     toplam_ders_sayisi: int = 16
     yapilan_ders_sayisi: int = 0
     durum: str = "aktif"  # aktif, tamamlandi
+    ozel_alanlar: Optional[dict] = {}
     created_at: str = Field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
 
 class GrupCreate(BaseModel):
