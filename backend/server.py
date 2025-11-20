@@ -632,8 +632,10 @@ async def get_aylik_gelir_raporu():
     # Tüm ödemeleri al (Birebir - payments)
     birebir_payments = await db.payments.find({}, {"_id": 0}).to_list(10000)
     
-    # Grup ödemelerini al (grup_ogrenci_odeme tablosundan alınacak - şimdilik boş)
-    grup_payments = []  # TODO: Grup ödeme sistemi eklenince buraya eklenecek
+    # Grup ödemelerini al
+    grup_payments_raw = await db.grup_odemeler.find({}, {"_id": 0}).to_list(10000)
+    # Format'ı birebir ödemelerle aynı yap (tutar ve tarih alanları)
+    grup_payments = [{"tutar": p["tutar"], "tarih": p["tarih"]} for p in grup_payments_raw]
     
     all_payments = birebir_payments + grup_payments
     
