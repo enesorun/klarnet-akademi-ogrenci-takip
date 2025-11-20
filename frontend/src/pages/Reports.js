@@ -186,6 +186,7 @@ const Reports = () => {
                 <div className="text-2xl font-bold text-gray-900 dark:text-white">{formatCurrency(grupStats.ortalama_ders_ucreti)}</div>
                 <div className="text-sm text-gray-600 dark:text-gray-400 mt-1">Ortalama Ders Saati Ücreti</div>
               </div>
+              </div>
             </AccordionContent>
           </AccordionItem>
         </Accordion>
