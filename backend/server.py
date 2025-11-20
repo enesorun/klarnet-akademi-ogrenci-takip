@@ -510,15 +510,16 @@ async def create_payment(payment: PaymentCreate):
 async def update_payment(payment_id: str, payment_update: PaymentCreate):
     update_data = payment_update.model_dump()
     
-    result = await db.payments.update_one(
-        {"id": payment_id},
-        {"$set": update_data}
-    )
-    
-    if result.matched_count == 0:
+    # SQLite: Önce ödemeyi kontrol et
+    existing = await db.find_one("odemeler", where={"id": payment_id})
+    if not existing:
         raise HTTPException(status_code=404, detail="Ödeme bulunamadı")
     
-    updated_payment = await db.payments.find_one({"id": payment_id}, {"_id": 0})
+    # SQLite: Update
+    await db.update("odemeler", update_data, "id", payment_id)
+    
+    # Güncellenmiş ödemeyi getir
+    updated_payment = await db.find_one("odemeler", where={"id": payment_id})
     return updated_payment
 
 @api_router.delete("/payments/{payment_id}")
