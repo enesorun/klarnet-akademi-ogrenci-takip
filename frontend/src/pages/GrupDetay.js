@@ -163,17 +163,30 @@ const GrupDetay = () => {
   const handleCreateOgrenci = async (e) => {
     e.preventDefault();
     try {
-      await axios.post(`${API}/grup-dersleri/ogrenciler`, {
-        ...ogrenciForm,
-        sezon_id: grup.sezon_id,
-        grup_id: grupId,
-        ucret: parseFloat(ogrenciForm.ucret),
-        ilk_odeme_tutari: ogrenciForm.ilk_odeme_tutari 
-          ? parseFloat(ogrenciForm.ilk_odeme_tutari) 
-          : 0,
-      });
-      toast.success("Öğrenci eklendi!");
+      if (editingOgrenci) {
+        // Düzenleme modu
+        await axios.put(`${API}/grup-dersleri/ogrenciler/${editingOgrenci.id}`, {
+          ...ogrenciForm,
+          sezon_id: grup.sezon_id,
+          grup_id: grupId,
+          ucret: parseFloat(ogrenciForm.ucret),
+        });
+        toast.success("Öğrenci güncellendi!");
+      } else {
+        // Yeni oluşturma
+        await axios.post(`${API}/grup-dersleri/ogrenciler`, {
+          ...ogrenciForm,
+          sezon_id: grup.sezon_id,
+          grup_id: grupId,
+          ucret: parseFloat(ogrenciForm.ucret),
+          ilk_odeme_tutari: ogrenciForm.ilk_odeme_tutari 
+            ? parseFloat(ogrenciForm.ilk_odeme_tutari) 
+            : 0,
+        });
+        toast.success("Öğrenci eklendi!");
+      }
       setIsOgrenciModalOpen(false);
+      setEditingOgrenci(null);
       setOgrenciForm({
         ad_soyad: "",
         telefon: "",
@@ -186,7 +199,50 @@ const GrupDetay = () => {
       });
       fetchOgrenciler();
     } catch (error) {
-      toast.error("Öğrenci eklenirken hata oluştu");
+      toast.error(editingOgrenci ? "Öğrenci güncellenirken hata oluştu" : "Öğrenci eklenirken hata oluştu");
+    }
+  };
+
+  const handleOpenOgrenciModal = (ogrenci = null) => {
+    if (ogrenci) {
+      setEditingOgrenci(ogrenci);
+      setOgrenciForm({
+        ad_soyad: ogrenci.ad_soyad,
+        telefon: ogrenci.telefon,
+        eposta: ogrenci.eposta || "",
+        paket_tipi: ogrenci.paket_tipi,
+        ucret: ogrenci.ucret.toString(),
+        odeme_sekli: ogrenci.odeme_sekli,
+        ilk_odeme_tutari: "",
+        ilk_odeme_tarihi: new Date().toISOString().split('T')[0],
+      });
+    } else {
+      setEditingOgrenci(null);
+      const defaultEtap = etaplar.length > 0 ? etaplar[0] : null;
+      const defaultOdemeSekli = odemeSekilleri.length > 0 ? odemeSekilleri[0] : null;
+      setOgrenciForm({
+        ad_soyad: "",
+        telefon: "",
+        eposta: "",
+        paket_tipi: defaultEtap ? defaultEtap.deger : "1. Etap",
+        ucret: defaultEtap ? defaultEtap.varsayilan_ucret?.toString() || "" : "",
+        odeme_sekli: defaultOdemeSekli ? defaultOdemeSekli.deger : "Peşin",
+        ilk_odeme_tutari: "",
+        ilk_odeme_tarihi: new Date().toISOString().split('T')[0],
+      });
+    }
+    setIsOgrenciModalOpen(true);
+  };
+
+  const handleDeleteOgrenci = async () => {
+    if (!deleteOgrenciId) return;
+    try {
+      await axios.delete(`${API}/grup-dersleri/ogrenciler/${deleteOgrenciId}`);
+      toast.success("Öğrenci silindi!");
+      setDeleteOgrenciId(null);
+      fetchOgrenciler();
+    } catch (error) {
+      toast.error("Öğrenci silinirken hata oluştu");
     }
   };
 
