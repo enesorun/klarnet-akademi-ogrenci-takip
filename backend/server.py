@@ -599,18 +599,18 @@ async def get_dashboard_stats():
     for student in aktif_students:
         student_id = student["id"]
         
-        # Güncel tarife
-        tariff = await db.tariffs.find_one(
-            {"ogrenci_id": student_id, "bitis_tarihi": None},
-            {"_id": 0}
+        # SQLite: Güncel tarife (bitis_tarihi NULL olan)
+        tariff = await db.fetch_one(
+            "SELECT * FROM tarifeler WHERE ogrenci_id = ? AND bitis_tarihi IS NULL LIMIT 1",
+            (student_id,)
         )
         
         if not tariff:
             continue
         
-        # Ödemeler ve dersler
-        payments = await db.payments.find({"ogrenci_id": student_id}, {"_id": 0}).to_list(1000)
-        lessons = await db.lessons.find({"ogrenci_id": student_id}, {"_id": 0}).to_list(1000)
+        # SQLite: Ödemeler ve dersler
+        payments = await db.find_all("odemeler", where={"ogrenci_id": student_id})
+        lessons = await db.find_all("dersler", where={"ogrenci_id": student_id})
         
         toplam_ders_kredisi = sum(p["ders_sayisi"] for p in payments)
         yapilan_ders = len(lessons)
