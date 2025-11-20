@@ -191,7 +191,9 @@ class Database:
                 id TEXT PRIMARY KEY,
                 kategori TEXT NOT NULL,
                 deger TEXT NOT NULL,
+                varsayilan_ucret REAL,
                 sira INTEGER DEFAULT 0,
+                aktif INTEGER DEFAULT 1,
                 created_at TEXT DEFAULT CURRENT_TIMESTAMP
             )
         """)
