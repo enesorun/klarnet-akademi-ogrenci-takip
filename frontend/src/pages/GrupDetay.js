@@ -31,8 +31,11 @@ const GrupDetay = () => {
   const [sezon, setSezon] = useState(null);
   const [ogrenciler, setOgrenciler] = useState([]);
   const [filteredOgrenciler, setFilteredOgrenciler] = useState([]);
+  const [dersKayitlari, setDersKayitlari] = useState([]);
   const [isOgrenciModalOpen, setIsOgrenciModalOpen] = useState(false);
+  const [isDersModalOpen, setIsDersModalOpen] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState("ogrenciler"); // "ogrenciler" veya "dersler"
   
   const [durumFilter, setDurumFilter] = useState("hepsi");
   const [odemeFilter, setOdemeFilter] = useState("hepsi");
