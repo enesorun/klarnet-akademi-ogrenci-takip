@@ -1572,7 +1572,7 @@ async def create_backup():
             "path": backup_path,
             "size_mb": round(file_size_mb, 2),
             "total_documents": total_documents,
-            "collections": len(collections),
+            "collections": len(tables),
             "timestamp": now.isoformat()
         }
     
