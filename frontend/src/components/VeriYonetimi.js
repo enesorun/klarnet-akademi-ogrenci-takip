@@ -123,18 +123,93 @@ const VeriYonetimi = () => {
     });
   };
 
+  // Electron yedekleme fonksiyonları
+  const isElectron = window.electronAPI !== undefined;
+  
+  const handleElectronBackup = async () => {
+    try {
+      toast.info("Yedek dosyası kaydediliyor...");
+      const result = await window.electronAPI.backupDatabase();
+      
+      if (result.success) {
+        toast.success(result.message);
+      } else {
+        if (result.message !== 'İptal edildi') {
+          toast.error(result.message);
+        }
+      }
+    } catch (error) {
+      toast.error("Yedekleme hatası!");
+    }
+  };
+  
+  const handleElectronRestore = async () => {
+    try {
+      toast.info("Yedek dosyası seçiliyor...");
+      const result = await window.electronAPI.restoreDatabase();
+      
+      if (result.success) {
+        toast.success(result.message);
+      } else {
+        if (result.message !== 'İptal edildi') {
+          toast.error(result.message);
+        }
+      }
+    } catch (error) {
+      toast.error("Geri yükleme hatası!");
+    }
+  };
+
   return (
     <div className="space-y-6">
-      {/* Yedekleme Butonu */}
+      {/* Electron Desktop Yedekleme (Manuel) */}
+      {isElectron && (
+        <div className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-xl p-6 shadow-sm border-2 border-blue-200 dark:border-blue-800">
+          <div className="flex items-start justify-between mb-4">
+            <div>
+              <h2 className="text-xl font-semibold text-blue-900 dark:text-blue-100 mb-2">
+                💾 Manuel Yedekleme (Desktop)
+              </h2>
+              <p className="text-sm text-blue-700 dark:text-blue-300">
+                Database dosyasını bilgisayarınıza yedekleyin veya önceki bir yedekten geri yükleyin.
+                Otomatik yedekler uygulama kapatılırken backups/ klasörüne alınır.
+              </p>
+            </div>
+            <HardDrive className="w-12 h-12 text-blue-600" />
+          </div>
+          
+          <div className="flex gap-3">
+            <Button
+              onClick={handleElectronBackup}
+              className="bg-blue-600 hover:bg-blue-700 text-white"
+            >
+              <Download className="w-4 h-4 mr-2" />
+              Manuel Yedek Al
+            </Button>
+            
+            <Button
+              onClick={handleElectronRestore}
+              variant="outline"
+              className="border-blue-600 text-blue-600 hover:bg-blue-50 dark:border-blue-400 dark:text-blue-400 dark:hover:bg-blue-900/20"
+            >
+              <Upload className="w-4 h-4 mr-2" />
+              Yedekten Geri Yükle
+            </Button>
+          </div>
+        </div>
+      )}
+      
+      {/* Server Yedekleme (Web) */}
       <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-100 dark:border-gray-700">
         <div className="flex items-start justify-between">
           <div>
             <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
-              Veri Yedekleme
+              {isElectron ? "📦 Server Yedekleme (JSON)" : "Veri Yedekleme"}
             </h2>
             <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
-              Tüm verilerinizi güvenli bir şekilde yedekleyin. Yedekler otomatik olarak 
-              /data/backup/YYYY-MM/ klasörüne kaydedilir.
+              {isElectron 
+                ? "JSON formatında yedek oluşturun. Bu yöntem veri aktarımı için uygundur."
+                : "Tüm verilerinizi güvenli bir şekilde yedekleyin. Yedekler otomatik olarak /data/backup/YYYY-MM/ klasörüne kaydedilir."}
             </p>
           </div>
           <Database className="w-12 h-12 text-blue-500" />
