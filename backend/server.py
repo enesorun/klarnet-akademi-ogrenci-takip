@@ -1859,7 +1859,7 @@ async def export_grup_ogrenciler_csv(grup_id: Optional[str] = None):
 @api_router.get("/grup-dersleri/ders-kayitlari", response_model=List[GrupDersKaydi])
 async def get_grup_ders_kayitlari(grup_id: str):
     # SQLite: Grup ders kayıtlarını getir
-    kayitlar = await db.find_all("grup_ders_kayitlari", where={"grup_id": grup_id}, order_by="ders_tarihi DESC")
+    kayitlar = await db.find_all("grup_ders_kayitlari", where={"grup_id": grup_id}, order_by="tarih DESC")
     return kayitlar
 
 @api_router.post("/grup-dersleri/ders-kayitlari", response_model=GrupDersKaydi)
