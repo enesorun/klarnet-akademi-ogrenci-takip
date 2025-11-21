@@ -1635,31 +1635,38 @@ async def export_data():
     from datetime import datetime
     
     try:
-        # Yedeklenecek koleksiyonlar
-        collections = [
-            "ogrenciler",
-            "payments",
-            "tariffs",
+        # SQLite: Yedeklenecek tablolar
+        tables = [
+            "students",
+            "odemeler",
+            "tarifeler",
+            "dersler",
             "ayarlar",
             "grup_sezonlar",
-            "gruplar",
+            "grup_gruplar",
             "grup_ogrenciler",
             "grup_ders_kayitlari",
-            "ozel_alanlar",
-            "gelir_raporu_ayarlari"
+            "grup_ogrenci_odemeler",
+            "ozel_alanlar_config",
+            "istatistik_baseline"
         ]
         
         export_data = {
             "export_date": datetime.now().isoformat(),
-            "version": "1.0",
-            "collections": {}
+            "version": "2.0",
+            "database": "sqlite",
+            "tables": {}
         }
         
-        # Her koleksiyonu topla
-        for collection_name in collections:
-            collection = db[collection_name]
-            documents = await collection.find({}, {"_id": 0}).to_list(100000)
-            export_data["collections"][collection_name] = documents
+        # SQLite: Her tabloyu topla
+        for table_name in tables:
+            try:
+                documents = await db.find_all(table_name)
+                export_data["tables"][table_name] = documents
+            except Exception:
+                # Tablo yoksa boş liste ekle
+                export_data["tables"][table_name] = []
+                continue
         
         # JSON string'e çevir
         json_str = json.dumps(export_data, ensure_ascii=False, indent=2)
