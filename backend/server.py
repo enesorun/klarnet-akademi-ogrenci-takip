@@ -1694,41 +1694,62 @@ async def import_data(file: UploadFile):
         contents = await file.read()
         data = json.loads(contents.decode('utf-8'))
         
-        # Versiyon kontrolü
-        if "collections" not in data:
+        # Versiyon kontrolü - hem eski (collections) hem yeni (tables) formatı destekle
+        if "tables" in data:
+            # Yeni format (SQLite)
+            tables_data = data["tables"]
+        elif "collections" in data:
+            # Eski format (MongoDB) - tablo adlarını dönüştür
+            tables_data = {}
+            mapping = {
+                "ogrenciler": "students",
+                "payments": "odemeler",
+                "tariffs": "tarifeler",
+                "lessons": "dersler",
+                "gruplar": "grup_gruplar"
+            }
+            for old_name, docs in data["collections"].items():
+                new_name = mapping.get(old_name, old_name)
+                tables_data[new_name] = docs
+        else:
             raise HTTPException(status_code=400, detail="Geçersiz dosya formatı")
-        
-        collections_data = data["collections"]
         
         stats = {
             "total_imported": 0,
             "total_skipped": 0,
-            "collections": {}
+            "tables": {}
         }
         
-        # Her koleksiyonu import et
-        for collection_name, documents in collections_data.items():
-            collection = db[collection_name]
-            
+        # SQLite: Her tabloyu import et
+        for table_name, documents in tables_data.items():
             imported = 0
             skipped = 0
             
             for doc in documents:
                 if "id" in doc:
                     # ID var - deduplication yap
-                    existing = await collection.find_one({"id": doc["id"]}, {"_id": 0})
-                    
-                    if existing:
+                    try:
+                        existing = await db.find_one(table_name, where={"id": doc["id"]})
+                        
+                        if existing:
+                            skipped += 1
+                        else:
+                            await db.insert(table_name, doc)
+                            imported += 1
+                    except Exception:
+                        # Tablo yoksa veya hata varsa atla
                         skipped += 1
-                    else:
-                        await collection.insert_one(doc)
-                        imported += 1
+                        continue
                 else:
                     # ID yok - direkt ekle
-                    await collection.insert_one(doc)
-                    imported += 1
+                    try:
+                        await db.insert(table_name, doc)
+                        imported += 1
+                    except Exception:
+                        skipped += 1
+                        continue
             
-            stats["collections"][collection_name] = {
+            stats["tables"][table_name] = {
                 "imported": imported,
                 "skipped": skipped
             }
