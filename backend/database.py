@@ -5,15 +5,23 @@ from datetime import datetime, timezone
 import json
 import uuid
 
-# DB_PATH environment variable'dan al, yoksa default
+# DB_PATH environment variable'dan al, yoksa çalışma dizinine göre belirle
 if os.environ.get('DB_PATH'):
     DB_PATH = Path(os.environ.get('DB_PATH'))
 else:
-    # Göreli yol kullan - uygulama nerede çalışırsa çalışsın
-    BASE_DIR = Path(__file__).parent.parent  # /app dizini
-    DB_PATH = BASE_DIR / "data" / "ogrenciler.db"
+    import sys
+    # PyInstaller ile paketlenmiş mi kontrol et
+    if getattr(sys, 'frozen', False):
+        # PyInstaller ile çalışıyoruz - exe'nin bulunduğu klasör
+        BASE_DIR = Path(sys.executable).parent
+    else:
+        # Normal development - /app dizini
+        BASE_DIR = Path(__file__).parent.parent
+    
+    # Database dosyası exe ile aynı klasörde olacak
+    DB_PATH = BASE_DIR / "database.db"
 
-# Data klasörünü oluştur
+# Database'in bulunduğu klasörü oluştur (eğer yoksa)
 DB_PATH.parent.mkdir(parents=True, exist_ok=True)
 
 print(f"📂 Database path: {DB_PATH}")
