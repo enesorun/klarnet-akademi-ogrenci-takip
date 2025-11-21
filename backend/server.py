@@ -1525,29 +1525,35 @@ async def create_backup():
         backup_dir = f"/app/data/backup/{year_month}"
         os.makedirs(backup_dir, exist_ok=True)
         
-        # Yedeklenecek koleksiyonlar
-        collections = [
-            "ogrenciler",
-            "payments",
-            "tariffs",
+        # SQLite: Yedeklenecek tablolar
+        tables = [
+            "students",
+            "odemeler",
+            "tarifeler",
+            "dersler",
             "ayarlar",
             "grup_sezonlar",
-            "gruplar",
+            "grup_gruplar",
             "grup_ogrenciler",
             "grup_ders_kayitlari",
-            "ozel_alanlar",
-            "gelir_raporu_ayarlari"
+            "grup_ogrenci_odemeler",
+            "ozel_alanlar_config",
+            "istatistik_baseline"
         ]
         
         backup_data = {}
         total_documents = 0
         
-        # Her koleksiyonu topla
-        for collection_name in collections:
-            collection = db[collection_name]
-            documents = await collection.find({}, {"_id": 0}).to_list(100000)
-            backup_data[collection_name] = documents
-            total_documents += len(documents)
+        # SQLite: Her tabloyu topla
+        for table_name in tables:
+            try:
+                documents = await db.find_all(table_name)
+                backup_data[table_name] = documents
+                total_documents += len(documents)
+            except Exception as e:
+                # Tablo yoksa devam et
+                backup_data[table_name] = []
+                continue
         
         # JSON dosyası olarak kaydet
         backup_filename = f"yedek_{timestamp}.json"
