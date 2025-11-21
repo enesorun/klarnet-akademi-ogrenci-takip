@@ -916,8 +916,10 @@ async def get_genel_istatistik():
     baseline_ders = baseline_dict.get("toplam_ders", 0)
     baseline_kazanc = baseline_dict.get("toplam_kazanilan_para", 0)
     
-    # SQLite: Gerçek verileri topla
+    # SQLite: Gerçek verileri topla (birebir + grup öğrencileri)
     gercek_ogrenci = await db.count("students")
+    grup_ogrenci_count = await db.count("grup_ogrenciler")
+    gercek_ogrenci += grup_ogrenci_count
     
     # SQLite: Tüm dersler (birebir)
     gercek_ders = await db.count("dersler")
