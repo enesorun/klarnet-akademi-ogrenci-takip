@@ -2073,3 +2073,59 @@ async def shutdown_db():
     """SQLite bağlantısını kapat"""
     await db.close()
     logger.info("✅ SQLite database closed")
+
+# Static files - Frontend build'ini serve et
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
+import sys
+
+# PyInstaller ile paketlendiğinde veya normal çalıştırmada frontend build path'i
+if getattr(sys, 'frozen', False):
+    # PyInstaller ile çalışıyoruz
+    application_path = Path(sys._MEIPASS)
+    frontend_build_path = Path(sys.executable).parent / "frontend_build"
+else:
+    # Normal development
+    application_path = Path(__file__).parent.parent
+    frontend_build_path = application_path / "frontend" / "build"
+
+# Frontend build varsa serve et
+if frontend_build_path.exists():
+    app.mount("/static", StaticFiles(directory=str(frontend_build_path / "static")), name="static")
+    
+    @app.get("/")
+    async def serve_frontend():
+        """React frontend'i serve et"""
+        index_file = frontend_build_path / "index.html"
+        if index_file.exists():
+            return FileResponse(index_file)
+        return {"message": "Frontend build bulunamadı"}
+    
+    @app.get("/{full_path:path}")
+    async def serve_frontend_routes(full_path: str):
+        """React Router için tüm route'ları index.html'e yönlendir"""
+        # API route'ları hariç tut
+        if full_path.startswith("api/") or full_path.startswith("docs") or full_path.startswith("openapi.json"):
+            return {"error": "Not found"}
+        
+        index_file = frontend_build_path / "index.html"
+        if index_file.exists():
+            return FileResponse(index_file)
+        return {"message": "Frontend build bulunamadı"}
+
+if __name__ == "__main__":
+    import uvicorn
+    
+    # Port'u environment variable'dan al veya default 8000
+    port = int(os.environ.get("PORT", 8000))
+    
+    logger.info("🚀 Backend server başlatılıyor...")
+    logger.info(f"📍 URL: http://127.0.0.1:{port}")
+    logger.info(f"📂 Database: {db.db_path}")
+    
+    uvicorn.run(
+        app,
+        host="127.0.0.1",
+        port=port,
+        log_level="info"
+    )
