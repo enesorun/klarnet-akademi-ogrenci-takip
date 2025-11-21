@@ -1190,8 +1190,20 @@ async def create_grup_ogrenci(ogrenci: GrupOgrenciCreate):
     elif ogrenci_dict.get("ozel_alanlar") is None:
         ogrenci_dict["ozel_alanlar"] = "{}"
     
-    # SQLite: Insert
+    # SQLite: Insert öğrenci
     await db.insert("grup_ogrenciler", ogrenci_dict)
+    
+    # İlk ödeme varsa, ödeme kaydı oluştur
+    if new_ogrenci.ilk_odeme_tutari and new_ogrenci.ilk_odeme_tutari > 0:
+        odeme = GrupOdeme(
+            grup_ogrenci_id=new_ogrenci.id,
+            grup_id=ogrenci.grup_id,
+            tutar=new_ogrenci.ilk_odeme_tutari,
+            tarih=ogrenci.ilk_odeme_tarihi or datetime.now(timezone.utc).isoformat(),
+            aciklama="İlk ödeme"
+        )
+        await db.insert("grup_ogrenci_odemeler", odeme.dict())
+    
     return new_ogrenci
 
 @api_router.get("/grup-dersleri/ogrenciler/{ogrenci_id}", response_model=GrupOgrenci)
