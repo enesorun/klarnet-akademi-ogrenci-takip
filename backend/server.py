@@ -2076,7 +2076,7 @@ async def shutdown_db():
 
 # Static files - Frontend build'ini serve et
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, HTMLResponse
 import sys
 
 # PyInstaller ile paketlendiğinde veya normal çalıştırmada frontend build path'i
@@ -2089,29 +2089,38 @@ else:
     application_path = Path(__file__).parent.parent
     frontend_build_path = application_path / "frontend" / "build"
 
+logger.info(f"📂 Frontend build path: {frontend_build_path}")
+logger.info(f"📂 Frontend build exists: {frontend_build_path.exists()}")
+
 # Frontend build varsa serve et
-if frontend_build_path.exists():
-    app.mount("/static", StaticFiles(directory=str(frontend_build_path / "static")), name="static")
+if frontend_build_path.exists() and (frontend_build_path / "index.html").exists():
+    # Static dosyalar için
+    static_dir = frontend_build_path / "static"
+    if static_dir.exists():
+        app.mount("/static", StaticFiles(directory=str(static_dir)), name="static")
+        logger.info(f"✅ Static files mounted: {static_dir}")
     
-    @app.get("/")
-    async def serve_frontend():
-        """React frontend'i serve et"""
-        index_file = frontend_build_path / "index.html"
-        if index_file.exists():
-            return FileResponse(index_file)
-        return {"message": "Frontend build bulunamadı"}
-    
+    # React Router için catch-all handler - EN SONA EKLE
     @app.get("/{full_path:path}")
-    async def serve_frontend_routes(full_path: str):
+    async def serve_frontend_catchall(full_path: str):
         """React Router için tüm route'ları index.html'e yönlendir"""
-        # API route'ları hariç tut
-        if full_path.startswith("api/") or full_path.startswith("docs") or full_path.startswith("openapi.json"):
-            return {"error": "Not found"}
+        # API route'ları ve docs'u hariç tut
+        if (full_path.startswith("api/") or 
+            full_path.startswith("docs") or 
+            full_path.startswith("redoc") or
+            full_path.startswith("openapi.json")):
+            raise HTTPException(status_code=404, detail="Not found")
         
+        # index.html'i döndür
         index_file = frontend_build_path / "index.html"
         if index_file.exists():
             return FileResponse(index_file)
-        return {"message": "Frontend build bulunamadı"}
+        
+        return HTMLResponse(content="<h1>Frontend build not found</h1>", status_code=404)
+    
+    logger.info("✅ Frontend routes configured")
+else:
+    logger.warning(f"⚠️ Frontend build not found at: {frontend_build_path}")
 
 if __name__ == "__main__":
     import uvicorn
@@ -2119,13 +2128,41 @@ if __name__ == "__main__":
     # Port'u environment variable'dan al veya default 8000
     port = int(os.environ.get("PORT", 8000))
     
+    # PyInstaller ile çalışıyorsa özel log config kullan
+    log_config = None
+    if getattr(sys, 'frozen', False):
+        # PyInstaller ortamında basit logging
+        log_config = {
+            "version": 1,
+            "disable_existing_loggers": False,
+            "formatters": {
+                "default": {
+                    "format": "%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+                },
+            },
+            "handlers": {
+                "default": {
+                    "formatter": "default",
+                    "class": "logging.StreamHandler",
+                    "stream": "ext://sys.stdout",
+                },
+            },
+            "loggers": {
+                "uvicorn": {"handlers": ["default"], "level": "INFO"},
+                "uvicorn.error": {"level": "INFO"},
+                "uvicorn.access": {"handlers": ["default"], "level": "INFO"},
+            },
+        }
+    
     logger.info("🚀 Backend server başlatılıyor...")
     logger.info(f"📍 URL: http://127.0.0.1:{port}")
     logger.info(f"📂 Database: {db.db_path}")
+    logger.info(f"📦 Frozen: {getattr(sys, 'frozen', False)}")
     
     uvicorn.run(
         app,
         host="127.0.0.1",
         port=port,
-        log_level="info"
+        log_level="info",
+        log_config=log_config
     )
