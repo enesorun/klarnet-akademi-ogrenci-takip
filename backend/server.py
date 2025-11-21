@@ -648,25 +648,11 @@ async def get_dashboard_stats():
         prev_month = now - relativedelta(months=1)
         period_start = datetime(prev_month.year, prev_month.month, baslangic_gunu, tzinfo=timezone.utc)
     
-    # SQLite: Bu dönemdeki ödemeleri topla (Birebir)
+    # SQLite: Bu dönemdeki ödemeleri topla (Sadece Birebir)
     birebir_payments = await db.find_all("odemeler")
     aylik_gelir = 0
     
     for payment in birebir_payments:
-        try:
-            payment_date_str = payment["tarih"].replace("Z", "+00:00")
-            payment_date = datetime.fromisoformat(payment_date_str)
-            # Eğer timezone bilgisi yoksa UTC olarak kabul et
-            if payment_date.tzinfo is None:
-                payment_date = payment_date.replace(tzinfo=timezone.utc)
-            if period_start <= payment_date <= now:
-                aylik_gelir += payment["tutar"]
-        except Exception:
-            continue
-    
-    # SQLite: Grup ödemelerini ekle
-    grup_payments = await db.find_all("grup_ogrenci_odemeler")
-    for payment in grup_payments:
         try:
             payment_date_str = payment["tarih"].replace("Z", "+00:00")
             payment_date = datetime.fromisoformat(payment_date_str)
